@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "PsychePal",
+    "slug": "psychepal",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#F7F4FC"
+    },
+    "android": {
+      "package": "com.ughsranasingha.psychepal"
+    }
+  }
+}
