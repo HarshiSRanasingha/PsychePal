@@ -1,0 +1,27 @@
+[
+  {
+    "id": "1",
+    "keywords": ["stress", "overwhelmed", "pressure"],
+    "response": "It sounds like you may be carrying a lot right now. Would it help to identify one small thing you can focus on first?"
+  },
+  {
+    "id": "2",
+    "keywords": ["sad", "lonely", "down"],
+    "response": "Thank you for sharing how you feel. You do not have to solve everything at once. Is there someone you trust whom you could talk with?"
+  },
+  {
+    "id": "3",
+    "keywords": ["exam", "study", "assignment"],
+    "response": "Study pressure can feel difficult. Try choosing one manageable task and taking a short break after completing it."
+  },
+  {
+    "id": "4",
+    "keywords": ["angry", "frustrated", "annoyed"],
+    "response": "It may help to pause for a moment and notice what triggered the feeling. You can take a little space before responding."
+  },
+  {
+    "id": "5",
+    "keywords": ["happy", "good", "excited"],
+    "response": "I'm glad you have a positive moment to share. What do you think contributed to this feeling?"
+  }
+]
