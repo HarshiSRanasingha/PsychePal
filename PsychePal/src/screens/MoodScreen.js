@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Text, TextInput, Alert, StyleSheet } from 'react-native';
+import { Text, TextInput, Alert, StyleSheet, Platform } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Screen from '../components/Screen';
 import PrimaryButton from '../components/PrimaryButton';
@@ -11,14 +12,36 @@ export default function MoodScreen() {
   const [selected, setSelected] = useState('');
   const [note, setNote] = useState('');
   const [intensity, setIntensity] = useState('5');
+  const [recordedAt, setRecordedAt] = useState(new Date());
+  const [picker, setPicker] = useState(null);
 
   async function saveMood() {
     if (!selected) return Alert.alert('Choose a mood', 'Please select how you feel first.');
+    const moodIntensity = Math.min(10, Math.max(1, Number.parseInt(intensity, 10) || 5));
     const existing = JSON.parse((await AsyncStorage.getItem('moodRecords')) || '[]');
-    const record = { id: Date.now().toString(), mood: selected, intensity: Number(intensity) || 5, note, date: new Date().toISOString() };
+    const record = { id: Date.now().toString(), mood: selected, intensity: moodIntensity, note: note.trim(), date: recordedAt.toISOString() };
     await AsyncStorage.setItem('moodRecords', JSON.stringify([record, ...existing]));
+    setIntensity('5');
     setNote('');
+    setRecordedAt(new Date());
     Alert.alert('Saved', 'Your mood check-in has been saved on this device.');
+  }
+
+  function updateDateTime(event, value) {
+    if (event.type === 'dismissed') {
+      setPicker(null);
+      return;
+    }
+    if (value) setRecordedAt(previous => {
+      const next = new Date(previous);
+      if (picker === 'date') {
+        next.setFullYear(value.getFullYear(), value.getMonth(), value.getDate());
+      } else {
+        next.setHours(value.getHours(), value.getMinutes(), 0, 0);
+      }
+      return next;
+    });
+    if (Platform.OS === 'android') setPicker(null);
   }
 
   return (
@@ -32,6 +55,17 @@ export default function MoodScreen() {
       <TextInput value={intensity} onChangeText={setIntensity} keyboardType="number-pad" style={styles.input} />
       <Text style={styles.label}>Optional note</Text>
       <TextInput value={note} onChangeText={setNote} placeholder="What might have influenced this mood?" multiline style={[styles.input, styles.multiline]} />
+      <Text style={styles.label}>Date and time</Text>
+      <Text onPress={() => setPicker('date')} style={styles.dateButton}>Date: {recordedAt.toLocaleDateString()}</Text>
+      <Text onPress={() => setPicker('time')} style={styles.dateButton}>Time: {recordedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+      {picker ? (
+        <DateTimePicker
+          value={recordedAt}
+          mode={picker}
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          onChange={updateDateTime}
+        />
+      ) : null}
       <PrimaryButton title="Save Mood Check-in" onPress={saveMood} />
     </Screen>
   );
@@ -44,4 +78,5 @@ const styles = StyleSheet.create({
   label: { color: Theme.text, fontWeight: '700', marginTop: 12, marginBottom: 6 },
   input: { backgroundColor: Theme.surface, borderColor: Theme.border, borderWidth: 1, borderRadius: 12, padding: 12, color: Theme.text },
   multiline: { minHeight: 90, textAlignVertical: 'top' },
+  dateButton: { backgroundColor: Theme.surface, borderColor: Theme.border, borderWidth: 1, borderRadius: 12, padding: 12, marginBottom: 8, color: Theme.text },
 });
