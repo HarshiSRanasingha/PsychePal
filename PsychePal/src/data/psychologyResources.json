@@ -1,7 +1,37 @@
 [
-  {"id":"1","title":"Understanding Emotions","category":"Emotional Awareness","description":"An introduction to naming emotions and noticing how they change."},
-  {"id":"2","title":"Managing Everyday Stress","category":"Stress Management","description":"Simple educational ideas for breaking tasks into manageable steps."},
-  {"id":"3","title":"Healthy Self-Talk","category":"Personal Growth","description":"Explore how inner dialogue can influence feelings and actions."},
-  {"id":"4","title":"Building a Gratitude Habit","category":"Well-being","description":"A short guide to noticing meaningful positive moments."},
-  {"id":"5","title":"The Importance of Rest","category":"Self-care","description":"Learn why breaks and regular rest are part of everyday well-being."}
+  {
+    "id": "1",
+    "title": "Understanding Emotions",
+    "category": "Emotional Awareness",
+    "description": "An introduction to naming emotions and noticing how they change.",
+    "details": "Pause and identify the emotion, its intensity, and what may have triggered it. Naming feelings without judging them can create enough distance to choose a helpful response. Try journaling physical sensations, thoughts, and actions associated with each emotion."
+  },
+  {
+    "id": "2",
+    "title": "Managing Everyday Stress",
+    "category": "Stress Management",
+    "description": "Simple educational ideas for breaking tasks into manageable steps.",
+    "details": "When a task feels overwhelming, list the smallest useful next action. Separate what you control from what you do not, then schedule brief breaks. Slow breathing, realistic priorities, and reducing one unnecessary commitment can make the remaining work more manageable."
+  },
+  {
+    "id": "3",
+    "title": "Healthy Self-Talk",
+    "category": "Personal Growth",
+    "description": "Explore how inner dialogue can influence feelings and actions.",
+    "details": "Notice harsh or absolute thoughts, then test them against evidence. Replace phrases such as 'I always fail' with a balanced statement such as 'This is difficult, and I can take the next step.' Supportive self-talk should stay honest rather than overly positive."
+  },
+  {
+    "id": "4",
+    "title": "Building a Gratitude Habit",
+    "category": "Well-being",
+    "description": "A short guide to noticing meaningful positive moments.",
+    "details": "Each day, record one ordinary moment you appreciated and explain why it mattered. Specific observations are more useful than broad statements. Gratitude practice is not a replacement for difficult feelings, but a way to notice a fuller range of experience."
+  },
+  {
+    "id": "5",
+    "title": "The Importance of Rest",
+    "category": "Self-care",
+    "description": "Learn why breaks and regular rest are part of everyday well-being.",
+    "details": "Rest can include sleep, quiet pauses, reduced stimulation, and activities that are not goal-oriented. Notice when fatigue affects concentration or patience, and plan a genuine break before exhaustion forces one. Consistent routines support both recovery and attention."
+  }
 ]
