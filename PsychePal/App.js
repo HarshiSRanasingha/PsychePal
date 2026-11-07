@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -41,7 +42,47 @@ function Tabs() {
   );
 }
 
+function SplashScreen() {
+  const fade = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fade, {
+      toValue: 1,
+      duration: 700,
+      useNativeDriver: true,
+    }).start();
+  }, [fade]);
+
+  return (
+    <View style={styles.splash}>
+      <Animated.View style={[styles.brand, { opacity: fade }]}>
+        <View style={styles.logo}>
+          <View style={styles.logoInner} />
+        </View>
+        <Text style={styles.appName}>PsychePal</Text>
+        <Text style={styles.tagline}>A little space for your mind</Text>
+      </Animated.View>
+    </View>
+  );
+}
+
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 2200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showSplash) {
+    return (
+      <>
+        <StatusBar style="dark" />
+        <SplashScreen />
+      </>
+    );
+  }
+
   return (
     <NavigationContainer>
       <StatusBar style="dark" />
@@ -63,3 +104,12 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  splash: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.background },
+  brand: { alignItems: 'center' },
+  logo: { width: 108, height: 108, borderRadius: 54, alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.primary, marginBottom: 22 },
+  logoInner: { width: 48, height: 48, borderRadius: 24, borderWidth: 5, borderColor: Theme.surface, transform: [{ rotate: '45deg' }] },
+  appName: { color: Theme.primaryDark, fontSize: 32, fontWeight: '800' },
+  tagline: { color: Theme.muted, fontSize: 16, marginTop: 8 },
+});
