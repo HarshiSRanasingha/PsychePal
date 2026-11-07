@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text } from 'react-native';
+import PrimaryButton from './src/components/PrimaryButton';
 import { Theme } from './src/styles/theme';
 import HomeScreen from './src/screens/HomeScreen';
 import MoodScreen from './src/screens/MoodScreen';
@@ -66,8 +66,28 @@ function SplashScreen() {
   );
 }
 
+function WelcomeScreen({ onStart }) {
+  return (
+    <View style={styles.welcome}>
+      <View style={styles.welcomeContent}>
+        <View style={[styles.logo, styles.welcomeLogo]}>
+          <View style={styles.logoInner} />
+        </View>
+        <Text style={styles.welcomeTitle}>Welcome to PsychePal</Text>
+        <Text style={styles.welcomeDescription}>
+          A private, offline-first space to check in with your mood, reflect on your thoughts, and find support for everyday well-being.
+        </Text>
+      </View>
+      <View style={styles.startButton}>
+        <PrimaryButton title="Get Started" onPress={onStart} />
+      </View>
+    </View>
+  );
+}
+
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2200);
@@ -79,6 +99,15 @@ export default function App() {
       <>
         <StatusBar style="dark" />
         <SplashScreen />
+      </>
+    );
+  }
+
+  if (showWelcome) {
+    return (
+      <>
+        <StatusBar style="dark" />
+        <WelcomeScreen onStart={() => setShowWelcome(false)} />
       </>
     );
   }
@@ -112,4 +141,10 @@ const styles = StyleSheet.create({
   logoInner: { width: 48, height: 48, borderRadius: 24, borderWidth: 5, borderColor: Theme.surface, transform: [{ rotate: '45deg' }] },
   appName: { color: Theme.primaryDark, fontSize: 32, fontWeight: '800' },
   tagline: { color: Theme.muted, fontSize: 16, marginTop: 8 },
+  welcome: { flex: 1, justifyContent: 'center', paddingHorizontal: 24, backgroundColor: Theme.background },
+  welcomeContent: { alignItems: 'center' },
+  welcomeLogo: { marginBottom: 28 },
+  welcomeTitle: { color: Theme.primaryDark, fontSize: 28, fontWeight: '800', textAlign: 'center' },
+  welcomeDescription: { color: Theme.muted, fontSize: 16, lineHeight: 24, textAlign: 'center', marginTop: 14 },
+  startButton: { marginTop: 36 },
 });
