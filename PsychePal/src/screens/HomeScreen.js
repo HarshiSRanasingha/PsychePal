@@ -38,7 +38,7 @@ export default function HomeScreen({ navigation }) {
 
   const items = [
     ['Mood History', 'Review your previous mood check-ins.'],
-    ['Thought Reflection', 'Explore a situation, thought, and feeling.'],
+    ['Thought Reflection', 'Explore self-awareness, personality, strengths, and thoughts.'],
     ['Relaxation Toolkit', 'Try a breathing or grounding exercise.'],
     ['Recommendations', 'Browse books, music, and movie suggestions.'],
     ['Personal Diary', 'Write and manage private journal entries.'],
