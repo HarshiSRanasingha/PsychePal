@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
-import { Text, TextInput, Alert, StyleSheet, Platform } from 'react-native';
+import { Text, TextInput, Alert, StyleSheet, Platform, Pressable, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Screen from '../components/Screen';
 import PrimaryButton from '../components/PrimaryButton';
 import { Theme } from '../styles/theme';
 
-const moods = ['Happy', 'Calm', 'Neutral', 'Sad', 'Anxious', 'Angry', 'Tired'];
+const moods = [
+  ['Happy', '😊', '#FFF3C4'],
+  ['Calm', '🌿', '#DDEEDD'],
+  ['Neutral', '😐', '#E8EDF0'],
+  ['Sad', '😔', '#DDE8F3'],
+  ['Anxious', '😟', '#EAE0F5'],
+  ['Angry', '😡', '#F7DDD8'],
+  ['Tired', '😴', '#E3E1EE'],
+  ['Distressed', '😫', '#F5DDE4'],
+];
 
 export default function MoodScreen() {
   const [selected, setSelected] = useState('');
@@ -48,9 +57,14 @@ export default function MoodScreen() {
     <Screen>
       <Text style={styles.heading}>How are you feeling today?</Text>
       <Text style={styles.helper}>Choose the mood that feels closest to your experience.</Text>
-      {moods.map(m => (
-        <Text key={m} onPress={() => setSelected(m)} style={[styles.mood, selected === m && styles.selected]}>{selected === m ? '✓  ' : ''}{m}</Text>
-      ))}
+      <View style={styles.moodGrid}>
+        {moods.map(([mood, emoji, color]) => (
+          <Pressable key={mood} onPress={() => setSelected(mood)} style={[styles.mood, { backgroundColor: color }, selected === mood && styles.selected]}>
+            <Text style={styles.emoji}>{emoji}</Text>
+            <Text style={[styles.moodText, selected === mood && styles.selectedText]}>{mood}</Text>
+          </Pressable>
+        ))}
+      </View>
       <Text style={styles.label}>Intensity (1–10)</Text>
       <TextInput value={intensity} onChangeText={setIntensity} keyboardType="number-pad" style={styles.input} />
       <Text style={styles.label}>Optional note</Text>
@@ -73,8 +87,12 @@ export default function MoodScreen() {
 const styles = StyleSheet.create({
   heading: { fontSize: 23, fontWeight: '800', color: Theme.text, marginBottom: 8 },
   helper: { color: Theme.muted, marginBottom: 16, lineHeight: 20 },
-  mood: { backgroundColor: Theme.surface, borderColor: Theme.border, borderWidth: 1, borderRadius: 12, padding: 13, marginBottom: 8, color: Theme.text },
-  selected: { backgroundColor: Theme.lavender, borderColor: Theme.primary, color: Theme.primaryDark, fontWeight: '700' },
+  moodGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  mood: { width: '30%', minHeight: 94, borderColor: Theme.border, borderWidth: 1, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
+  emoji: { fontSize: 30, marginBottom: 5 },
+  moodText: { color: Theme.text, fontWeight: '600' },
+  selected: { borderColor: Theme.primary, borderWidth: 2 },
+  selectedText: { color: Theme.primaryDark, fontWeight: '800' },
   label: { color: Theme.text, fontWeight: '700', marginTop: 12, marginBottom: 6 },
   input: { backgroundColor: Theme.surface, borderColor: Theme.border, borderWidth: 1, borderRadius: 12, padding: 12, color: Theme.text },
   multiline: { minHeight: 90, textAlignVertical: 'top' },

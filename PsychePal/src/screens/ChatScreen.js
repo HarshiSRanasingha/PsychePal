@@ -6,9 +6,11 @@ import { Theme } from '../styles/theme';
 import responses from '../data/chatbotResponses.json';
 
 const conversationStyles = [
+  ['Friendly', 'friendly'],
   ['Calm', 'calm'],
-  ['Motivating', 'motivating'],
-  ['Reflective', 'reflective'],
+  ['Serious', 'serious'],
+  ['Funny', 'funny'],
+  ['Lovely', 'lovely'],
 ];
 
 const suggestedQuestions = [
@@ -22,11 +24,15 @@ const suggestedQuestions = [
 export default function ChatScreen() {
   const [message, setMessage] = useState('');
   const [reply, setReply] = useState('Hi, I’m PsychePal. What would you like to reflect on today?');
-  const [conversationStyle, setConversationStyle] = useState('calm');
+  const [conversationStyle, setConversationStyle] = useState('friendly');
 
   function addStyle(responseText) {
     if (conversationStyle === 'motivating') return `You can take this one step at a time. ${responseText}`;
     if (conversationStyle === 'reflective') return `${responseText} Before responding, what has felt most important in this situation?`;
+    if (conversationStyle === 'friendly') return `I'm here with you. ${responseText}`;
+    if (conversationStyle === 'serious') return `Let's approach this calmly and clearly. ${responseText}`;
+    if (conversationStyle === 'funny') return `Life can feel wonderfully awkward sometimes. ${responseText}`;
+    if (conversationStyle === 'lovely') return `Sending a little warmth your way. ${responseText}`;
     return responseText;
   }
 
@@ -69,7 +75,7 @@ const styles = StyleSheet.create({
   heading: { fontSize: 23, fontWeight: '800', color: Theme.text, marginBottom: 10 },
   disclaimer: { color: Theme.muted, lineHeight: 20, marginBottom: 18 },
   label: { color: Theme.text, fontWeight: '700', marginBottom: 8 },
-  styles: { flexDirection: 'row', marginBottom: 16 },
+  styles: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 16 },
   styleButton: { flex: 1, alignItems: 'center', borderWidth: 1, borderColor: Theme.border, borderRadius: 10, paddingVertical: 9, marginRight: 6 },
   activeStyle: { backgroundColor: Theme.primary, borderColor: Theme.primary },
   styleText: { color: Theme.text, fontWeight: '700' },
