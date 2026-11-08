@@ -23,5 +23,25 @@
     "id": "5",
     "keywords": ["happy", "good", "excited"],
     "response": "I'm glad you have a positive moment to share. What do you think contributed to this feeling?"
+  },
+  {
+    "id": "6",
+    "keywords": ["anxiety", "anxious", "worried", "worry"],
+    "response": "Anxiety can make the next moment feel very urgent. Try naming what is happening, taking one slow breath, and identifying only the next safe step."
+  },
+  {
+    "id": "7",
+    "keywords": ["sleep", "tired", "insomnia", "rest"],
+    "response": "Sleep can be affected by stress and routines. Consider reducing late stimulation, keeping a consistent wake-up time, and noticing what helps your body settle."
+  },
+  {
+    "id": "8",
+    "keywords": ["confidence", "self esteem", "fail", "failure"],
+    "response": "One difficult moment does not define your whole ability or worth. What evidence about this situation challenges the harshest version of that thought?"
+  },
+  {
+    "id": "9",
+    "keywords": ["crisis", "self-harm", "suicide", "hurt myself"],
+    "response": "I'm sorry you're carrying this. You deserve immediate human support. Please contact local emergency services or a crisis line now, and stay with someone you trust."
   }
 ]
