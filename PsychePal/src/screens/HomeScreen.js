@@ -23,6 +23,17 @@ export default function HomeScreen({ navigation }) {
   const dayIndex = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000);
   const quote = quotes[dayIndex % quotes.length];
   const selfCare = selfCareSuggestions[dayIndex % selfCareSuggestions.length];
+  const moodActivities = {
+    Distressed: [['Chat', 'Talk it through in a safe space'], ['Relaxation Toolkit', 'Try a calming grounding exercise'], ['Recommendations', 'Find gentle music and media']],
+    Happy: [['Recommendations', 'Keep the good feeling going'], ['Personal Diary', 'Capture what is going well'], ['Chat', 'Share a positive moment']],
+    Neutral: [['Recommendations', 'Explore books, movies, and music'], ['Thought Reflection', 'Check in with what you need'], ['Relaxation Toolkit', 'Take a mindful pause']],
+    Sad: [['Recommendations', 'Find comfort through music and books'], ['Chat', 'Talk through difficult feelings'], ['Thought Reflection', 'Notice thoughts with kindness']],
+    Tired: [['Recommendations', 'Choose low-energy entertainment'], ['Relaxation Toolkit', 'Use a short rest timer'], ['Personal Diary', 'Write down tomorrow’s priorities']],
+    Angry: [['Relaxation Toolkit', 'Pause and regulate with breathing'], ['Personal Diary', 'Write before you respond'], ['Chat', 'Reflect on what triggered the feeling']],
+    Anxious: [['Relaxation Toolkit', 'Try 4-7-8 breathing or grounding'], ['Thought Reflection', 'Separate facts from worried thoughts'], ['Chat', 'Talk through the next safe step']],
+    Calm: [['Thought Reflection', 'Explore what helped you feel settled'], ['Personal Diary', 'Save a gratitude note'], ['Recommendations', 'Choose something uplifting']],
+  };
+  const suggestedActivities = todayMood ? moodActivities[todayMood.mood] || [] : [];
 
   useFocusEffect(useCallback(() => {
     let active = true;
@@ -65,6 +76,17 @@ export default function HomeScreen({ navigation }) {
         )}
         <Text style={styles.linkText} onPress={() => navigation.navigate('Mood')}>Open mood check-in</Text>
       </View>
+      {suggestedActivities.length ? (
+        <View style={styles.card}>
+          <Text style={styles.label}>Suggested for this mood</Text>
+          {suggestedActivities.map(([screen, description]) => (
+            <View key={`${screen}-${description}`} style={styles.activity}>
+              <Text style={styles.activityTitle} onPress={() => navigation.navigate(screen)}>{screen}</Text>
+              <Text style={styles.activityDescription}>{description}</Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
 
       <View style={styles.card}>
         <Text style={styles.label}>Daily self-care</Text>
@@ -90,4 +112,7 @@ const styles = StyleSheet.create({
   linkText: { color: Theme.primary, fontWeight: '700', marginTop: 10 },
   suggestion: { color: Theme.text, lineHeight: 22 },
   sectionHeading: { color: Theme.text, fontSize: 18, fontWeight: '800', marginTop: 10, marginBottom: 12 },
+  activity: { borderTopWidth: 1, borderTopColor: Theme.border, paddingVertical: 10 },
+  activityTitle: { color: Theme.primaryDark, fontWeight: '800', marginBottom: 3 },
+  activityDescription: { color: Theme.muted, fontSize: 13 },
 });

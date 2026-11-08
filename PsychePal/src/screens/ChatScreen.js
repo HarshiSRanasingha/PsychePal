@@ -21,6 +21,14 @@ const suggestedQuestions = [
   'Help me reflect on my strengths.',
 ];
 
+const personalityGreetings = {
+  friendly: "👋 Hey! So glad you're here. I'm all ears!",
+  serious: "I'm here to listen attentively. Let's think through things carefully.",
+  funny: "😂 Life's too short to be serious all the time! What's up?",
+  lovely: "🌸 Sending you a big warm hug. You're not alone. Tell me everything.",
+  calm: "Take your time. I'm here to listen and help you find the next calm step.",
+};
+
 export default function ChatScreen() {
   const [message, setMessage] = useState('');
   const [reply, setReply] = useState('Hi, I’m PsychePal. What would you like to reflect on today?');
@@ -34,6 +42,12 @@ export default function ChatScreen() {
     if (conversationStyle === 'funny') return `Life can feel wonderfully awkward sometimes. ${responseText}`;
     if (conversationStyle === 'lovely') return `Sending a little warmth your way. ${responseText}`;
     return responseText;
+  }
+
+  function changeStyle(style) {
+    setConversationStyle(style);
+    setReply(personalityGreetings[style]);
+    setMessage('');
   }
 
   function send() {
@@ -52,7 +66,7 @@ export default function ChatScreen() {
       <Text style={styles.label}>Conversation style</Text>
       <View style={styles.styles}>
         {conversationStyles.map(([label, value]) => (
-          <Pressable key={value} style={[styles.styleButton, conversationStyle === value && styles.activeStyle]} onPress={() => setConversationStyle(value)}>
+          <Pressable key={value} style={[styles.styleButton, conversationStyle === value && styles.activeStyle]} onPress={() => changeStyle(value)}>
             <Text style={[styles.styleText, conversationStyle === value && styles.activeStyleText]}>{label}</Text>
           </Pressable>
         ))}
