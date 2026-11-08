@@ -21,6 +21,7 @@ export default function RelaxationScreen() {
   const [timerMinutes, setTimerMinutes] = useState(5);
   const [timerSeconds, setTimerSeconds] = useState(300);
   const [timerRunning, setTimerRunning] = useState(false);
+  const [timerCompleted, setTimerCompleted] = useState(false);
   const [phaseIndex, setPhaseIndex] = useState(0);
   const [phaseSeconds, setPhaseSeconds] = useState(4);
   const [guideRunning, setGuideRunning] = useState(false);
@@ -33,6 +34,7 @@ export default function RelaxationScreen() {
       setTimerSeconds(seconds => {
         if (seconds > 1) return seconds - 1;
         setTimerRunning(false);
+        setTimerCompleted(true);
         return 0;
       });
     }, 1000);
@@ -63,8 +65,20 @@ export default function RelaxationScreen() {
 
   function setMinutes(minutes) {
     setTimerRunning(false);
+    setTimerCompleted(false);
     setTimerMinutes(minutes);
     setTimerSeconds(minutes * 60);
+  }
+
+  function toggleTimer() {
+    if (timerSeconds === 0) {
+      setTimerCompleted(false);
+      setTimerSeconds(timerMinutes * 60);
+      setTimerRunning(true);
+      return;
+    }
+    setTimerCompleted(false);
+    setTimerRunning(running => !running);
   }
 
   function selectExercise(id) {
@@ -115,7 +129,8 @@ export default function RelaxationScreen() {
         ))}
       </View>
       <Text style={styles.timeDisplay}>{Math.floor(timerSeconds / 60)}:{String(timerSeconds % 60).padStart(2, '0')}</Text>
-      <Pressable style={styles.timerButton} onPress={() => timerSeconds === 0 ? setMinutes(timerMinutes) : setTimerRunning(value => !value)}>
+      {timerCompleted ? <Text style={styles.timerComplete}>Relaxation timer complete. Take a moment to notice how you feel.</Text> : null}
+      <Pressable style={styles.timerButton} onPress={toggleTimer}>
         <Text style={styles.timerButtonText}>{timerRunning ? 'Pause Timer' : timerSeconds === 0 ? 'Restart Timer' : 'Start Timer'}</Text>
       </Pressable>
       <Text style={styles.note}>These are general self-care exercises. Do not force your breathing; stop if uncomfortable.</Text>
@@ -139,5 +154,6 @@ const styles = StyleSheet.create({
   timeDisplay: { textAlign: 'center', color: Theme.primaryDark, fontSize: 42, fontWeight: '800', marginVertical: 12 },
   timerButton: { backgroundColor: Theme.primary, borderRadius: 12, padding: 14, alignItems: 'center', marginVertical: 6 },
   timerButtonText: { color: '#FFFFFF', fontWeight: '700' },
+  timerComplete: { color: Theme.success, fontWeight: '700', textAlign: 'center', marginBottom: 8 },
   note: { color: Theme.muted, lineHeight: 19, marginTop: 8, fontSize: 12 },
 });
