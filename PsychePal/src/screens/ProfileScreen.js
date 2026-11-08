@@ -12,6 +12,7 @@ export default function ProfileScreen({ navigation }) {
       <SectionCard title="Mood History" description="Review saved mood check-ins." onPress={() => navigation.navigate('Mood History')} />
       <SectionCard title="Personal Diary" description="Your private notes and reflections." onPress={() => navigation.navigate('Personal Diary')} />
       <SectionCard title="Support Directory" description="View support information." onPress={() => navigation.navigate('Support Directory')} />
+      <SectionCard title="Relaxing Games" description="Browse puzzle, word, and relaxing game suggestions." onPress={() => navigation.navigate('Relaxing Games')} />
       <Text style={styles.note}>Your records are stored locally on this device in this starter version.</Text>
     </Screen>
   );

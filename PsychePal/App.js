@@ -17,6 +17,7 @@ import RelaxationScreen from './src/screens/RelaxationScreen';
 import RecommendationsScreen from './src/screens/RecommendationsScreen';
 import DiaryScreen from './src/screens/DiaryScreen';
 import SupportScreen from './src/screens/SupportScreen';
+import GamesScreen from './src/screens/GamesScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -129,6 +130,7 @@ export default function App() {
         <Stack.Screen name="Recommendations" component={RecommendationsScreen} />
         <Stack.Screen name="Personal Diary" component={DiaryScreen} />
         <Stack.Screen name="Support Directory" component={SupportScreen} />
+        <Stack.Screen name="Relaxing Games" component={GamesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

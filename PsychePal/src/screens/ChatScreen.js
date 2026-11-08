@@ -33,6 +33,9 @@ export default function ChatScreen() {
   const [message, setMessage] = useState('');
   const [reply, setReply] = useState('Hi, I’m PsychePal. What would you like to reflect on today?');
   const [conversationStyle, setConversationStyle] = useState('friendly');
+  const [conversation, setConversation] = useState([
+    { id: 'welcome', role: 'bot', text: 'Hi, I’m PsychePal. What would you like to reflect on today?' },
+  ]);
 
   function addStyle(responseText) {
     if (conversationStyle === 'motivating') return `You can take this one step at a time. ${responseText}`;
@@ -47,6 +50,7 @@ export default function ChatScreen() {
   function changeStyle(style) {
     setConversationStyle(style);
     setReply(personalityGreetings[style]);
+    setConversation([{ id: `greeting-${style}`, role: 'bot', text: personalityGreetings[style] }]);
     setMessage('');
   }
 
@@ -55,7 +59,13 @@ export default function ChatScreen() {
     if (!text) return;
     const match = responses.find(item => item.keywords.some(word => text.includes(word)));
     const fallback = 'Thank you for sharing that. Would it help to describe what happened and what you need right now?';
-    setReply(addStyle(match ? match.response : fallback));
+    const botReply = addStyle(match ? match.response : fallback);
+    setReply(botReply);
+    setConversation(messages => [
+      ...messages,
+      { id: `user-${Date.now()}`, role: 'user', text: message.trim() },
+      { id: `bot-${Date.now() + 1}`, role: 'bot', text: botReply },
+    ]);
     setMessage('');
   }
 
@@ -72,6 +82,15 @@ export default function ChatScreen() {
         ))}
       </View>
       <View style={styles.reply}><Text style={styles.replyText}>{reply}</Text></View>
+      {conversation.length > 1 ? (
+        <View style={styles.history} accessibilityLabel="Conversation history">
+          {conversation.slice(1).map(item => (
+            <View key={item.id} style={[styles.message, item.role === 'user' ? styles.userMessage : styles.botMessage]}>
+              <Text style={[styles.messageText, item.role === 'user' && styles.userMessageText]}>{item.text}</Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
       <Text style={styles.label}>Suggested questions</Text>
       <View style={styles.suggestions}>
         {suggestedQuestions.map(question => (
@@ -96,6 +115,12 @@ const styles = StyleSheet.create({
   activeStyleText: { color: '#FFFFFF' },
   reply: { backgroundColor: Theme.lavender, padding: 16, borderRadius: 16, marginBottom: 16 },
   replyText: { color: Theme.primaryDark, lineHeight: 22 },
+  history: { marginBottom: 12 },
+  message: { maxWidth: '88%', borderRadius: 14, padding: 12, marginBottom: 8 },
+  userMessage: { alignSelf: 'flex-end', backgroundColor: Theme.primary },
+  botMessage: { alignSelf: 'flex-start', backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border },
+  messageText: { color: Theme.text, lineHeight: 20 },
+  userMessageText: { color: '#FFFFFF' },
   suggestions: { marginBottom: 12 },
   suggestion: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 10, padding: 10, marginBottom: 7 },
   suggestionText: { color: Theme.primaryDark },

@@ -38,10 +38,19 @@ export default function MoodHistoryScreen() {
   const commonMood = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'None';
   const trend = filtered.slice().sort((a, b) => new Date(a.date) - new Date(b.date)).slice(-7);
   const maxIntensity = Math.max(...trend.map(record => Number(record.intensity) || 0), 1);
+  const dayKeys = new Set(records.map(record => new Date(record.date).toDateString()));
+  let streak = 0;
+  const cursor = new Date();
+  cursor.setHours(0, 0, 0, 0);
+  while (dayKeys.has(cursor.toDateString())) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
 
   return (
     <Screen>
       <Text style={styles.heading}>Mood History</Text>
+      <View style={styles.streak}><Text style={styles.streakText}>🌱 {streak} day check-in streak</Text></View>
       <View style={styles.summaryRow}><View style={styles.summaryCard}><Text style={styles.summaryValue}>{filtered.length}</Text><Text style={styles.summaryLabel}>Entries</Text></View><View style={styles.summaryCard}><Text style={styles.summaryValue}>{average}</Text><Text style={styles.summaryLabel}>Avg intensity</Text></View><View style={styles.summaryCard}><Text style={styles.summaryValue}>{commonMood}</Text><Text style={styles.summaryLabel}>Most common</Text></View></View>
       <Text style={styles.sectionLabel}>Summary</Text>
       <View style={styles.wrap}>{['Day', 'Week', 'All'].map(option => <Pressable key={option} onPress={() => setPeriod(option)} style={[styles.option, period === option && styles.activeOption]}><Text style={[styles.optionText, period === option && styles.activeOptionText]}>{option === 'Day' ? 'Daily' : option === 'Week' ? 'Weekly' : 'All time'}</Text></Pressable>)}</View>
@@ -60,6 +69,8 @@ export default function MoodHistoryScreen() {
 }
 const styles = StyleSheet.create({
   heading: { fontSize: 23, fontWeight: '800', color: Theme.text, marginBottom: 16 },
+  streak: { backgroundColor: '#F0F8F4', borderRadius: 14, padding: 12, marginBottom: 10 },
+  streakText: { color: '#2C6E49', fontWeight: '700' },
   sectionLabel: { color: Theme.text, fontWeight: '700', marginTop: 12, marginBottom: 8 },
   summaryRow: { flexDirection: 'row', gap: 8 },
   summaryCard: { flex: 1, minHeight: 82, justifyContent: 'center', backgroundColor: Theme.surface, borderColor: Theme.border, borderWidth: 1, borderRadius: 12, padding: 10 },
