@@ -33,5 +33,68 @@
     "category": "Self-care",
     "description": "Learn why breaks and regular rest are part of everyday well-being.",
     "details": "Rest can include sleep, quiet pauses, reduced stimulation, and activities that are not goal-oriented. Notice when fatigue affects concentration or patience, and plan a genuine break before exhaustion forces one. Consistent routines support both recovery and attention."
+  },
+  {
+    "id": "6",
+    "title": "How Stress Affects the Body and Mind",
+    "category": "Psychology Articles",
+    "description": "Understand the common physical and cognitive signs of stress.",
+    "details": "Stress activates the body's alert systems and can affect sleep, concentration, digestion, and mood. Short-term stress may improve focus, while prolonged stress can become difficult to manage. Notice patterns early, reduce avoidable demands, and seek professional support when stress persists."
+  },
+  {
+    "id": "7",
+    "title": "Building a Balanced Daily Routine",
+    "category": "Mental Wellness Tips",
+    "description": "A practical framework for supporting everyday mental wellness.",
+    "details": "A balanced routine can include regular sleep, nourishing meals, movement, meaningful connection, and enjoyable downtime. Choose one small routine that fits your week, make it easy to begin, and adjust it without self-criticism when life changes."
+  },
+  {
+    "id": "8",
+    "title": "Recognizing the Stress Cycle",
+    "category": "Stress Management",
+    "description": "Learn to identify triggers, responses, and recovery needs.",
+    "details": "Notice the chain from trigger to thoughts, physical sensations, and actions. Recovery may include movement, slow breathing, connection, sleep, or a calming activity. Completing a stress cycle does not always require solving the original problem; the body may need time and safety cues to settle."
+  },
+  {
+    "id": "9",
+    "title": "Grounding During Anxiety",
+    "category": "Anxiety Awareness",
+    "description": "Simple grounding strategies for intense moments of anxiety.",
+    "details": "Orient to the present by naming where you are, describing nearby objects, and attending to your breathing without forcing it. Anxiety may create strong physical sensations, but these are not necessarily danger. If anxiety is frequent or disruptive, consider discussing it with a qualified professional."
+  },
+  {
+    "id": "10",
+    "title": "The Circle of Anxiety Triggers",
+    "category": "Anxiety Awareness",
+    "description": "Explore how thoughts and avoidance can maintain anxiety.",
+    "details": "Anxiety can lead to physical discomfort, frightening predictions, and avoidance. Avoidance may bring short-term relief, but can strengthen worry over time. A therapist may help build gradual exposure and coping plans in a safe, supported way."
+  },
+  {
+    "id": "11",
+    "title": "Understanding Emotional Intelligence",
+    "category": "Emotional Intelligence",
+    "description": "Learn the foundations of recognizing and responding to emotions.",
+    "details": "Emotional intelligence includes recognizing emotions, understanding their causes, managing reactions, and responding to other people with empathy. Pause before responding, consider context, and use clear language to describe what you feel and need."
+  },
+  {
+    "id": "12",
+    "title": "Practicing Empathy in Conversations",
+    "category": "Emotional Intelligence",
+    "description": "Build connection through listening and perspective-taking.",
+    "details": "Listen without immediately planning a reply. Reflect what the other person seems to feel, ask an open question, and validate their experience without having to agree. Boundaries are still important, and empathy does not require accepting harmful behavior."
+  },
+  {
+    "id": "13",
+    "title": "Resetting After a Difficult Day",
+    "category": "Mental Wellness Tips",
+    "description": "A gentle checklist for ending the day with more support.",
+    "details": "Reduce stimulation, eat or hydrate if needed, tend to basic responsibilities, and choose one calming activity. Write down unfinished worries with a single next step. If thoughts of self-harm are present, contact local emergency or crisis support immediately."
+  },
+  {
+    "id": "14",
+    "title": "Coping Skills Under Pressure",
+    "category": "Stress Management",
+    "description": "Compare immediate coping tools with longer-term stress habits.",
+    "details": "Immediate tools may include paced breathing, sensory grounding, stepping away, or speaking with a trusted person. Longer-term habits include planning manageable workloads, maintaining routines, setting boundaries, and getting professional support when pressure is persistent."
   }
 ]

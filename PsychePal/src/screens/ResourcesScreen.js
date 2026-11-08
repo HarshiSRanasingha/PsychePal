@@ -43,6 +43,7 @@ export default function ResourcesScreen() {
           onPress={() => showDetails(item)}
         />
       ))}
+      {filtered.length ? <Text style={styles.count}>{filtered.length} {filtered.length === 1 ? 'resource' : 'resources'} found</Text> : null}
       {!filtered.length ? <Text style={styles.empty}>No matching resources found.</Text> : null}
     </Screen>
   );
@@ -58,4 +59,5 @@ const styles = StyleSheet.create({
   filterText: { color: Theme.text },
   activeFilterText: { color: '#FFFFFF', fontWeight: '700' },
   empty: { color: Theme.muted, textAlign: 'center', marginTop: 20 },
+  count: { color: Theme.muted, fontSize: 12, textAlign: 'center', marginTop: 4 },
 });
