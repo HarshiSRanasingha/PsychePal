@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { Alert, Text, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Screen from '../components/Screen';
@@ -19,6 +19,7 @@ const selfCareSuggestions = [
 
 export default function HomeScreen({ navigation }) {
   const [todayMood, setTodayMood] = useState(null);
+  const [profileSettings, setProfileSettings] = useState({ preferredName: '', showDailyMotivation: true, showSelfCare: true });
   const today = new Date();
   const dayIndex = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000);
   const quote = quotes[dayIndex % quotes.length];
@@ -37,13 +38,36 @@ export default function HomeScreen({ navigation }) {
 
   useFocusEffect(useCallback(() => {
     let active = true;
-    AsyncStorage.getItem('moodRecords').then(value => {
-      if (!active) return;
-      const records = JSON.parse(value || '[]');
-      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-      const latestToday = records.find(record => new Date(record.date).getTime() >= startOfDay);
-      setTodayMood(latestToday || null);
-    });
+    async function loadHomeData() {
+      try {
+        const moodValue = await AsyncStorage.getItem('moodRecords');
+        if (active) {
+          const records = JSON.parse(moodValue || '[]');
+          const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+          const latestToday = records.find(record => new Date(record.date).getTime() >= startOfDay);
+          setTodayMood(latestToday || null);
+        }
+      } catch (error) {
+        if (active) Alert.alert('Could not load mood check-in', error.message || 'Please try again.');
+      }
+
+      try {
+        const settingsValue = await AsyncStorage.getItem('profileSettings');
+        if (!active) return;
+        const settings = settingsValue ? JSON.parse(settingsValue) : {};
+        if (!settings || typeof settings !== 'object' || Array.isArray(settings)) {
+          throw new Error('Saved profile settings have an unexpected format.');
+        }
+        setProfileSettings({
+          preferredName: typeof settings.preferredName === 'string' ? settings.preferredName : '',
+          showDailyMotivation: settings.showDailyMotivation !== false,
+          showSelfCare: settings.showSelfCare !== false,
+        });
+      } catch (error) {
+        if (active) Alert.alert('Could not load profile preferences', error.message || 'Please try again.');
+      }
+    }
+    loadHomeData();
     return () => { active = false; };
   }, []));
 
@@ -58,14 +82,16 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <Screen>
-      <Text style={styles.hello}>Hello</Text>
+      <Text style={styles.hello}>{profileSettings.preferredName ? `Hello, ${profileSettings.preferredName}` : 'Hello'}</Text>
       <Text style={styles.heading}>Welcome to PsychePal</Text>
       <Text style={styles.subtitle}>A little space to understand yourself, care for yourself, and grow.</Text>
 
-      <View style={styles.card}>
-        <Text style={styles.label}>Daily motivation</Text>
-        <Text style={styles.quote}>"{quote.text}"</Text>
-      </View>
+      {profileSettings.showDailyMotivation ? (
+        <View style={styles.card}>
+          <Text style={styles.label}>Daily motivation</Text>
+          <Text style={styles.quote}>"{quote.text}"</Text>
+        </View>
+      ) : null}
 
       <View style={[styles.card, styles.moodCard]}>
         <Text style={styles.label}>Today's mood</Text>
@@ -88,10 +114,12 @@ export default function HomeScreen({ navigation }) {
         </View>
       ) : null}
 
-      <View style={styles.card}>
-        <Text style={styles.label}>Daily self-care</Text>
-        <Text style={styles.suggestion}>{selfCare}</Text>
-      </View>
+      {profileSettings.showSelfCare ? (
+        <View style={styles.card}>
+          <Text style={styles.label}>Daily self-care</Text>
+          <Text style={styles.suggestion}>{selfCare}</Text>
+        </View>
+      ) : null}
 
       <Text style={styles.sectionHeading}>Quick access</Text>
       {items.map(([title, description]) => (
