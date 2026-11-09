@@ -1,9 +1,58 @@
 [
   {
-    "id": "placeholder-1",
-    "name": "Verified local support service",
-    "description": "Replace this placeholder with a verified Sri Lankan counselor or support service.",
-    "contact": "Add verified phone number, operating hours, and source before release.",
-    "language": "English"
+    "id": "nimh-helpline",
+    "name": "National Mental Health Helpline",
+    "organization": "National Institute of Mental Health (NIMH)",
+    "category": "Counselor & referral information",
+    "description": "A national helpline for mental health support. Call to ask about available help and referral options for qualified mental health professionals. Individual counselor profiles are not listed here.",
+    "contacts": [
+      { "label": "Call", "value": "1926", "type": "phone" }
+    ],
+    "website": "https://nimh.health.gov.lk/",
+    "language": "Sri Lanka",
+    "hours": "Contact the service to confirm current availability."
+  },
+  {
+    "id": "nimh-hospital",
+    "name": "National Institute of Mental Health",
+    "organization": "National Institute of Mental Health (NIMH)",
+    "category": "Hospital and clinical care",
+    "description": "Government mental health institute in Mulleriyawa New Town. Contact the institute for information about services, referrals, and visiting arrangements.",
+    "contacts": [
+      { "label": "Telephone", "value": "+94 11 257 8234", "type": "phone" }
+    ],
+    "website": "https://nimh.health.gov.lk/",
+    "language": "Sri Lanka",
+    "hours": "Contact the institute to confirm current hours and services."
+  },
+  {
+    "id": "nimh-dementia",
+    "name": "Dementia Hotline",
+    "organization": "National Institute of Mental Health (NIMH)",
+    "category": "Dementia and caregiver support",
+    "description": "A dedicated hotline listed by NIMH. Call for information and support related to dementia.",
+    "contacts": [
+      { "label": "Call", "value": "+94 11 314 0844", "type": "phone" }
+    ],
+    "website": "https://nimh.health.gov.lk/",
+    "language": "Sri Lanka",
+    "hours": "Contact the service to confirm current availability."
+  },
+  {
+    "id": "sumithrayo-colombo",
+    "name": "Sri Lanka Sumithrayo — Founding Branch",
+    "organization": "Sri Lanka Sumithrayo",
+    "category": "Emotional and peer support",
+    "description": "Free emotional support and befriending. The organization says callers may remain anonymous and information shared is confidential. This is a support service, not a substitute for emergency care.",
+    "contacts": [
+      { "label": "Call", "value": "+94 11 269 6666", "type": "phone" },
+      { "label": "Call", "value": "+94 11 269 2909", "type": "phone" },
+      { "label": "Call", "value": "+94 11 268 3555", "type": "phone" }
+    ],
+    "address": "No. 60B, Horton Place, Colombo 07",
+    "website": "https://srilankasumithrayo.lk/",
+    "contactPage": "https://srilankasumithrayo.lk/contact-us/",
+    "language": "Sri Lanka",
+    "hours": "Daily, 9:00 AM–8:00 PM (as listed by the organization)."
   }
 ]
