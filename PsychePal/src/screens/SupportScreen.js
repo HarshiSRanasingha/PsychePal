@@ -16,7 +16,10 @@ async function openContact(contact) {
     }
     await Linking.openURL(url);
   } catch (error) {
-    Alert.alert('Unable to open contact', error.message || 'Please try again.');
+    Alert.alert(
+      'Unable to open contact',
+      error.message || 'Please try again or use the contact details shown in the listing.',
+    );
   }
 }
 
@@ -44,6 +47,9 @@ export default function SupportScreen() {
       <Text style={styles.intro}>
         Find mental health services, emotional support, and contact details in Sri Lanka.
         For a licensed counselor or clinical assessment, contact NIMH or a local health service to ask about referrals.
+      </Text>
+      <Text style={styles.offlineNote}>
+        Directory details are stored on this device. Calling or opening a source website needs a compatible app and may need internet access.
       </Text>
 
       <View style={styles.notice}>
@@ -92,7 +98,7 @@ export default function SupportScreen() {
           {item.address ? <Text style={styles.detail}><Text style={styles.detailLabel}>Address: </Text>{item.address}</Text> : null}
           {item.hours ? <Text style={styles.detail}><Text style={styles.detailLabel}>Hours: </Text>{item.hours}</Text> : null}
           <Text style={styles.contactHeading}>Contact details</Text>
-          {item.contacts.map((contact, index) => (
+          {(item.contacts || []).map((contact, index) => (
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={`${contact.label} ${contact.value}`}
@@ -103,6 +109,21 @@ export default function SupportScreen() {
               <Text style={styles.contactButtonText}>{contact.label}: {contact.value}</Text>
             </Pressable>
           ))}
+          <Text style={[styles.verification, item.verifiedOn ? styles.verified : styles.unverified]}>
+            {item.verifiedOn
+              ? `Details checked against the listed source on ${new Date(`${item.verifiedOn}T00:00:00`).toLocaleDateString()}. Confirm before relying on them.`
+              : 'Details were not verified during this update. Contact the service to confirm current information.'}
+          </Text>
+          {item.sourceUrl ? (
+            <Pressable
+              accessibilityRole="link"
+              accessibilityLabel={`Open source for ${item.name}`}
+              onPress={() => openContact({ type: 'web', value: item.sourceUrl })}
+              style={styles.websiteButton}
+            >
+              <Text style={styles.websiteText}>Check listed source</Text>
+            </Pressable>
+          ) : null}
           {item.website ? (
             <Pressable
               accessibilityRole="link"
@@ -130,6 +151,7 @@ export default function SupportScreen() {
 const styles = StyleSheet.create({
   heading: { fontSize: 23, fontWeight: '800', color: Theme.text, marginBottom: 8 },
   intro: { color: Theme.muted, lineHeight: 21, marginBottom: 14 },
+  offlineNote: { color: Theme.muted, fontSize: 12, lineHeight: 18, marginBottom: 14 },
   notice: { backgroundColor: Theme.lavender, borderRadius: 14, padding: 15, marginBottom: 16 },
   noticeTitle: { color: Theme.primaryDark, fontWeight: '800', fontSize: 16, marginBottom: 6 },
   noticeText: { color: Theme.text, lineHeight: 20 },
@@ -152,6 +174,9 @@ const styles = StyleSheet.create({
   contactHeading: { color: Theme.primaryDark, fontWeight: '700', marginTop: 13, marginBottom: 5 },
   contactButton: { alignSelf: 'flex-start', backgroundColor: Theme.lavender, borderRadius: 9, paddingHorizontal: 11, paddingVertical: 9, marginTop: 6 },
   contactButtonText: { color: Theme.primaryDark, fontWeight: '700' },
+  verification: { lineHeight: 18, fontSize: 12, marginTop: 10 },
+  verified: { color: Theme.success },
+  unverified: { color: Theme.muted },
   websiteButton: { alignSelf: 'flex-start', paddingVertical: 10, paddingHorizontal: 2 },
   websiteText: { color: Theme.primary, fontWeight: '700', textDecorationLine: 'underline' },
   count: { color: Theme.muted, fontSize: 12, textAlign: 'center', marginTop: 4 },

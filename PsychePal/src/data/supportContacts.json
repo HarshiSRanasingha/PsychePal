@@ -9,6 +9,8 @@
       { "label": "Call", "value": "1926", "type": "phone" }
     ],
     "website": "https://nimh.health.gov.lk/",
+    "sourceUrl": "https://nimh.health.gov.lk/",
+    "verifiedOn": null,
     "language": "Sri Lanka",
     "hours": "Contact the service to confirm current availability."
   },
@@ -22,6 +24,8 @@
       { "label": "Telephone", "value": "+94 11 257 8234", "type": "phone" }
     ],
     "website": "https://nimh.health.gov.lk/",
+    "sourceUrl": "https://nimh.health.gov.lk/",
+    "verifiedOn": null,
     "language": "Sri Lanka",
     "hours": "Contact the institute to confirm current hours and services."
   },
@@ -35,6 +39,8 @@
       { "label": "Call", "value": "+94 11 314 0844", "type": "phone" }
     ],
     "website": "https://nimh.health.gov.lk/",
+    "sourceUrl": "https://nimh.health.gov.lk/",
+    "verifiedOn": null,
     "language": "Sri Lanka",
     "hours": "Contact the service to confirm current availability."
   },
@@ -43,7 +49,7 @@
     "name": "Sri Lanka Sumithrayo — Founding Branch",
     "organization": "Sri Lanka Sumithrayo",
     "category": "Emotional and peer support",
-    "description": "Free emotional support and befriending. The organization says callers may remain anonymous and information shared is confidential. This is a support service, not a substitute for emergency care.",
+    "description": "Emotional support and befriending. The organization says callers may remain anonymous and information shared is confidential. This is a support service, not a substitute for emergency care.",
     "contacts": [
       { "label": "Call", "value": "+94 11 269 6666", "type": "phone" },
       { "label": "Call", "value": "+94 11 269 2909", "type": "phone" },
@@ -52,6 +58,8 @@
     "address": "No. 60B, Horton Place, Colombo 07",
     "website": "https://srilankasumithrayo.lk/",
     "contactPage": "https://srilankasumithrayo.lk/contact-us/",
+    "sourceUrl": "https://srilankasumithrayo.lk/contact-us/",
+    "verifiedOn": "2026-11-10",
     "language": "Sri Lanka",
     "hours": "Daily, 9:00 AM–8:00 PM (as listed by the organization)."
   }
