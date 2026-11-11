@@ -1,9 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Switch, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import Screen from '../components/Screen';
 import SectionCard from '../components/SectionCard';
+import { CloudPal } from '../components/CozyArt';
+import { CozyText as Text } from '../components/CozyText';
+import TextInput from '../components/CozyInput';
 import { Theme } from '../styles/theme';
 
 const SETTINGS_KEY = 'profileSettings';
@@ -18,9 +21,11 @@ const APP_DATA_KEYS = [
 
 const DEFAULT_SETTINGS = {
   preferredName: '',
+  avatar: '☁️',
   showDailyMotivation: true,
   showSelfCare: true,
 };
+const AVATARS = ['☁️', '🐻', '🌿', '🌙', '🌼', '🦋'];
 
 function parseSettings(value) {
   if (!value) return DEFAULT_SETTINGS;
@@ -32,6 +37,7 @@ function parseSettings(value) {
     ...DEFAULT_SETTINGS,
     ...parsed,
     preferredName: typeof parsed.preferredName === 'string' ? parsed.preferredName : '',
+    avatar: AVATARS.includes(parsed.avatar) ? parsed.avatar : DEFAULT_SETTINGS.avatar,
     showDailyMotivation: parsed.showDailyMotivation !== false,
     showSelfCare: parsed.showSelfCare !== false,
   };
@@ -99,11 +105,31 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <Screen>
-      <Text style={styles.heading}>Profile & Settings</Text>
-      <Text style={styles.subtitle}>Personalize your space and manage your on-device data.</Text>
+      <View style={styles.profileHero}>
+        <View style={styles.avatar}>
+          {settings.avatar === '☁️' ? <CloudPal size={77} /> : <Text style={styles.avatarEmoji}>{settings.avatar}</Text>}
+        </View>
+        <Text style={styles.heading}>{settings.preferredName ? `A little space for ${settings.preferredName}` : 'Your cozy corner'}</Text>
+        <Text style={styles.subtitle}>Make this little space feel like yours.</Text>
+      </View>
 
       <Text style={styles.sectionHeading}>User profile</Text>
       <View style={styles.card}>
+        <Text style={styles.fieldLabel}>Choose a little companion</Text>
+        <View style={styles.avatarChoices}>
+          {AVATARS.map(avatar => (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`Choose ${avatar} profile picture`}
+              accessibilityState={{ selected: settings.avatar === avatar }}
+              key={avatar}
+              onPress={() => saveSettings({ ...settings, avatar })}
+              style={[styles.avatarChoice, settings.avatar === avatar && styles.selectedAvatar]}
+            >
+              <Text style={styles.avatarChoiceText}>{avatar}</Text>
+            </Pressable>
+          ))}
+        </View>
         <Text style={styles.fieldLabel}>What should PsychePal call you?</Text>
         <TextInput
           accessibilityLabel="Preferred name"
@@ -137,8 +163,8 @@ export default function ProfileScreen({ navigation }) {
             accessibilityLabel="Show daily motivation"
             value={settings.showDailyMotivation}
             onValueChange={value => changePreference('showDailyMotivation', value)}
-            trackColor={{ false: Theme.border, true: Theme.accent }}
-            thumbColor={settings.showDailyMotivation ? Theme.primary : '#F4F3F4'}
+            trackColor={{ false: Theme.border, true: '#A8C7B0' }}
+            thumbColor={settings.showDailyMotivation ? '#648C75' : '#F4F3F4'}
           />
         </View>
         <View style={[styles.preferenceRow, styles.lastPreference]}>
@@ -150,8 +176,8 @@ export default function ProfileScreen({ navigation }) {
             accessibilityLabel="Show daily self-care"
             value={settings.showSelfCare}
             onValueChange={value => changePreference('showSelfCare', value)}
-            trackColor={{ false: Theme.border, true: Theme.accent }}
-            thumbColor={settings.showSelfCare ? Theme.primary : '#F4F3F4'}
+            trackColor={{ false: Theme.border, true: '#A8C7B0' }}
+            thumbColor={settings.showSelfCare ? '#648C75' : '#F4F3F4'}
           />
         </View>
       </View>
@@ -188,10 +214,17 @@ export default function ProfileScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  heading: { fontSize: 23, fontWeight: '800', color: Theme.text, marginBottom: 6 },
-  subtitle: { color: Theme.muted, lineHeight: 21, marginBottom: 10 },
+  profileHero: { alignItems: 'center', backgroundColor: '#E8EDF3', borderRadius: 25, padding: 20, marginBottom: 5 },
+  avatar: { width: 100, height: 100, backgroundColor: '#DDE8E5', borderRadius: 50, alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: 12, borderWidth: 3, borderColor: 'rgba(255,255,255,0.8)' },
+  avatarEmoji: { fontSize: 47 },
+  heading: { fontSize: 21, fontWeight: '800', color: Theme.text, marginBottom: 5, textAlign: 'center' },
+  subtitle: { color: Theme.muted, lineHeight: 21, marginBottom: 3, textAlign: 'center' },
   sectionHeading: { color: Theme.text, fontSize: 17, fontWeight: '800', marginTop: 16, marginBottom: 10 },
-  card: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 14, padding: 15, marginBottom: 12 },
+  card: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 20, padding: 15, marginBottom: 12, elevation: 2, shadowColor: '#788078', shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 3 } },
+  avatarChoices: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 17 },
+  avatarChoice: { width: 43, height: 43, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F1F0EC', borderWidth: 1, borderColor: 'transparent' },
+  selectedAvatar: { backgroundColor: '#E2EFE4', borderColor: '#70917C' },
+  avatarChoiceText: { fontSize: 22 },
   fieldLabel: { color: Theme.primaryDark, fontWeight: '700', marginBottom: 6 },
   input: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 10, padding: 11, color: Theme.text },
   saveButton: { backgroundColor: Theme.primary, borderRadius: 10, padding: 12, marginTop: 10, alignItems: 'center' },

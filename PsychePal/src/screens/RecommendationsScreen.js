@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Linking, Pressable, StyleSheet, View } from 'react-native';
 import Screen from '../components/Screen';
+import CozyHero from '../components/CozyHero';
 import SectionCard from '../components/SectionCard';
+import { CozyText as Text } from '../components/CozyText';
 import { Theme } from '../styles/theme';
 
 const languages = ['Sinhala', 'Tamil', 'English', 'Hindi', 'Korean'];
@@ -71,14 +73,16 @@ export default function RecommendationsScreen() {
   }
 
   function openLink(url) {
-    Linking.openURL(url).catch(() => undefined);
+    Linking.openURL(url).catch(error => {
+      Alert.alert('Could not open recommendation', error.message || 'Please try again.');
+    });
   }
 
   function showResults() {
     if (selectedType === 'Books') {
       const books = bookLists[selection]?.[language] || [];
       return books.map(title => (
-        <SectionCard key={title} title={title} description={`${selection} • ${language}`} />
+        <SectionCard key={title} title={title} description={`${selection} • ${language} · Tap to search`} onPress={() => openLink(`https://www.google.com/search?q=${encodeURIComponent(`${title} ${language} book`)}`)} />
       ));
     }
     const search = selectedType === 'Music'
@@ -101,8 +105,13 @@ export default function RecommendationsScreen() {
 
   return (
     <Screen>
-      <Text style={styles.heading}>Recommendations</Text>
-      <Text style={styles.subtitle}>Choose a type, then narrow the selection to what fits your mood.</Text>
+      <CozyHero
+        eyebrow="A LITTLE INSPIRATION"
+        title="Find something you love"
+        description="A calming song, a story, or something new to explore."
+        art="🦋"
+        colors={['#F7E5D9', '#E9E6F3']}
+      />
       <View style={styles.types}>
         {media.map(([type, description]) => (
           <Pressable
@@ -148,17 +157,15 @@ export default function RecommendationsScreen() {
 }
 
 const styles = StyleSheet.create({
-  heading: { fontSize: 23, fontWeight: '800', color: Theme.text, marginBottom: 6 },
-  subtitle: { color: Theme.muted, lineHeight: 20, marginBottom: 16 },
   types: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 18 },
-  typeCard: { width: '48%', minHeight: 96, backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 16, padding: 12 },
+  typeCard: { width: '48%', minHeight: 96, backgroundColor: 'rgba(255,255,255,0.78)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 20, padding: 14 },
   activeType: { backgroundColor: Theme.primary, borderColor: Theme.primary },
   typeTitle: { color: Theme.primaryDark, fontSize: 17, fontWeight: '800', marginBottom: 5 },
   typeDescription: { color: Theme.muted, fontSize: 12, lineHeight: 17 },
   activeTypeText: { color: '#FFFFFF' },
   label: { color: Theme.text, fontWeight: '700', marginBottom: 8 },
   categories: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 14 },
-  category: { borderWidth: 1, borderColor: Theme.border, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 7, marginRight: 6, marginBottom: 6, backgroundColor: Theme.surface },
+  category: { borderWidth: 1, borderColor: Theme.border, borderRadius: 20, paddingHorizontal: 13, paddingVertical: 9, marginRight: 6, marginBottom: 6, backgroundColor: 'rgba(255,255,255,0.76)' },
   activeCategory: { backgroundColor: Theme.primary, borderColor: Theme.primary },
   categoryText: { color: Theme.text, fontSize: 12 },
   activeCategoryText: { color: '#FFFFFF', fontWeight: '700' },

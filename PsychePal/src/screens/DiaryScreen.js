@@ -1,9 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import Screen from '../components/Screen';
+import CozyHero from '../components/CozyHero';
 import PrimaryButton from '../components/PrimaryButton';
+import { CozyText as Text } from '../components/CozyText';
+import TextInput from '../components/CozyInput';
 import { Theme } from '../styles/theme';
 
 const ENTRIES_KEY = 'diaryEntries';
@@ -189,8 +192,13 @@ export default function DiaryScreen() {
 
   return (
     <Screen>
-      <Text style={styles.heading}>Personal Diary & Growth</Text>
-      <Text style={styles.intro}>A private space to reflect, notice what matters, and celebrate your progress.</Text>
+      <CozyHero
+        eyebrow="A SPACE JUST FOR YOU"
+        title="Your personal journal"
+        description="Reflect, notice what matters, and celebrate every small step."
+        art="📔"
+        colors={['#F9EADF', '#F3E7F1']}
+      />
 
       <Text style={styles.subheading}>{editingId ? 'Edit diary entry' : 'Create a diary entry'}</Text>
       <TextInput value={title} onChangeText={setTitle} placeholder="Entry title" style={styles.input} />
@@ -302,14 +310,12 @@ export default function DiaryScreen() {
 }
 
 const styles = StyleSheet.create({
-  heading: { fontSize: 23, fontWeight: '800', color: Theme.text, marginBottom: 6 },
-  intro: { color: Theme.muted, lineHeight: 21, marginBottom: 10 },
-  subheading: { fontSize: 17, fontWeight: '700', color: Theme.text, marginTop: 22, marginBottom: 10 },
-  helper: { color: Theme.muted, marginBottom: 9 },
-  input: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 12, padding: 12, marginBottom: 10, color: Theme.text },
+  subheading: { fontSize: 18, fontWeight: '800', color: Theme.text, marginTop: 22, marginBottom: 10 },
+  helper: { color: Theme.muted, marginBottom: 9, lineHeight: 20 },
+  input: { backgroundColor: 'rgba(255,255,255,0.82)', borderWidth: 1, borderColor: Theme.border, borderRadius: 18, padding: 14, marginBottom: 10, color: Theme.text },
   multiline: { minHeight: 110, textAlignVertical: 'top' },
   gratitudeInput: { minHeight: 80 },
-  card: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 12, padding: 14, marginBottom: 10 },
+  card: { backgroundColor: 'rgba(255,255,255,0.8)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 20, padding: 16, marginBottom: 12 },
   entryTitle: { color: Theme.text, fontSize: 16, fontWeight: '700', marginBottom: 4 },
   goalTitle: { color: Theme.primaryDark, fontSize: 16, fontWeight: '700', marginBottom: 5 },
   cardDate: { color: Theme.muted, fontSize: 12, marginBottom: 8 },

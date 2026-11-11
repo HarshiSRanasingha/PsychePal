@@ -1,11 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Animated, StyleSheet, Text, View } from 'react-native';
+import { Alert, Animated, Platform, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useFonts } from 'expo-font';
+import { Nunito_400Regular } from '@expo-google-fonts/nunito/400Regular';
+import { Nunito_600SemiBold } from '@expo-google-fonts/nunito/600SemiBold';
+import { Nunito_700Bold } from '@expo-google-fonts/nunito/700Bold';
+import { Nunito_800ExtraBold } from '@expo-google-fonts/nunito/800ExtraBold';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import PrimaryButton from './src/components/PrimaryButton';
+import CozyText from './src/components/CozyText';
 import PastelBackground from './src/components/PastelBackground';
 import { Theme } from './src/styles/theme';
 import HomeScreen from './src/screens/HomeScreen';
@@ -24,18 +30,23 @@ import GamesScreen from './src/screens/GamesScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const ONBOARDING_KEY = 'onboardingComplete';
+const tabIcons = { Home: '⌂', Mood: '☼', Chat: '☁', Resources: '✿', Profile: '♡' };
 
 function Tabs() {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerStyle: { backgroundColor: Theme.surface },
         headerTintColor: Theme.primary,
         tabBarActiveTintColor: Theme.primary,
         tabBarInactiveTintColor: Theme.muted,
-        tabBarStyle: { backgroundColor: Theme.surface, borderTopColor: Theme.border },
-        headerTitleStyle: { fontWeight: '700' },
-      }}
+        tabBarStyle: { backgroundColor: Theme.surface, borderTopColor: Theme.border, height: 64, paddingTop: 7, paddingBottom: 8 },
+        tabBarLabelStyle: { fontSize: 10, fontWeight: '700', fontFamily: 'Nunito_700Bold' },
+        headerTitleStyle: { fontWeight: '800', fontFamily: 'Nunito_800ExtraBold', color: Theme.text },
+        tabBarIcon: ({ color, focused }) => (
+          <Text style={{ color, fontSize: focused ? 20 : 19, lineHeight: 22 }}>{tabIcons[route.name]}</Text>
+        ),
+      })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Mood" component={MoodScreen} />
@@ -53,7 +64,7 @@ function SplashScreen() {
     Animated.timing(fade, {
       toValue: 1,
       duration: 700,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [fade]);
 
@@ -64,8 +75,8 @@ function SplashScreen() {
           <View style={styles.logo}>
             <View style={styles.logoInner} />
           </View>
-          <Text style={styles.appName}>PsychePal</Text>
-          <Text style={styles.tagline}>A little space for your mind</Text>
+          <CozyText style={styles.appName}>PsychePal</CozyText>
+          <CozyText style={styles.tagline}>A little space for your mind</CozyText>
         </Animated.View>
       </View>
     </PastelBackground>
@@ -80,10 +91,10 @@ function WelcomeScreen({ onStart }) {
           <View style={[styles.logo, styles.welcomeLogo]}>
             <View style={styles.logoInner} />
           </View>
-          <Text style={styles.welcomeTitle}>Welcome to PsychePal</Text>
-          <Text style={styles.welcomeDescription}>
+          <CozyText style={styles.welcomeTitle}>Welcome to PsychePal</CozyText>
+          <CozyText style={styles.welcomeDescription}>
             A private, offline-first space to check in with your mood, reflect on your thoughts, and find support for everyday well-being.
-          </Text>
+          </CozyText>
         </View>
         <View style={styles.startButton}>
           <PrimaryButton title="Get Started" onPress={onStart} />
@@ -96,8 +107,15 @@ function WelcomeScreen({ onStart }) {
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [fontsLoaded, fontError] = useFonts({
+    Nunito_400Regular,
+    Nunito_600SemiBold,
+    Nunito_700Bold,
+    Nunito_800ExtraBold,
+  });
 
   useEffect(() => {
+    if (!fontsLoaded && !fontError) return undefined;
     let active = true;
     const timer = setTimeout(async () => {
       try {
@@ -116,7 +134,13 @@ export default function App() {
       active = false;
       clearTimeout(timer);
     };
-  }, []);
+  }, [fontsLoaded, fontError]);
+
+  useEffect(() => {
+    if (fontError) {
+      Alert.alert('Could not load the display font', fontError.message || 'PsychePal will use your device font instead.');
+    }
+  }, [fontError]);
 
   async function completeWelcome() {
     try {
@@ -127,7 +151,7 @@ export default function App() {
     setShowWelcome(false);
   }
 
-  if (showSplash) {
+  if (showSplash || (!fontsLoaded && !fontError)) {
     return (
       <>
         <StatusBar style="dark" />
@@ -150,7 +174,7 @@ export default function App() {
       <StatusBar style="dark" />
       <Stack.Navigator
         screenOptions={{
-          headerStyle: { backgroundColor: Theme.surface },
+          headerStyle: { backgroundColor: Theme.background },
           headerTintColor: Theme.primary,
           contentStyle: { backgroundColor: Theme.background },
         }}

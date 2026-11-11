@@ -1,6 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { Alert, Linking, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Linking, Pressable, StyleSheet, View } from 'react-native';
 import Screen from '../components/Screen';
+import CozyHero from '../components/CozyHero';
+import { CozyText as Text } from '../components/CozyText';
+import TextInput from '../components/CozyInput';
 import support from '../data/supportContacts.json';
 import { Theme } from '../styles/theme';
 
@@ -43,7 +46,13 @@ export default function SupportScreen() {
 
   return (
     <Screen>
-      <Text style={styles.heading}>Counselor & Support Directory</Text>
+      <CozyHero
+        eyebrow="YOU DON'T HAVE TO DO IT ALONE"
+        title="Find support"
+        description="Explore local mental-health services and ways to get in touch."
+        art="🤝"
+        colors={['#E6F0E7', '#E9E7F4']}
+      />
       <Text style={styles.intro}>
         Find mental health services, emotional support, and contact details in Sri Lanka.
         For a licensed counselor or clinical assessment, contact NIMH or a local health service to ask about referrals.
@@ -149,22 +158,21 @@ export default function SupportScreen() {
 }
 
 const styles = StyleSheet.create({
-  heading: { fontSize: 23, fontWeight: '800', color: Theme.text, marginBottom: 8 },
   intro: { color: Theme.muted, lineHeight: 21, marginBottom: 14 },
   offlineNote: { color: Theme.muted, fontSize: 12, lineHeight: 18, marginBottom: 14 },
-  notice: { backgroundColor: Theme.lavender, borderRadius: 14, padding: 15, marginBottom: 16 },
+  notice: { backgroundColor: '#F3E9F0', borderRadius: 20, padding: 17, marginBottom: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)' },
   noticeTitle: { color: Theme.primaryDark, fontWeight: '800', fontSize: 16, marginBottom: 6 },
   noticeText: { color: Theme.text, lineHeight: 20 },
-  urgentButton: { backgroundColor: Theme.primary, borderRadius: 10, paddingVertical: 11, paddingHorizontal: 14, alignSelf: 'flex-start', marginTop: 10 },
+  urgentButton: { backgroundColor: Theme.primary, borderRadius: 18, paddingVertical: 12, paddingHorizontal: 17, alignSelf: 'flex-start', marginTop: 12 },
   urgentButtonText: { color: '#FFFFFF', fontWeight: '700' },
-  input: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 12, padding: 12, marginBottom: 14, color: Theme.text },
+  input: { backgroundColor: 'rgba(255,255,255,0.84)', borderWidth: 1, borderColor: Theme.border, borderRadius: 18, padding: 14, marginBottom: 16, color: Theme.text },
   filterLabel: { color: Theme.text, fontWeight: '700', marginBottom: 8 },
   filters: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10 },
   filter: { minHeight: 36, justifyContent: 'center', paddingHorizontal: 11, borderWidth: 1, borderColor: Theme.border, borderRadius: 18, marginRight: 7, marginBottom: 7, backgroundColor: Theme.surface },
   activeFilter: { backgroundColor: Theme.primary, borderColor: Theme.primary },
   filterText: { color: Theme.text, fontSize: 13 },
   activeFilterText: { color: '#FFFFFF', fontWeight: '700' },
-  card: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 14, padding: 15, marginBottom: 12 },
+  card: { backgroundColor: 'rgba(255,255,255,0.84)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 21, padding: 17, marginBottom: 12 },
   category: { alignSelf: 'flex-start', color: Theme.primaryDark, backgroundColor: Theme.lavender, borderRadius: 12, paddingHorizontal: 9, paddingVertical: 5, fontSize: 12, fontWeight: '700', overflow: 'hidden', marginBottom: 9 },
   serviceName: { color: Theme.text, fontSize: 17, fontWeight: '800' },
   organization: { color: Theme.primary, fontWeight: '600', marginTop: 3, marginBottom: 9 },

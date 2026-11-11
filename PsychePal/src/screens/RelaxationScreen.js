@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, Platform, Pressable, StyleSheet, View } from 'react-native';
 import Screen from '../components/Screen';
+import CozyHero from '../components/CozyHero';
 import SectionCard from '../components/SectionCard';
+import { CozyText as Text } from '../components/CozyText';
 import { Theme } from '../styles/theme';
 
 const exercises = [
@@ -25,6 +27,7 @@ export default function RelaxationScreen() {
   const [phaseIndex, setPhaseIndex] = useState(0);
   const [phaseSeconds, setPhaseSeconds] = useState(4);
   const [guideRunning, setGuideRunning] = useState(false);
+  const breathingPulse = useRef(new Animated.Value(1)).current;
   const selectedExercise = exercises.find(([, , id]) => id === selected);
   const breathingPattern = breathingPatterns[selected];
 
@@ -55,6 +58,24 @@ export default function RelaxationScreen() {
     }, 1000);
     return () => clearInterval(timer);
   }, [guideRunning, breathingPattern, phaseIndex]);
+
+  useEffect(() => {
+    if (!guideRunning || !breathingPattern) return undefined;
+    const pulse = Animated.loop(Animated.sequence(breathingPattern.map(([phase, seconds]) => {
+      if (phase === 'Inhale') {
+        return Animated.timing(breathingPulse, { toValue: 1.22, duration: seconds * 1000, useNativeDriver: Platform.OS !== 'web' });
+      }
+      if (phase === 'Exhale') {
+        return Animated.timing(breathingPulse, { toValue: 0.88, duration: seconds * 1000, useNativeDriver: Platform.OS !== 'web' });
+      }
+      if (phase === 'Rest') {
+        return Animated.timing(breathingPulse, { toValue: 1, duration: seconds * 1000, useNativeDriver: Platform.OS !== 'web' });
+      }
+      return Animated.delay(seconds * 1000);
+    })));
+    pulse.start();
+    return () => pulse.stop();
+  }, [guideRunning, breathingPattern, breathingPulse]);
 
   function startBreathingGuide() {
     if (!breathingPattern) return;
@@ -90,16 +111,27 @@ export default function RelaxationScreen() {
 
   return (
     <Screen>
-      <Text style={styles.heading}>Relaxation Toolkit</Text>
-      <Text style={styles.subtitle}>Choose an exercise and follow the guidance at a comfortable pace.</Text>
+      <CozyHero
+        eyebrow="A SOFTER MOMENT"
+        title="Relaxation toolkit"
+        description="Take a breath, settle in, and go at your own pace."
+        art="☁️"
+        colors={['#E6F0EA', '#E6EAF5']}
+      />
       {exercises.map(([title, description, id]) => (
         <SectionCard key={id} title={title} description={selected === id ? description : 'Tap to view instructions.'} onPress={() => selectExercise(id)} />
       ))}
       {breathingPattern && selectedExercise ? (
         <View style={styles.guide}>
-          <Text style={styles.guidePhase}>{guideRunning ? breathingPattern[phaseIndex][0] : 'Ready'}</Text>
-          <Text style={styles.guideCount}>{guideRunning ? phaseSeconds : 'Tap start when comfortable'}</Text>
-          <Pressable style={styles.timerButton} onPress={guideRunning ? () => setGuideRunning(false) : startBreathingGuide}>
+          <View style={styles.breathingStage}>
+            <Animated.View style={[styles.breathingOuter, { transform: [{ scale: breathingPulse }] }]}>
+              <View style={styles.breathingInner}>
+                <Text style={styles.guidePhase}>{guideRunning ? breathingPattern[phaseIndex][0] : 'Breathe'}</Text>
+                <Text style={styles.guideCount}>{guideRunning ? phaseSeconds : 'at your own pace'}</Text>
+              </View>
+            </Animated.View>
+          </View>
+          <Pressable accessibilityRole="button" style={styles.timerButton} onPress={guideRunning ? () => setGuideRunning(false) : startBreathingGuide}>
             <Text style={styles.timerButtonText}>{guideRunning ? 'Pause Guide' : 'Start Breathing Guide'}</Text>
           </Pressable>
         </View>
@@ -123,14 +155,14 @@ export default function RelaxationScreen() {
       <Text style={styles.timerHeading}>Relaxation Timer</Text>
       <View style={styles.minuteChoices}>
         {[1, 5, 10].map(minutes => (
-          <Pressable key={minutes} style={[styles.minuteButton, timerMinutes === minutes && styles.minuteButtonActive]} onPress={() => setMinutes(minutes)}>
+          <Pressable key={minutes} accessibilityRole="button" accessibilityState={{ selected: timerMinutes === minutes }} style={[styles.minuteButton, timerMinutes === minutes && styles.minuteButtonActive]} onPress={() => setMinutes(minutes)}>
             <Text style={[styles.minuteText, timerMinutes === minutes && styles.minuteTextActive]}>{minutes} min</Text>
           </Pressable>
         ))}
       </View>
       <Text style={styles.timeDisplay}>{Math.floor(timerSeconds / 60)}:{String(timerSeconds % 60).padStart(2, '0')}</Text>
       {timerCompleted ? <Text style={styles.timerComplete}>Relaxation timer complete. Take a moment to notice how you feel.</Text> : null}
-      <Pressable style={styles.timerButton} onPress={toggleTimer}>
+      <Pressable accessibilityRole="button" style={styles.timerButton} onPress={toggleTimer}>
         <Text style={styles.timerButtonText}>{timerRunning ? 'Pause Timer' : timerSeconds === 0 ? 'Restart Timer' : 'Start Timer'}</Text>
       </Pressable>
       <Text style={styles.note}>These are general self-care exercises. Do not force your breathing; stop if uncomfortable.</Text>
@@ -138,21 +170,22 @@ export default function RelaxationScreen() {
   );
 }
 const styles = StyleSheet.create({
-  heading: { fontSize: 23, fontWeight: '800', color: Theme.text, marginBottom: 6 },
-  subtitle: { color: Theme.muted, lineHeight: 20, marginBottom: 16 },
-  guide: { alignItems: 'center', backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 16, padding: 18, marginTop: 10 },
-  guidePhase: { color: Theme.primaryDark, fontSize: 24, fontWeight: '800' },
-  guideCount: { color: Theme.muted, marginVertical: 8 },
-  steps: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 16, padding: 16, marginTop: 10 },
+  guide: { alignItems: 'center', backgroundColor: '#E8EDF3', borderWidth: 1, borderColor: 'rgba(255,255,255,0.8)', borderRadius: 25, padding: 18, marginTop: 10, overflow: 'hidden' },
+  breathingStage: { width: 184, height: 184, alignItems: 'center', justifyContent: 'center', marginVertical: 10 },
+  breathingOuter: { width: 148, height: 148, borderRadius: 74, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(191,216,198,0.58)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.84)' },
+  breathingInner: { width: 110, height: 110, borderRadius: 55, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F6E8D9', borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)' },
+  guidePhase: { color: Theme.primaryDark, fontSize: 20, fontWeight: '800' },
+  guideCount: { color: Theme.muted, marginTop: 4, fontSize: 11 },
+  steps: { backgroundColor: 'rgba(255,255,255,0.82)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 21, padding: 16, marginTop: 10 },
   step: { color: Theme.text, lineHeight: 24 },
   timerHeading: { fontSize: 18, fontWeight: '800', color: Theme.text, marginTop: 24, marginBottom: 10 },
   minuteChoices: { flexDirection: 'row', gap: 8 },
-  minuteButton: { flex: 1, borderWidth: 1, borderColor: Theme.border, borderRadius: 10, paddingVertical: 10, alignItems: 'center', backgroundColor: Theme.surface },
+  minuteButton: { flex: 1, borderWidth: 1, borderColor: Theme.border, borderRadius: 18, paddingVertical: 12, alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.8)' },
   minuteButtonActive: { backgroundColor: Theme.primary, borderColor: Theme.primary },
   minuteText: { color: Theme.text, fontWeight: '700' },
   minuteTextActive: { color: '#FFFFFF' },
   timeDisplay: { textAlign: 'center', color: Theme.primaryDark, fontSize: 42, fontWeight: '800', marginVertical: 12 },
-  timerButton: { backgroundColor: Theme.primary, borderRadius: 12, padding: 14, alignItems: 'center', marginVertical: 6 },
+  timerButton: { backgroundColor: Theme.primary, borderRadius: 20, padding: 15, alignItems: 'center', marginVertical: 6 },
   timerButtonText: { color: '#FFFFFF', fontWeight: '700' },
   timerComplete: { color: Theme.success, fontWeight: '700', textAlign: 'center', marginBottom: 8 },
   note: { color: Theme.muted, lineHeight: 19, marginTop: 8, fontSize: 12 },

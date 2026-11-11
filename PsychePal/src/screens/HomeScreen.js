@@ -1,9 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Alert, Text, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Screen from '../components/Screen';
 import SectionCard from '../components/SectionCard';
+import { SoftLandscape } from '../components/CozyArt';
+import { CozyText as Text } from '../components/CozyText';
 import quotes from '../data/dailyQuotes.json';
 import { Theme } from '../styles/theme';
 
@@ -82,46 +84,83 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <Screen>
-      <Text style={styles.hello}>{profileSettings.preferredName ? `Hello, ${profileSettings.preferredName}` : 'Hello'}</Text>
-      <Text style={styles.heading}>Welcome to PsychePal</Text>
-      <Text style={styles.subtitle}>A little space to understand yourself, care for yourself, and grow.</Text>
+      <Text style={styles.eyebrow}>A LITTLE SPACE FOR YOU</Text>
+      <Text style={styles.heading}>{profileSettings.preferredName ? `Hello, ${profileSettings.preferredName} ✨` : 'Hello, friend ✨'}</Text>
+      <Text style={styles.subtitle}>Take a breath. You can start wherever you are.</Text>
 
       {profileSettings.showDailyMotivation ? (
-        <View style={styles.card}>
-          <Text style={styles.label}>Daily motivation</Text>
-          <Text style={styles.quote}>"{quote.text}"</Text>
+        <View style={styles.heroCard}>
+          <Text style={styles.heroEyebrow}>A THOUGHT FOR TODAY</Text>
+          <Text style={styles.quote}>“{quote.text}”</Text>
+          <Text style={styles.quoteSignoff}>A gentle reminder for you</Text>
+          <SoftLandscape style={styles.landscape} />
         </View>
       ) : null}
 
-      <View style={[styles.card, styles.moodCard]}>
-        <Text style={styles.label}>Today's mood</Text>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => navigation.navigate('Mood')}
+        style={({ pressed }) => [styles.moodCard, pressed && styles.pressed]}
+      >
+        <View style={styles.moodCopy}>
+          <Text style={styles.cardEyebrow}>CHECK IN WITH YOURSELF</Text>
+          <Text style={styles.moodTitle}>How are you feeling?</Text>
+          <Text style={styles.moodDescription}>
+            {todayMood ? `Today you felt ${todayMood.mood.toLowerCase()}. Check in again anytime.` : 'There’s no right answer. Just notice what’s here.'}
+          </Text>
+          <Text style={styles.moodLink}> {todayMood ? 'Check in again  ›' : 'Take a gentle check-in  ›'}</Text>
+        </View>
+        <View style={styles.moodSun}><Text style={styles.moodSunText}>{todayMood ? '🌷' : '☁️'}</Text></View>
         {todayMood ? (
-          <Text style={styles.summaryText}>{todayMood.mood} - intensity {todayMood.intensity}/10</Text>
-        ) : (
-          <Text style={styles.summaryText}>No check-in yet today.</Text>
-        )}
-        <Text style={styles.linkText} onPress={() => navigation.navigate('Mood')}>Open mood check-in</Text>
+          <Text style={styles.moodSummary}>{todayMood.mood} · intensity {todayMood.intensity}/10</Text>
+        ) : null}
+      </Pressable>
+
+      <Text style={styles.sectionHeading}>A little care, right now</Text>
+      <View style={styles.actionRow}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => navigation.navigate('Relaxation Toolkit')}
+          style={({ pressed }) => [styles.actionCard, styles.breathingCard, pressed && styles.pressed]}
+        >
+          <Text style={styles.actionIcon}>☁︎</Text>
+          <Text style={styles.actionTitle}>Take a breath</Text>
+          <Text style={styles.actionDescription}>A small pause for you</Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => navigation.navigate('Personal Diary')}
+          style={({ pressed }) => [styles.actionCard, styles.diaryCard, pressed && styles.pressed]}
+        >
+          <Text style={styles.actionIcon}>✎</Text>
+          <Text style={styles.actionTitle}>Write it out</Text>
+          <Text style={styles.actionDescription}>A page just for you</Text>
+        </Pressable>
       </View>
+
       {suggestedActivities.length ? (
-        <View style={styles.card}>
-          <Text style={styles.label}>Suggested for this mood</Text>
+        <View style={styles.activityCard}>
+          <Text style={styles.cardEyebrow}>A FEW IDEAS FOR YOU</Text>
           {suggestedActivities.map(([screen, description]) => (
-            <View key={`${screen}-${description}`} style={styles.activity}>
-              <Text style={styles.activityTitle} onPress={() => navigation.navigate(screen)}>{screen}</Text>
+            <Pressable key={`${screen}-${description}`} onPress={() => navigation.navigate(screen)} style={styles.activity}>
+              <Text style={styles.activityTitle}>{screen} <Text style={styles.activityArrow}>›</Text></Text>
               <Text style={styles.activityDescription}>{description}</Text>
-            </View>
+            </Pressable>
           ))}
         </View>
       ) : null}
 
       {profileSettings.showSelfCare ? (
-        <View style={styles.card}>
-          <Text style={styles.label}>Daily self-care</Text>
-          <Text style={styles.suggestion}>{selfCare}</Text>
+        <View style={styles.selfCareCard}>
+          <Text style={styles.selfCareIcon}>✿</Text>
+          <View style={styles.selfCareCopy}>
+            <Text style={styles.cardEyebrow}>A LITTLE SELF-CARE</Text>
+            <Text style={styles.suggestion}>{selfCare}</Text>
+          </View>
         </View>
       ) : null}
 
-      <Text style={styles.sectionHeading}>Quick access</Text>
+      <Text style={styles.sectionHeading}>Explore your space</Text>
       {items.map(([title, description]) => (
         <SectionCard key={title} title={title} description={description} onPress={() => navigation.navigate(title)} />
       ))}
@@ -129,18 +168,39 @@ export default function HomeScreen({ navigation }) {
   );
 }
 const styles = StyleSheet.create({
-  hello: { color: Theme.primary, fontSize: 16, fontWeight: '700', marginTop: 8 },
-  heading: { color: Theme.text, fontSize: 25, fontWeight: '800', marginTop: 4 },
-  subtitle: { color: Theme.muted, lineHeight: 21, marginTop: 8, marginBottom: 18 },
-  card: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 14, padding: 16, marginBottom: 12 },
-  moodCard: { backgroundColor: Theme.lavender },
-  label: { color: Theme.primaryDark, fontWeight: '700', marginBottom: 8 },
-  quote: { color: Theme.text, fontSize: 17, lineHeight: 24, fontStyle: 'italic' },
-  summaryText: { color: Theme.text, fontSize: 17, fontWeight: '700' },
-  linkText: { color: Theme.primary, fontWeight: '700', marginTop: 10 },
-  suggestion: { color: Theme.text, lineHeight: 22 },
-  sectionHeading: { color: Theme.text, fontSize: 18, fontWeight: '800', marginTop: 10, marginBottom: 12 },
-  activity: { borderTopWidth: 1, borderTopColor: Theme.border, paddingVertical: 10 },
+  eyebrow: { color: Theme.primary, fontSize: 10, fontWeight: '800', letterSpacing: 1.8, marginTop: 6 },
+  heading: { color: Theme.text, fontSize: 27, fontWeight: '800', marginTop: 8 },
+  subtitle: { color: Theme.muted, lineHeight: 21, marginTop: 6, marginBottom: 18 },
+  heroCard: { minHeight: 238, overflow: 'hidden', backgroundColor: '#F6E8D9', borderRadius: 28, padding: 21, marginBottom: 17, borderWidth: 1, borderColor: 'rgba(255,255,255,0.85)', elevation: 3, shadowColor: '#A88F78', shadowOpacity: 0.1, shadowRadius: 16, shadowOffset: { width: 0, height: 7 } },
+  heroEyebrow: { color: '#806D5B', fontSize: 10, fontWeight: '800', letterSpacing: 1.2, marginBottom: 10 },
+  quote: { color: '#4C5145', fontSize: 19, lineHeight: 26, fontWeight: '700', maxWidth: '90%' },
+  quoteSignoff: { color: '#806D5B', fontSize: 12, marginTop: 8 },
+  landscape: { height: 110 },
+  moodCard: { minHeight: 158, position: 'relative', overflow: 'hidden', backgroundColor: '#E4EFE7', borderRadius: 25, padding: 19, marginBottom: 9, borderWidth: 1, borderColor: 'rgba(255,255,255,0.85)', elevation: 2, shadowColor: '#78947F', shadowOpacity: 0.1, shadowRadius: 14, shadowOffset: { width: 0, height: 5 } },
+  moodCopy: { maxWidth: '78%', zIndex: 1 },
+  cardEyebrow: { color: Theme.primary, fontSize: 9, fontWeight: '800', letterSpacing: 1.3, marginBottom: 8 },
+  moodTitle: { color: Theme.text, fontSize: 20, lineHeight: 25, fontWeight: '800' },
+  moodDescription: { color: '#62746A', lineHeight: 19, fontSize: 12, marginTop: 5 },
+  moodLink: { color: Theme.primaryDark, fontWeight: '800', fontSize: 12, marginTop: 10 },
+  moodSun: { width: 83, height: 83, position: 'absolute', right: -9, top: 21, alignItems: 'center', justifyContent: 'center', borderRadius: 42, backgroundColor: '#F6E6BC' },
+  moodSunText: { fontSize: 33 },
+  moodSummary: { color: Theme.primaryDark, fontWeight: '700', fontSize: 12, marginTop: 10 },
+  pressed: { opacity: 0.85, transform: [{ scale: 0.985 }] },
+  sectionHeading: { color: Theme.text, fontSize: 18, fontWeight: '800', marginTop: 18, marginBottom: 11 },
+  actionRow: { flexDirection: 'row', gap: 11 },
+  actionCard: { flex: 1, minHeight: 132, justifyContent: 'center', borderRadius: 22, padding: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.85)', elevation: 2, shadowOpacity: 0.08, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } },
+  breathingCard: { backgroundColor: '#E7EAF4', shadowColor: '#8588A5' },
+  diaryCard: { backgroundColor: '#F7E8E2', shadowColor: '#AE867E' },
+  actionIcon: { color: Theme.primaryDark, fontSize: 24, marginBottom: 10 },
+  actionTitle: { color: Theme.text, fontWeight: '800', fontSize: 15 },
+  actionDescription: { color: Theme.muted, fontSize: 11, marginTop: 5, lineHeight: 16 },
+  activityCard: { padding: 17, backgroundColor: '#F0EAF5', borderRadius: 22, marginTop: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.8)' },
+  activity: { borderTopWidth: 1, borderTopColor: 'rgba(85,101,109,0.12)', paddingVertical: 11 },
   activityTitle: { color: Theme.primaryDark, fontWeight: '800', marginBottom: 3 },
-  activityDescription: { color: Theme.muted, fontSize: 13 },
+  activityArrow: { color: Theme.primary, fontSize: 20 },
+  activityDescription: { color: Theme.muted, fontSize: 12 },
+  selfCareCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F7EEDA', padding: 16, borderRadius: 21, marginTop: 17 },
+  selfCareIcon: { fontSize: 27, color: '#AF8A55', marginRight: 13 },
+  selfCareCopy: { flex: 1 },
+  suggestion: { color: Theme.text, lineHeight: 20, fontSize: 13 },
 });

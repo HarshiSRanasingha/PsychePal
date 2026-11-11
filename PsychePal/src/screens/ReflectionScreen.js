@@ -1,9 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import Screen from '../components/Screen';
+import CozyHero from '../components/CozyHero';
 import PrimaryButton from '../components/PrimaryButton';
+import { CozyText as Text } from '../components/CozyText';
+import TextInput from '../components/CozyInput';
 import { Theme } from '../styles/theme';
 
 const reflectionSections = [
@@ -58,8 +61,14 @@ export default function ReflectionScreen() {
   const [notes, setNotes] = useState([]);
 
   const loadNotes = useCallback(async () => {
-    const saved = await AsyncStorage.getItem('reflectionNotes');
-    setNotes(saved ? JSON.parse(saved) : []);
+    try {
+      const saved = await AsyncStorage.getItem('reflectionNotes');
+      const loadedNotes = saved ? JSON.parse(saved) : [];
+      if (!Array.isArray(loadedNotes)) throw new Error('Reflection notes data is not a list.');
+      setNotes(loadedNotes);
+    } catch (error) {
+      Alert.alert('Could not load reflection notes', error.message || 'Please try again.');
+    }
   }, []);
 
   useFocusEffect(useCallback(() => { loadNotes(); }, [loadNotes]));
@@ -81,16 +90,24 @@ export default function ReflectionScreen() {
       date: new Date().toISOString(),
     };
     const updated = [entry, ...notes];
-    await AsyncStorage.setItem('reflectionNotes', JSON.stringify(updated));
-    setNotes(updated);
-    clearReflection();
-    Alert.alert('Reflection saved', 'Your personal reflection note has been saved on this device.');
+    try {
+      await AsyncStorage.setItem('reflectionNotes', JSON.stringify(updated));
+      setNotes(updated);
+      clearReflection();
+      Alert.alert('Reflection saved', 'Your personal reflection note has been saved on this device.');
+    } catch (error) {
+      Alert.alert('Could not save reflection', error.message || 'Please try again.');
+    }
   }
 
   async function removeNote(id) {
     const updated = notes.filter(note => note.id !== id);
-    await AsyncStorage.setItem('reflectionNotes', JSON.stringify(updated));
-    setNotes(updated);
+    try {
+      await AsyncStorage.setItem('reflectionNotes', JSON.stringify(updated));
+      setNotes(updated);
+    } catch (error) {
+      Alert.alert('Could not delete reflection', error.message || 'Please try again.');
+    }
   }
 
   function clearReflection() {
@@ -110,8 +127,14 @@ export default function ReflectionScreen() {
   );
   return (
     <Screen>
-      <Text style={styles.heading}>Self-Discovery and Reflection</Text>
-      <Text style={styles.help}>Explore patterns, values, strengths, and thoughts privately. Reflection prompts are educational and are not personality assessments or therapy.</Text>
+      <CozyHero
+        eyebrow="GENTLE SELF-DISCOVERY"
+        title="A moment to reflect"
+        description="Explore your thoughts and strengths, at your own pace."
+        art="🪷"
+        colors={['#EEE8F7', '#E3EEF2']}
+      />
+      <Text style={styles.help}>These prompts are for personal reflection and are not a personality assessment or therapy.</Text>
       <View style={styles.sections}>
         {reflectionSections.map(section => (
           <Pressable key={section.id} style={[styles.sectionButton, sectionId === section.id && styles.activeSection]} onPress={() => { setSectionId(section.id); clearReflection(); }}>
@@ -151,8 +174,10 @@ export default function ReflectionScreen() {
       <PrimaryButton title="Clear Reflection" secondary onPress={clearReflection} />
       <Text style={styles.subheading}>Personal Reflection Notes</Text>
       {notes.map(note => (
-        <Text
+        <Pressable
           key={note.id}
+          accessibilityRole="button"
+          accessibilityLabel={`Reflection note from ${new Date(note.date).toLocaleString()}. Tap to read or delete.`}
           style={styles.note}
           onPress={() => Alert.alert(
             new Date(note.date).toLocaleString(),
@@ -160,27 +185,29 @@ export default function ReflectionScreen() {
             [{ text: 'Close' }, { text: 'Delete', style: 'destructive', onPress: () => removeNote(note.id) }],
           )}
         >
-          {note.thought || note.feeling || note.situation || 'Reflection note'}{'\n'}
-          {new Date(note.date).toLocaleString()}{'\n'}
-          Tap to read or delete
-        </Text>
+          <Text style={styles.noteTitle}>{note.thought || note.feeling || note.situation || 'Reflection note'}</Text>
+          <Text style={styles.noteDate}>{new Date(note.date).toLocaleString()}</Text>
+          <Text style={styles.noteHint}>Tap to read or delete</Text>
+        </Pressable>
       ))}
       {!notes.length ? <Text style={styles.empty}>Your saved personal reflection notes will appear here.</Text> : null}
     </Screen>
   );
 }
 const styles = StyleSheet.create({
-  heading: { fontSize: 23, fontWeight: '800', color: Theme.text, marginBottom: 8 },
   help: { color: Theme.muted, lineHeight: 20, marginBottom: 10 },
   label: { color: Theme.text, fontWeight: '700', marginTop: 10, marginBottom: 6 },
-  input: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 12, minHeight: 72, padding: 12, textAlignVertical: 'top' },
-  sections: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 6 },
-  sectionButton: { borderWidth: 1, borderColor: Theme.border, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 8, marginRight: 6, marginBottom: 6 },
+  input: { backgroundColor: 'rgba(255,255,255,0.82)', borderWidth: 1, borderColor: Theme.border, borderRadius: 18, minHeight: 80, padding: 14, textAlignVertical: 'top' },
+  sections: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 6, gap: 7 },
+  sectionButton: { borderWidth: 1, borderColor: Theme.border, borderRadius: 18, paddingHorizontal: 12, paddingVertical: 9, marginBottom: 6, backgroundColor: 'rgba(255,255,255,0.72)' },
   activeSection: { backgroundColor: Theme.primary, borderColor: Theme.primary },
   sectionButtonText: { color: Theme.text, fontSize: 12, fontWeight: '700' },
   activeSectionText: { color: '#FFFFFF' },
-  guidanceHeading: { color: Theme.primaryDark, fontSize: 18, fontWeight: '800', marginTop: 10 },
+  guidanceHeading: { color: Theme.primaryDark, fontSize: 18, fontWeight: '800', marginTop: 10, marginBottom: 4 },
   subheading: { fontSize: 18, fontWeight: '800', color: Theme.text, marginTop: 24, marginBottom: 10 },
-  note: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 12, padding: 14, marginBottom: 10, color: Theme.text, lineHeight: 21 },
+  note: { backgroundColor: 'rgba(255,255,255,0.82)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 20, padding: 16, marginBottom: 10 },
+  noteTitle: { color: Theme.text, fontWeight: '700', lineHeight: 21 },
+  noteDate: { color: Theme.muted, fontSize: 12, marginTop: 5 },
+  noteHint: { color: Theme.primary, fontSize: 12, fontWeight: '700', marginTop: 8 },
   empty: { color: Theme.muted },
 });
