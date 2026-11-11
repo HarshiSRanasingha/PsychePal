@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "splash": {
-      "backgroundColor": "#F7F4FC"
+      "backgroundColor": "#F8F7F3"
     },
     "android": {
       "package": "com.ughsranasingha.psychepal"
