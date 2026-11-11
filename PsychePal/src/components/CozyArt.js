@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Theme } from '../styles/theme';
+import { useAppSettings } from '../context/AppSettingsContext';
+import { adaptStyle } from '../styles/darkMode';
 
 const resourceArt = {
   'Emotional Awareness': ['🌷', '#F6E5EA'],
@@ -47,12 +49,13 @@ export function SoftLandscape({ style }) {
 }
 
 export function MoodFace({ mood, color, size = 48 }) {
+  const { darkMode } = useAppSettings();
   const worried = mood === 'Anxious' || mood === 'Distressed';
   const downturned = mood === 'Sad' || mood === 'Angry';
   const sleepy = mood === 'Tired';
   const smiling = mood === 'Happy' || mood === 'Calm';
   return (
-    <View style={[styles.moodFace, { width: size, height: size, borderRadius: size / 2, backgroundColor: color }]}>
+    <View style={[adaptStyle(styles.moodFace, darkMode), { width: size, height: size, borderRadius: size / 2, ...adaptStyle({ backgroundColor: color }, darkMode) }]}>
       <View style={styles.faceHighlight} />
       <View style={styles.faceEyes}>
         <View style={[styles.faceEye, sleepy && styles.sleepyEye]} />
@@ -75,9 +78,10 @@ export function MoodFace({ mood, color, size = 48 }) {
 }
 
 export function ResourceArtwork({ category }) {
+  const { darkMode } = useAppSettings();
   const [emoji, backgroundColor] = resourceArt[category] || ['✦', Theme.lavender];
   return (
-    <View style={[styles.resourceArt, { backgroundColor }]}>
+    <View style={[adaptStyle(styles.resourceArt, darkMode), adaptStyle({ backgroundColor }, darkMode)]}>
       <View style={styles.artOrb} />
       <Text style={styles.resourceEmoji}>{emoji}</Text>
       <View style={styles.artSparkle} />

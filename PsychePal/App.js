@@ -7,11 +7,14 @@ import { Nunito_600SemiBold } from '@expo-google-fonts/nunito/600SemiBold';
 import { Nunito_700Bold } from '@expo-google-fonts/nunito/700Bold';
 import { Nunito_800ExtraBold } from '@expo-google-fonts/nunito/800ExtraBold';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import PrimaryButton from './src/components/PrimaryButton';
 import CozyText from './src/components/CozyText';
+import { CloudPal } from './src/components/CozyArt';
+import AppSettingsContext from './src/context/AppSettingsContext';
+import { translate } from './src/i18n/translations';
 import PastelBackground from './src/components/PastelBackground';
 import { Theme } from './src/styles/theme';
 import HomeScreen from './src/screens/HomeScreen';
@@ -26,25 +29,70 @@ import RecommendationsScreen from './src/screens/RecommendationsScreen';
 import DiaryScreen from './src/screens/DiaryScreen';
 import SupportScreen from './src/screens/SupportScreen';
 import GamesScreen from './src/screens/GamesScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
+import EmergencyScreen from './src/screens/EmergencyScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const ONBOARDING_KEY = 'onboardingComplete';
-const tabIcons = { Home: '⌂', Mood: '☼', Chat: '☁', Resources: '✿', Profile: '♡' };
+const APP_SETTINGS_KEY = 'appSettings';
+const DEFAULT_APP_SETTINGS = { language: 'en', darkMode: false, emergencyMode: false };
+const tabIcons = { Home: '⌂', Mood: '☼', Chat: '☁', Resources: '✿', Profile: '♡', Settings: '⚙' };
+
+function parseAppSettings(value) {
+  const parsed = JSON.parse(value);
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('Saved app settings have an unexpected format.');
+  }
+  return {
+    language: ['en', 'si', 'ta'].includes(parsed.language) ? parsed.language : 'en',
+    darkMode: parsed.darkMode === true,
+    emergencyMode: parsed.emergencyMode === true,
+  };
+}
+
+function getPalette(darkMode) {
+  return darkMode
+    ? {
+      primary: '#9FC8AA',
+      primaryDark: '#C3D9CA',
+      background: '#151D19',
+      surface: '#202A24',
+      text: '#E5ECE7',
+      muted: '#AEBBB2',
+      border: '#3A4941',
+    }
+    : Theme;
+}
 
 function Tabs() {
+  const { darkMode, language } = React.useContext(AppSettingsContext);
+  const palette = getPalette(darkMode);
+  const t = text => translate(text, language);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerStyle: { backgroundColor: Theme.surface },
-        headerTintColor: Theme.primary,
-        tabBarActiveTintColor: Theme.primary,
-        tabBarInactiveTintColor: Theme.muted,
-        tabBarStyle: { backgroundColor: Theme.surface, borderTopColor: Theme.border, height: 64, paddingTop: 7, paddingBottom: 8 },
-        tabBarLabelStyle: { fontSize: 10, fontWeight: '700', fontFamily: 'Nunito_700Bold' },
-        headerTitleStyle: { fontWeight: '800', fontFamily: 'Nunito_800ExtraBold', color: Theme.text },
+        headerStyle: { backgroundColor: palette.surface },
+        headerTintColor: palette.primary,
+        tabBarActiveTintColor: palette.primary,
+        tabBarInactiveTintColor: palette.muted,
+        tabBarStyle: { backgroundColor: palette.surface, borderTopColor: palette.border, height: 64, paddingTop: 7, paddingBottom: 8 },
+        tabBarLabelStyle: { fontSize: 9, fontWeight: '700', fontFamily: 'Nunito_700Bold' },
+        tabBarLabel: t(route.name),
+        headerTitle: t(route.name),
+        headerTitleStyle: { fontWeight: '800', fontFamily: 'Nunito_800ExtraBold', color: palette.text },
         tabBarIcon: ({ color, focused }) => (
-          <Text style={{ color, fontSize: focused ? 20 : 19, lineHeight: 22 }}>{tabIcons[route.name]}</Text>
+          <Text
+            style={{
+              color,
+              fontSize: focused ? 22 : 21,
+              lineHeight: 24,
+              transform: [{ translateY: -2 }],
+            }}
+          >
+            {tabIcons[route.name]}
+          </Text>
         ),
       })}
     >
@@ -53,6 +101,7 @@ function Tabs() {
       <Tab.Screen name="Chat" component={ChatScreen} />
       <Tab.Screen name="Resources" component={ResourcesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: t('Settings') }} />
     </Tab.Navigator>
   );
 }
@@ -73,7 +122,9 @@ function SplashScreen() {
       <View style={styles.splash}>
         <Animated.View style={[styles.brand, { opacity: fade }]}>
           <View style={styles.logo}>
-            <View style={styles.logoInner} />
+            <CloudPal size={72} />
+            <View style={styles.logoSparkle} />
+            <View style={styles.logoDot} />
           </View>
           <CozyText style={styles.appName}>PsychePal</CozyText>
           <CozyText style={styles.tagline}>A little space for your mind</CozyText>
@@ -89,7 +140,9 @@ function WelcomeScreen({ onStart }) {
       <View style={styles.welcome}>
         <View style={styles.welcomeContent}>
           <View style={[styles.logo, styles.welcomeLogo]}>
-            <View style={styles.logoInner} />
+            <CloudPal size={72} />
+            <View style={styles.logoSparkle} />
+            <View style={styles.logoDot} />
           </View>
           <CozyText style={styles.welcomeTitle}>Welcome to PsychePal</CozyText>
           <CozyText style={styles.welcomeDescription}>
@@ -107,6 +160,7 @@ function WelcomeScreen({ onStart }) {
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [appSettings, setAppSettings] = useState(DEFAULT_APP_SETTINGS);
   const [fontsLoaded, fontError] = useFonts({
     Nunito_400Regular,
     Nunito_600SemiBold,
@@ -118,6 +172,15 @@ export default function App() {
     if (!fontsLoaded && !fontError) return undefined;
     let active = true;
     const timer = setTimeout(async () => {
+      try {
+        const savedSettings = await AsyncStorage.getItem(APP_SETTINGS_KEY);
+        if (savedSettings && active) setAppSettings(parseAppSettings(savedSettings));
+      } catch (error) {
+        if (active) {
+          Alert.alert('Could not load app settings', error.message || 'PsychePal will use its default settings.');
+        }
+      }
+
       try {
         const completed = await AsyncStorage.getItem(ONBOARDING_KEY);
         if (active) setShowWelcome(completed !== 'true');
@@ -151,52 +214,138 @@ export default function App() {
     setShowWelcome(false);
   }
 
+  async function updateAppSetting(key, value) {
+    const updated = { ...appSettings, [key]: value };
+    try {
+      await AsyncStorage.setItem(APP_SETTINGS_KEY, JSON.stringify(updated));
+      setAppSettings(updated);
+    } catch (error) {
+      Alert.alert('Could not save setting', error.message || 'Please try again.');
+    }
+  }
+
+  const settingsContext = {
+    ...appSettings,
+    setLanguage: value => updateAppSetting('language', value),
+    setDarkMode: value => updateAppSetting('darkMode', value),
+    setEmergencyMode: value => updateAppSetting('emergencyMode', value),
+  };
+  const palette = getPalette(appSettings.darkMode);
+  const appTranslation = text => translate(text, appSettings.language);
+  const navigationTheme = appSettings.darkMode
+    ? {
+      ...DarkTheme,
+      colors: {
+        ...DarkTheme.colors,
+        primary: palette.primary,
+        background: palette.background,
+        card: palette.surface,
+        text: palette.text,
+        border: palette.border,
+      },
+    }
+    : DefaultTheme;
+
   if (showSplash || (!fontsLoaded && !fontError)) {
     return (
-      <>
-        <StatusBar style="dark" />
+      <AppSettingsContext.Provider value={settingsContext}>
+        <StatusBar style={appSettings.darkMode ? 'light' : 'dark'} />
         <SplashScreen />
-      </>
+      </AppSettingsContext.Provider>
     );
   }
 
   if (showWelcome) {
     return (
-      <>
-        <StatusBar style="dark" />
+      <AppSettingsContext.Provider value={settingsContext}>
+        <StatusBar style={appSettings.darkMode ? 'light' : 'dark'} />
         <WelcomeScreen onStart={completeWelcome} />
-      </>
+      </AppSettingsContext.Provider>
     );
   }
 
   return (
-    <NavigationContainer>
-      <StatusBar style="dark" />
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: { backgroundColor: Theme.background },
-          headerTintColor: Theme.primary,
-          contentStyle: { backgroundColor: Theme.background },
-        }}
-      >
-        <Stack.Screen name="PsychePal" component={Tabs} options={{ headerShown: false }} />
-        <Stack.Screen name="Mood History" component={MoodHistoryScreen} />
-        <Stack.Screen name="Thought Reflection" component={ReflectionScreen} />
-        <Stack.Screen name="Relaxation Toolkit" component={RelaxationScreen} />
-        <Stack.Screen name="Recommendations" component={RecommendationsScreen} />
-        <Stack.Screen name="Personal Diary" component={DiaryScreen} />
-        <Stack.Screen name="Support Directory" component={SupportScreen} />
-        <Stack.Screen name="Relaxing Games" component={GamesScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AppSettingsContext.Provider value={settingsContext}>
+      <NavigationContainer theme={navigationTheme}>
+        <StatusBar style={appSettings.darkMode ? 'light' : 'dark'} />
+        <Stack.Navigator
+          key={appSettings.emergencyMode ? 'emergency' : 'main'}
+          screenOptions={{
+            headerStyle: { backgroundColor: palette.background },
+            headerTintColor: palette.primary,
+            contentStyle: { backgroundColor: palette.background },
+            headerTitleStyle: { color: palette.text, fontFamily: 'Nunito_800ExtraBold', fontWeight: '800' },
+          }}
+        >
+          {appSettings.emergencyMode ? (
+            <>
+              <Stack.Screen
+                name="Emergency Support"
+                component={EmergencyScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Support Directory"
+                component={SupportScreen}
+                options={{ title: appTranslation('Support Directory') }}
+              />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="PsychePal" component={Tabs} options={{ headerShown: false }} />
+              <Stack.Screen name="Mood History" component={MoodHistoryScreen} />
+              <Stack.Screen name="Thought Reflection" component={ReflectionScreen} />
+              <Stack.Screen name="Relaxation Toolkit" component={RelaxationScreen} />
+              <Stack.Screen name="Recommendations" component={RecommendationsScreen} />
+              <Stack.Screen name="Personal Diary" component={DiaryScreen} />
+              <Stack.Screen name="Support Directory" component={SupportScreen} />
+              <Stack.Screen name="Relaxing Games" component={GamesScreen} />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AppSettingsContext.Provider>
   );
 }
 
 const styles = StyleSheet.create({
   splash: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   brand: { alignItems: 'center' },
-  logo: { width: 108, height: 108, borderRadius: 54, alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.primary, marginBottom: 22 },
-  logoInner: { width: 48, height: 48, borderRadius: 24, borderWidth: 5, borderColor: Theme.surface, transform: [{ rotate: '45deg' }] },
+  logo: {
+    width: 116,
+    height: 116,
+    borderRadius: 58,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Theme.primary,
+    borderWidth: 5,
+    borderColor: '#E5EFE7',
+    marginBottom: 22,
+    shadowColor: Theme.primaryDark,
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 5,
+  },
+  logoSparkle: {
+    position: 'absolute',
+    top: 20,
+    right: 23,
+    width: 9,
+    height: 9,
+    borderRadius: 2,
+    backgroundColor: '#F4D691',
+    transform: [{ rotate: '45deg' }],
+  },
+  logoDot: {
+    position: 'absolute',
+    left: 21,
+    bottom: 25,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#BFD9C4',
+  },
   appName: { color: Theme.primaryDark, fontSize: 32, fontWeight: '800' },
   tagline: { color: Theme.muted, fontSize: 16, marginTop: 8 },
   welcome: { flex: 1, justifyContent: 'center', paddingHorizontal: 24 },

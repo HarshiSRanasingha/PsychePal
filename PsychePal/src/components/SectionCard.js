@@ -2,13 +2,16 @@ import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { CozyText as Text } from './CozyText';
 import { Theme } from '../styles/theme';
+import { useAppSettings } from '../context/AppSettingsContext';
+import { adaptStyle } from '../styles/darkMode';
 
 export default function SectionCard({ title, description, onPress }) {
+  const { darkMode } = useAppSettings();
   return (
     <Pressable
       accessibilityRole={onPress ? 'button' : undefined}
       onPress={onPress}
-      style={({ pressed }) => [styles.card, pressed && onPress && styles.pressed]}
+      style={({ pressed }) => [adaptStyle(styles.card, darkMode), pressed && onPress && styles.pressed]}
     >
       <Text style={styles.title}>{title}</Text>
       {description ? <Text style={styles.description}>{description}</Text> : null}

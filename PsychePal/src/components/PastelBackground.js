@@ -1,16 +1,19 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Theme } from '../styles/theme';
+import { useAppSettings } from '../context/AppSettingsContext';
+import { adaptStyle } from '../styles/darkMode';
 
 export default function PastelBackground({ children }) {
+  const { darkMode } = useAppSettings();
   return (
-    <View style={styles.container}>
+    <View style={adaptStyle(styles.container, darkMode)}>
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-        <View style={[styles.blob, styles.lavender]} />
-        <View style={[styles.blob, styles.peach]} />
-        <View style={[styles.blob, styles.mint]} />
-        <View style={[styles.blob, styles.blue]} />
-        <View style={[styles.blob, styles.pink]} />
+        <View style={adaptStyle([styles.blob, styles.lavender], darkMode)} />
+        <View style={adaptStyle([styles.blob, styles.peach], darkMode)} />
+        <View style={adaptStyle([styles.blob, styles.mint], darkMode)} />
+        <View style={adaptStyle([styles.blob, styles.blue], darkMode)} />
+        <View style={adaptStyle([styles.blob, styles.pink], darkMode)} />
       </View>
       {children}
     </View>

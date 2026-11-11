@@ -2,15 +2,18 @@ import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { CozyText as Text } from './CozyText';
 import { Theme } from '../styles/theme';
+import { useAppSettings } from '../context/AppSettingsContext';
+import { adaptStyle } from '../styles/darkMode';
 
 export default function PrimaryButton({ title, onPress, secondary = false }) {
+  const { darkMode } = useAppSettings();
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [styles.button, secondary && styles.secondary, pressed && styles.pressed]}
+      style={({ pressed }) => [adaptStyle([styles.button, secondary && styles.secondary], darkMode), pressed && styles.pressed]}
     >
-      <Text style={[styles.label, secondary && styles.secondaryLabel]}>{title}</Text>
+      <Text style={adaptStyle([styles.label, secondary && styles.secondaryLabel], darkMode)}>{title}</Text>
     </Pressable>
   );
 }

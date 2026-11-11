@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { cloneElement } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
 import PastelBackground from './PastelBackground';
+import { useAppSettings } from '../context/AppSettingsContext';
+import { adaptStyle } from '../styles/darkMode';
+
+function adaptChildren(children, darkMode) {
+  return React.Children.map(children, child => {
+    if (!React.isValidElement(child)) return child;
+    const props = {};
+    if (child.props.style) props.style = adaptStyle(child.props.style, darkMode);
+    if (child.props.children !== undefined) {
+      props.children = adaptChildren(child.props.children, darkMode);
+    }
+    return cloneElement(child, props);
+  });
+}
 
 export default function Screen({ children }) {
+  const { darkMode } = useAppSettings();
   return (
     <PastelBackground>
       <KeyboardAvoidingView
@@ -15,7 +30,7 @@ export default function Screen({ children }) {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
         >
-          {children}
+          {adaptChildren(children, darkMode)}
         </ScrollView>
       </KeyboardAvoidingView>
     </PastelBackground>

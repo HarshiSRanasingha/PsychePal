@@ -3,18 +3,24 @@ import { StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import CozyText from './CozyText';
 import { SoftLandscape } from './CozyArt';
+import { useAppSettings } from '../context/AppSettingsContext';
+import { adaptStyle } from '../styles/darkMode';
 import { Theme } from '../styles/theme';
 
 export default function CozyHero({ eyebrow, title, description, art, colors = ['#F7E5E8', '#E7EDF6'], landscape = false }) {
+  const { darkMode } = useAppSettings();
+  const gradientColors = darkMode
+    ? colors.map(color => adaptStyle({ backgroundColor: color }, true).backgroundColor)
+    : colors;
   return (
-    <View style={styles.hero}>
-      <LinearGradient colors={colors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+    <View style={adaptStyle(styles.hero, darkMode)}>
+      <LinearGradient colors={gradientColors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <View style={styles.copy}>
         {eyebrow ? <CozyText style={styles.eyebrow}>{eyebrow}</CozyText> : null}
         <CozyText style={styles.title}>{title}</CozyText>
         {description ? <CozyText style={styles.description}>{description}</CozyText> : null}
       </View>
-      {art ? <View accessibilityElementsHidden style={styles.art}><CozyText style={styles.artText}>{art}</CozyText></View> : null}
+      {art ? <View accessibilityElementsHidden style={adaptStyle(styles.art, darkMode)}><CozyText style={styles.artText}>{art}</CozyText></View> : null}
       {landscape ? <SoftLandscape style={styles.landscape} /> : null}
     </View>
   );

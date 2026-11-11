@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text as NativeText, StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
+import { useAppSettings } from '../context/AppSettingsContext';
+import { adaptStyle } from '../styles/darkMode';
 
 const fontByWeight = {
   '400': 'Nunito_400Regular',
@@ -12,6 +14,7 @@ const fontByWeight = {
 };
 
 export function CozyText({ style, ...props }) {
+  const { darkMode } = useAppSettings();
   const flattenedStyle = StyleSheet.flatten(style) || {};
   const requestedFont = fontByWeight[String(flattenedStyle.fontWeight || '400')];
   const fontFamily = flattenedStyle.fontFamily
@@ -20,7 +23,7 @@ export function CozyText({ style, ...props }) {
   return (
     <NativeText
       {...props}
-      style={[style, fontFamily ? { fontFamily } : null]}
+      style={[adaptStyle(style, darkMode), fontFamily ? { fontFamily } : null]}
     />
   );
 }
