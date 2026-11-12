@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalStore from '../data/localStore';
 import { useFocusEffect } from '@react-navigation/native';
 import Screen from '../components/Screen';
 import CozyHero from '../components/CozyHero';
@@ -42,9 +42,9 @@ export default function DiaryScreen() {
   const load = useCallback(async () => {
     try {
       const [savedEntries, savedGratitudes, savedGoals] = await Promise.all([
-        AsyncStorage.getItem(ENTRIES_KEY),
-        AsyncStorage.getItem(GRATITUDE_KEY),
-        AsyncStorage.getItem(GOALS_KEY),
+        LocalStore.getItem(ENTRIES_KEY),
+        LocalStore.getItem(GRATITUDE_KEY),
+        LocalStore.getItem(GOALS_KEY),
       ]);
       const loadedEntries = readList(savedEntries, 'Diary');
       const loadedGratitudes = readList(savedGratitudes, 'Gratitude journal');
@@ -78,7 +78,7 @@ export default function DiaryScreen() {
       ? entries.map(entry => (entry.id === editingId ? updatedEntry : entry))
       : [updatedEntry, ...entries];
     try {
-      await AsyncStorage.setItem(ENTRIES_KEY, JSON.stringify(updated));
+      await LocalStore.setItem(ENTRIES_KEY, JSON.stringify(updated));
       setEntries(updated);
       clearEntryForm();
     } catch (error) {
@@ -101,7 +101,7 @@ export default function DiaryScreen() {
   async function removeEntry(id) {
     const updated = entries.filter(entry => entry.id !== id);
     try {
-      await AsyncStorage.setItem(ENTRIES_KEY, JSON.stringify(updated));
+      await LocalStore.setItem(ENTRIES_KEY, JSON.stringify(updated));
       setEntries(updated);
       if (editingId === id) clearEntryForm();
     } catch (error) {
@@ -127,7 +127,7 @@ export default function DiaryScreen() {
       ...gratitudes.filter(item => item.date !== date),
     ];
     try {
-      await AsyncStorage.setItem(GRATITUDE_KEY, JSON.stringify(updated));
+      await LocalStore.setItem(GRATITUDE_KEY, JSON.stringify(updated));
       setGratitudes(updated);
       Alert.alert('Gratitude saved', 'Today’s gratitude note is saved on this device.');
     } catch (error) {
@@ -149,7 +149,7 @@ export default function DiaryScreen() {
       createdAt: new Date().toISOString(),
     }, ...goals];
     try {
-      await AsyncStorage.setItem(GOALS_KEY, JSON.stringify(updated));
+      await LocalStore.setItem(GOALS_KEY, JSON.stringify(updated));
       setGoals(updated);
       setGoalTitle('');
       setGoalTarget('');
@@ -166,7 +166,7 @@ export default function DiaryScreen() {
       return { ...item, progress: Math.max(0, Math.min(target, progress + amount)) };
     });
     try {
-      await AsyncStorage.setItem(GOALS_KEY, JSON.stringify(updated));
+      await LocalStore.setItem(GOALS_KEY, JSON.stringify(updated));
       setGoals(updated);
     } catch (error) {
       Alert.alert('Could not update progress', error.message || 'Please try again.');
@@ -176,7 +176,7 @@ export default function DiaryScreen() {
   async function removeGoal(id) {
     const updated = goals.filter(goal => goal.id !== id);
     try {
-      await AsyncStorage.setItem(GOALS_KEY, JSON.stringify(updated));
+      await LocalStore.setItem(GOALS_KEY, JSON.stringify(updated));
       setGoals(updated);
     } catch (error) {
       Alert.alert('Could not delete goal', error.message || 'Please try again.');

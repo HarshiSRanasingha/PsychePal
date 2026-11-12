@@ -5,13 +5,19 @@ import { Theme } from '../styles/theme';
 import { useAppSettings } from '../context/AppSettingsContext';
 import { adaptStyle } from '../styles/darkMode';
 
-export default function PrimaryButton({ title, onPress, secondary = false }) {
+export default function PrimaryButton({ title, onPress, secondary = false, disabled = false }) {
   const { darkMode } = useAppSettings();
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      disabled={disabled}
       onPress={onPress}
-      style={({ pressed }) => [adaptStyle([styles.button, secondary && styles.secondary], darkMode), pressed && styles.pressed]}
+      style={({ pressed }) => [
+        adaptStyle([styles.button, secondary && styles.secondary], darkMode),
+        disabled && styles.disabled,
+        pressed && !disabled && styles.pressed,
+      ]}
     >
       <Text style={adaptStyle([styles.label, secondary && styles.secondaryLabel], darkMode)}>{title}</Text>
     </Pressable>
@@ -22,5 +28,6 @@ const styles = StyleSheet.create({
   secondary: { backgroundColor: Theme.lavender },
   label: { color: '#FFFFFF', fontWeight: '700' },
   secondaryLabel: { color: Theme.primaryDark },
+  disabled: { opacity: 0.6 },
   pressed: { opacity: 0.82, transform: [{ scale: 0.99 }] },
 });

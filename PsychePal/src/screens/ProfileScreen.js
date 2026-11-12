@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Switch, View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import * as LocalStore from '../data/localStore';
 import Screen from '../components/Screen';
 import SectionCard from '../components/SectionCard';
 import { CloudPal } from '../components/CozyArt';
 import { CozyText as Text } from '../components/CozyText';
 import TextInput from '../components/CozyInput';
+import { useAppSettings } from '../context/AppSettingsContext';
 import { Theme } from '../styles/theme';
 
 const SETTINGS_KEY = 'profileSettings';
@@ -44,13 +45,14 @@ function parseSettings(value) {
 }
 
 export default function ProfileScreen({ navigation }) {
+  const { account, logout } = useAppSettings();
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [nameInput, setNameInput] = useState('');
   const [saving, setSaving] = useState(false);
 
   const loadSettings = useCallback(async () => {
     try {
-      const saved = await AsyncStorage.getItem(SETTINGS_KEY);
+      const saved = await LocalStore.getItem(SETTINGS_KEY);
       const loaded = parseSettings(saved);
       setSettings(loaded);
       setNameInput(loaded.preferredName);
@@ -64,7 +66,7 @@ export default function ProfileScreen({ navigation }) {
   async function saveSettings(updated) {
     setSaving(true);
     try {
-      await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(updated));
+      await LocalStore.setItem(SETTINGS_KEY, JSON.stringify(updated));
       setSettings(updated);
       setNameInput(updated.preferredName);
     } catch (error) {
@@ -90,7 +92,7 @@ export default function ProfileScreen({ navigation }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await AsyncStorage.multiRemove(APP_DATA_KEYS);
+              await LocalStore.multiRemove(APP_DATA_KEYS);
               setSettings(DEFAULT_SETTINGS);
               setNameInput('');
               Alert.alert('Stored data cleared', 'Your PsychePal data has been removed from this device.');
@@ -191,13 +193,20 @@ export default function ProfileScreen({ navigation }) {
       <Text style={styles.sectionHeading}>App information</Text>
       <View style={styles.card}>
         <Text style={styles.appName}>PsychePal</Text>
+        <Text style={styles.helper}>Local profile: {account.email}</Text>
         <Text style={styles.helper}>Version 1.0.0</Text>
         <Text style={styles.appDescription}>
           A personal well-being companion for mood check-ins, reflection, journaling, and finding support.
         </Text>
         <Text style={styles.appDescription}>
-          Your profile and activity records are stored locally on this device. They are not synced to an account.
+          Your profile and activity records are stored locally on this device and are not synced online.
         </Text>
+        <Text style={styles.appDescription}>
+          Local sign-in does not encrypt this device's database. Protect your device with its screen lock.
+        </Text>
+        <Pressable accessibilityRole="button" onPress={logout} style={styles.logoutButton}>
+          <Text style={styles.logoutButtonText}>Sign Out</Text>
+        </Pressable>
       </View>
 
       <Text style={styles.sectionHeading}>Data and privacy</Text>
@@ -238,4 +247,6 @@ const styles = StyleSheet.create({
   appDescription: { color: Theme.text, lineHeight: 20, marginTop: 8 },
   clearButton: { alignSelf: 'flex-start', borderWidth: 1, borderColor: '#A94442', borderRadius: 10, paddingHorizontal: 13, paddingVertical: 10, marginTop: 13 },
   clearButtonText: { color: '#A94442', fontWeight: '700' },
+  logoutButton: { alignSelf: 'flex-start', borderWidth: 1, borderColor: Theme.primary, borderRadius: 10, paddingHorizontal: 13, paddingVertical: 10, marginTop: 13 },
+  logoutButtonText: { color: Theme.primaryDark, fontWeight: '700' },
 });

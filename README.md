@@ -17,6 +17,8 @@ PsychePal is a React Native wellbeing companion for everyday mood check-ins, pri
 - **Recommendations and games:** Browse suggestions and open relevant external searches in a browser or app store.
 - **Support directory:** Search locally stored service information and use the listed contact links. Confirm current details with the provider.
 - **Profile and preferences:** Personalize the app's local profile settings.
+- **Local accounts:** Create multiple on-device profiles and sign in without an internet connection.
+- **Offline database:** Keep mood, reflection, diary, gratitude, goal, and profile records in a SQLite database, separated by local profile.
 - **Cozy interface:** Pastel gradients, rounded cards, custom illustrations, and Nunito typography.
 
 ## Run with Expo Go
@@ -62,7 +64,7 @@ PsychePal/
 ├── package.json
 └── src/
     ├── components/   # Shared UI, illustrations, buttons, and screen backgrounds
-    ├── data/         # Local resource and support-directory content
+    ├── data/         # SQLite account/data storage and local resource content
     ├── navigation/   # Tab and stack navigation
     ├── screens/      # App screens
     └── styles/       # Shared theme
@@ -72,6 +74,8 @@ The updated project proposal is available in [PROJECT_PROPOSAL.md](./PROJECT_PRO
 
 ## Data, privacy, and safety
 
-Mood check-ins, diary entries, gratitude notes, goals, reflections, and profile preferences are stored locally with AsyncStorage. The app does not require an account or a backend for these features. Removing the app or clearing its storage may remove locally saved data.
+Mood check-ins, diary entries, gratitude notes, goals, reflections, and profile preferences are stored in the local SQLite database. The first local profile created imports any existing records from the previous AsyncStorage format. Local accounts are device-only: they do not sync, and passwords cannot be recovered or reset. Passwords are stored as salted hashes, but the SQLite database and personal records are not encrypted; local sign-in is not a security boundary against someone with access to the device or its files. Use the device's screen lock and back up data before removing the app or clearing its storage.
+
+The web build uses SQLite's WebAssembly implementation. Its hosting server must support WebAssembly and send `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: credentialless` headers for the app document.
 
 Opening external recommendations, store searches, or service links requires a compatible app and may use the internet. Support-directory information is provided for discovery, not as a guarantee of availability or a substitute for emergency help. If there is immediate danger, contact local emergency services or go to the nearest hospital.
