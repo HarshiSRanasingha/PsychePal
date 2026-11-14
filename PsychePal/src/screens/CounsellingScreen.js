@@ -4,15 +4,11 @@ import Screen from '../components/Screen';
 import CozyHero from '../components/CozyHero';
 import { CozyText as Text } from '../components/CozyText';
 import counsellors from '../data/counsellors.json';
-import support from '../data/supportContacts.json';
 import openContact from '../data/openContact';
 import { Theme } from '../styles/theme';
 
 const { languages, categories, findCounsellors } = require('../data/counselling');
-const alternatives = support.filter(service =>
-  ['nimh-helpline', 'nimh-hospital', 'sumithrayo-colombo'].includes(service.id));
-
-export default function CounsellingScreen() {
+export default function CounsellingScreen({ navigation }) {
   const [language, setLanguage] = useState(null);
   const [category, setCategory] = useState(null);
   const matches = findCounsellors(counsellors, language, category);
@@ -34,6 +30,7 @@ export default function CounsellingScreen() {
   function renderCard(service) {
     return (
       <View key={service.id} style={styles.card}>
+        {service.demo ? <Text style={styles.demoLabel}>FICTIONAL DEMO PROFILE</Text> : null}
         <Text style={styles.name}>{service.name}</Text>
         {service.organization ? <Text style={styles.organization}>{service.organization}</Text> : null}
         {service.languages ? <Text style={styles.detail}>Languages: {service.languages.join(', ')}</Text> : null}
@@ -42,7 +39,11 @@ export default function CounsellingScreen() {
         {service.address ? <Text style={styles.detail}>Address: {service.address}</Text> : null}
         {service.hours ? <Text style={styles.detail}>Hours: {service.hours}</Text> : null}
         <Text style={styles.contactHeading}>Contact details</Text>
-        {service.contacts.map((contact, index) => (
+        {service.contacts.map((contact, index) => service.demo ? (
+          <Text key={`${contact.value}-${index}`} style={styles.demoContact}>
+            {contact.label}: {contact.value}
+          </Text>
+        ) : (
           <Pressable
             key={`${contact.value}-${index}`}
             accessibilityRole={contact.type === 'web' ? 'link' : 'button'}
@@ -54,11 +55,13 @@ export default function CounsellingScreen() {
           </Pressable>
         ))}
         <Text style={styles.verification}>
-          {service.verifiedOn
-            ? `Details checked against the listed source on ${service.verifiedOn}. Please confirm current information.`
-            : 'Details have not been verified. Please confirm current information with the service.'}
+          {service.demo
+            ? 'This person and these contact details are fictional. You cannot contact them.'
+            : service.verifiedOn
+              ? `Details checked against the listed source on ${service.verifiedOn}. Please confirm current information.`
+              : 'Details have not been verified. Please confirm current information with the service.'}
         </Text>
-        {service.sourceUrl ? (
+        {!service.demo && service.sourceUrl ? (
           <Pressable
             accessibilityRole="link"
             accessibilityLabel={`Open source for ${service.name}`}
@@ -77,10 +80,20 @@ export default function CounsellingScreen() {
       <CozyHero
         eyebrow="FIND THE RIGHT SUPPORT"
         title="Counselling"
-        description="Choose a language and a type of counselling to look for support in Sri Lanka."
+        description="Explore example counselling profiles by language and category."
         art="🤝"
         colors={['#E6F0E7', '#E9E7F4']}
       />
+      <Text style={styles.demoNotice}>
+        Demo only: all example profiles and contact details are fictional. They cannot provide counselling.
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => navigation.navigate('Support Directory')}
+        style={styles.supportButton}
+      >
+        <Text style={styles.supportText}>Find real support contacts  ›</Text>
+      </Pressable>
       <Text style={styles.label}>Which language would you like?</Text>
       <View style={styles.options}>
         {languages.map(value => renderOption(value, language, setLanguage))}
@@ -93,23 +106,14 @@ export default function CounsellingScreen() {
         <Text style={styles.note}>Choose both a language and a category to see matching listings.</Text>
       ) : (
         <>
-          <Text style={styles.heading}>Matching counsellors and services</Text>
+          <Text style={styles.heading}>Matching profiles</Text>
           {matches.length ? matches.map(renderCard) : (
             <Text style={styles.note}>
-              No verified listings are available for this language and category yet.
-              The services below may be able to help you find support.
+              No profiles are available for this language and category.
             </Text>
           )}
-          <Text style={styles.heading}>Other support contacts</Text>
-          <Text style={styles.note}>
-            These are existing support services, not matched counsellors. Their languages and counselling
-            specialties have not been confirmed for your selection. Contact them to ask about availability,
-            qualifications, fees, and referrals.
-          </Text>
-          {alternatives.map(renderCard)}
           <Text style={styles.note}>
             For immediate danger, contact local emergency services or go to the nearest emergency department.
-            Contact details may change; confirm them before relying on them.
           </Text>
         </>
       )}
@@ -119,6 +123,9 @@ export default function CounsellingScreen() {
 
 const styles = StyleSheet.create({
   label: { color: Theme.text, fontWeight: '700', marginBottom: 8 },
+  demoNotice: { color: Theme.text, fontWeight: '700', lineHeight: 20, marginBottom: 8 },
+  supportButton: { alignSelf: 'flex-start', marginBottom: 18, paddingVertical: 8 },
+  supportText: { color: Theme.primaryDark, fontWeight: '800', textDecorationLine: 'underline' },
   options: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 12 },
   chip: { borderWidth: 1, borderColor: Theme.border, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 9, marginRight: 7, marginBottom: 7, backgroundColor: Theme.surface },
   activeChip: { backgroundColor: Theme.primary, borderColor: Theme.primary },
@@ -127,6 +134,8 @@ const styles = StyleSheet.create({
   heading: { color: Theme.text, fontWeight: '800', fontSize: 17, marginTop: 6, marginBottom: 9 },
   note: { color: Theme.muted, fontSize: 12, lineHeight: 19, marginBottom: 14 },
   card: { backgroundColor: Theme.surface, borderRadius: 21, padding: 17, marginBottom: 12, borderWidth: 1, borderColor: Theme.border },
+  demoLabel: { color: Theme.primaryDark, fontSize: 11, fontWeight: '800', marginBottom: 6 },
+  demoContact: { color: Theme.text, lineHeight: 20, marginTop: 6 },
   name: { color: Theme.text, fontSize: 17, fontWeight: '800' },
   organization: { color: Theme.primary, fontWeight: '600', marginTop: 3, marginBottom: 9 },
   description: { color: Theme.text, lineHeight: 21, marginTop: 5 },

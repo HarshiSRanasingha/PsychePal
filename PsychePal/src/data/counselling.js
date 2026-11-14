@@ -12,7 +12,7 @@ const categories = [
 function findCounsellors(counsellors, language, category) {
   if (!language || !category) return [];
   return counsellors.filter(counsellor =>
-    counsellor.verifiedOn && counsellor.sourceUrl &&
+    (counsellor.demo === true || (counsellor.verifiedOn && counsellor.sourceUrl)) &&
     counsellor.languages.includes(language) && counsellor.categories.includes(category));
 }
 

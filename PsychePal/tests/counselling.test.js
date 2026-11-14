@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { languages, categories, findCounsellors } = require('../src/data/counselling');
-const support = require('../src/data/supportContacts.json');
+const counsellors = require('../src/data/counsellors.json');
 
 test('counsellor matching requires both the selected language and category', () => {
   const listings = [
@@ -17,13 +17,18 @@ test('counsellor matching requires both the selected language and category', () 
   assert.deepEqual(findCounsellors(listings, 'English', null), []);
 });
 
-test('requested filter options and fallback support contacts are available', () => {
+test('each language and category has at least five distinct demo profiles', () => {
   assert.deepEqual(languages, ['Sinhala', 'Tamil', 'English']);
   assert.ok(categories.length >= 7);
   for (const category of ['Child counselling', 'Educational counselling', 'Women counselling', 'Family counselling']) {
     assert.ok(categories.includes(category));
   }
-  for (const id of ['nimh-helpline', 'nimh-hospital', 'sumithrayo-colombo']) {
-    assert.ok(support.some(service => service.id === id && service.contacts.length));
+  for (const language of languages) {
+    for (const category of categories) {
+      const matches = findCounsellors(counsellors, language, category);
+      assert.ok(matches.length >= 5, `${language}: ${category} needs five profiles`);
+      assert.ok(matches.every(item => item.demo === true && item.contacts.length > 0));
+      assert.equal(new Set(matches.map(item => item.id)).size, matches.length);
+    }
   }
 });
