@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Screen from '../components/Screen';
-import SectionCard from '../components/SectionCard';
 import { SoftLandscape } from '../components/CozyArt';
 import { CozyText as Text } from '../components/CozyText';
+import { useAppSettings } from '../context/AppSettingsContext';
 import quotes from '../data/dailyQuotes.json';
 import { Theme } from '../styles/theme';
 
@@ -19,7 +19,18 @@ const selfCareSuggestions = [
   'Put your phone aside for ten quiet minutes.',
 ];
 
+const exploreItems = [
+  { title: 'Mood History', description: 'Review your previous mood check-ins.', icon: '▥', background: '#F3FAF5', accent: '#D5EFE0', iconColor: '#278657' },
+  { title: 'Thought Reflection', description: 'Explore self-awareness, personality, strengths, and thoughts.', icon: '☁', background: '#F4F8FF', accent: '#D9E8FC', iconColor: '#266FB8' },
+  { title: 'Relaxation Toolkit', description: 'Try a breathing or grounding exercise.', icon: '❧', background: '#FFFAF1', accent: '#FFEAC1', iconColor: '#A86708' },
+  { title: 'Recommendations', description: 'Browse books, music, and movie suggestions.', icon: '♥', background: '#FFF5F8', accent: '#FADDEB', iconColor: '#B83F78' },
+  { title: 'Personal Diary', description: 'Write and manage private journal entries.', icon: '▤', background: '#F9F6FF', accent: '#E9DFFC', iconColor: '#7852B5' },
+  { title: 'Support Directory', description: 'Find relevant support contact information.', icon: '☎', background: '#FFF7F1', accent: '#FFE4D1', iconColor: '#B55A1B' },
+];
+
 export default function HomeScreen({ navigation }) {
+  const { width, fontScale } = useWindowDimensions();
+  const { darkMode } = useAppSettings();
   const [todayMood, setTodayMood] = useState(null);
   const [profileSettings, setProfileSettings] = useState({ preferredName: '', showDailyMotivation: true, showSelfCare: true });
   const today = new Date();
@@ -72,15 +83,6 @@ export default function HomeScreen({ navigation }) {
     loadHomeData();
     return () => { active = false; };
   }, []));
-
-  const items = [
-    ['Mood History', 'Review your previous mood check-ins.'],
-    ['Thought Reflection', 'Explore self-awareness, personality, strengths, and thoughts.'],
-    ['Relaxation Toolkit', 'Try a breathing or grounding exercise.'],
-    ['Recommendations', 'Browse books, music, and movie suggestions.'],
-    ['Personal Diary', 'Write and manage private journal entries.'],
-    ['Support Directory', 'Find relevant support contact information.'],
-  ];
 
   return (
     <Screen>
@@ -161,9 +163,34 @@ export default function HomeScreen({ navigation }) {
       ) : null}
 
       <Text style={styles.sectionHeading}>Explore your space</Text>
-      {items.map(([title, description]) => (
-        <SectionCard key={title} title={title} description={description} onPress={() => navigation.navigate(title)} />
-      ))}
+      <View style={styles.exploreGrid}>
+        {exploreItems.map(item => (
+          <Pressable
+            key={item.title}
+            accessibilityRole="button"
+            accessibilityLabel={`${item.title}. ${item.description}`}
+            onPress={() => navigation.navigate(item.title)}
+            style={({ pressed }) => [
+              styles.exploreCard,
+              width >= 900 ? styles.exploreCardWide : styles.exploreCardNarrow,
+              { backgroundColor: item.background, borderColor: item.accent, minHeight: 200 * Math.max(fontScale, 1) },
+              pressed && styles.pressed,
+            ]}
+          >
+            <View pointerEvents="none" style={[styles.exploreOrb, { backgroundColor: item.accent }]} />
+            <View pointerEvents="none" style={styles.exploreDots}>
+              {[0, 1, 2, 3, 4, 5].map(dot => (
+                <View key={dot} style={[styles.exploreDot, { backgroundColor: item.accent }]} />
+              ))}
+            </View>
+            <View style={[styles.exploreIconBox, { backgroundColor: item.accent }]}>
+              <Text style={[styles.exploreIcon, { color: darkMode ? '#E5ECE7' : item.iconColor }]}>{item.icon}</Text>
+            </View>
+            <Text style={styles.exploreTitle}>{item.title}</Text>
+            <Text style={styles.exploreDescription}>{item.description}</Text>
+          </Pressable>
+        ))}
+      </View>
     </Screen>
   );
 }
@@ -187,6 +214,17 @@ const styles = StyleSheet.create({
   moodSummary: { color: Theme.primaryDark, fontWeight: '700', fontSize: 12, marginTop: 10 },
   pressed: { opacity: 0.85, transform: [{ scale: 0.985 }] },
   sectionHeading: { color: Theme.text, fontSize: 18, fontWeight: '800', marginTop: 18, marginBottom: 11 },
+  exploreGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  exploreCard: { aspectRatio: 1, borderRadius: 22, borderWidth: 1, padding: 14, overflow: 'hidden' },
+  exploreCardWide: { width: '23.5%' },
+  exploreCardNarrow: { width: '47%' },
+  exploreOrb: { position: 'absolute', width: 120, height: 120, borderRadius: 60, right: -55, bottom: -55, opacity: 0.75 },
+  exploreDots: { position: 'absolute', top: 16, right: 15, width: 26, flexDirection: 'row', flexWrap: 'wrap', gap: 5, opacity: 0.9 },
+  exploreDot: { width: 5, height: 5, borderRadius: 3 },
+  exploreIconBox: { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center', marginBottom: 13 },
+  exploreIcon: { fontSize: 27, lineHeight: 32, fontWeight: '700' },
+  exploreTitle: { color: Theme.text, fontSize: 14, fontWeight: '800', lineHeight: 20, marginBottom: 6 },
+  exploreDescription: { color: Theme.muted, fontSize: 12, lineHeight: 17 },
   actionRow: { flexDirection: 'row', gap: 11 },
   actionCard: { flex: 1, minHeight: 132, justifyContent: 'center', borderRadius: 22, padding: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.85)', elevation: 2, shadowOpacity: 0.08, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } },
   breathingCard: { backgroundColor: '#E7EAF4', shadowColor: '#8588A5' },
