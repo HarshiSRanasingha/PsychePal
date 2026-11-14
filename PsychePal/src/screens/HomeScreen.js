@@ -23,7 +23,7 @@ const exploreItems = [
   { title: 'Mood History', description: 'Review your previous mood check-ins.', icon: '▥', background: '#F3FAF5', accent: '#D5EFE0', iconColor: '#278657' },
   { title: 'Thought Reflection', description: 'Explore self-awareness, personality, strengths, and thoughts.', icon: '☁', background: '#F4F8FF', accent: '#D9E8FC', iconColor: '#266FB8' },
   { title: 'Relaxation Toolkit', description: 'Try a breathing or grounding exercise.', icon: '❧', background: '#FFFAF1', accent: '#FFEAC1', iconColor: '#A86708' },
-  { title: 'Recommendations', description: 'Browse books, music, and movie suggestions.', icon: '♥', background: '#FFF5F8', accent: '#FADDEB', iconColor: '#B83F78' },
+  { title: 'Recommendations', description: 'Browse books, music, films, web games, and social links.', icon: '♥', background: '#FFF5F8', accent: '#FADDEB', iconColor: '#B83F78' },
   { title: 'Personal Diary', description: 'Write and manage private journal entries.', icon: '▤', background: '#F9F6FF', accent: '#E9DFFC', iconColor: '#7852B5' },
   { title: 'Support Directory', description: 'Find relevant support contact information.', icon: '☎', background: '#FFF7F1', accent: '#FFE4D1', iconColor: '#B55A1B' },
 ];
