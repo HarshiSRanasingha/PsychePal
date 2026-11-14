@@ -1,30 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { Alert, Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Screen from '../components/Screen';
 import CozyHero from '../components/CozyHero';
 import { CozyText as Text } from '../components/CozyText';
 import TextInput from '../components/CozyInput';
 import support from '../data/supportContacts.json';
+import openContact from '../data/openContact';
 import { Theme } from '../styles/theme';
-
-async function openContact(contact) {
-  const url = contact.type === 'phone'
-    ? `tel:${contact.value.replace(/[^\d+]/g, '')}`
-    : contact.value;
-  try {
-    const canOpen = await Linking.canOpenURL(url);
-    if (!canOpen) {
-      Alert.alert('Unable to open contact', 'This device cannot open the selected phone or web link.');
-      return;
-    }
-    await Linking.openURL(url);
-  } catch (error) {
-    Alert.alert(
-      'Unable to open contact',
-      error.message || 'Please try again or use the contact details shown in the listing.',
-    );
-  }
-}
 
 export default function SupportScreen() {
   const [category, setCategory] = useState('All');

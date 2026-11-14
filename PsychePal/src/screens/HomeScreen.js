@@ -79,6 +79,7 @@ export default function HomeScreen({ navigation }) {
     ['Relaxation Toolkit', 'Try a breathing or grounding exercise.'],
     ['Recommendations', 'Browse books, music, and movie suggestions.'],
     ['Personal Diary', 'Write and manage private journal entries.'],
+    ['Counselling', 'Find counselling by language and category.'],
     ['Support Directory', 'Find relevant support contact information.'],
   ];
 
