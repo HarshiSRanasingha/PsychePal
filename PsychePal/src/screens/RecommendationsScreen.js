@@ -8,6 +8,8 @@ import recommendationCatalog from '../data/recommendationCatalog.json';
 import socialLinks from '../data/socialLinks.json';
 import { Theme } from '../styles/theme';
 
+const { recommendationLinks } = require('../data/recommendationLinks');
+
 function makeRecommendations(type) {
   return Object.entries(recommendationCatalog[type]).flatMap(([category, entries]) =>
     entries.map((entry, index) => {
@@ -92,7 +94,7 @@ export default function RecommendationsScreen() {
       <CozyHero
         eyebrow="A LITTLE INSPIRATION"
         title="Find something you love"
-        description="Browse recommendations offline. Web games and social platforms open online."
+        description="Browse recommendations offline. Links to websites and games require internet access."
         art="🦋"
         colors={['#F7E5D9', '#E9E6F3']}
       />
@@ -129,7 +131,13 @@ export default function RecommendationsScreen() {
         </View>
       ) : (
         <>
-          {selectedType === 'Web Games' ? <Text style={styles.offlineNote}>Game listings are available offline; playing requires an internet connection. Some games may require an account or payment.</Text> : null}
+          <Text style={styles.offlineNote}>
+            {selectedType === 'Web Games'
+              ? 'Game listings are available offline; playing requires an internet connection. Some games may require an account or payment.'
+              : selectedType === 'Books'
+                ? 'Expand a book to search stores and check current prices. Prices, editions, and availability vary.'
+                : 'Expand a recommendation to search external websites. Availability, subscriptions, and regional restrictions may vary.'}
+          </Text>
           <TextInput
             accessibilityLabel="Search recommendations"
             value={query}
@@ -166,9 +174,20 @@ export default function RecommendationsScreen() {
                   <Text style={styles.category}>{item.category}{item.language !== 'Not specified' && item.language !== 'Web' ? ` · ${item.language}` : ''}</Text>
                   <Text style={styles.resultTitle}>{item.title}</Text>
                   <Text style={styles.description}>{item.description}</Text>
-                  <Text style={styles.readMore}>{expanded ? 'Hide details  ‹' : 'View details  ›'}</Text>
+                  <Text style={styles.readMore}>{expanded ? 'Hide details  ‹' : 'View details and links  ›'}</Text>
                   {expanded ? <Text style={styles.details}>{item.details}</Text> : null}
                 </Pressable>
+                {expanded ? recommendationLinks(selectedType, item.title).map(link => (
+                  <Pressable
+                    accessibilityRole="link"
+                    accessibilityLabel={`${link.label} for ${item.title}`}
+                    key={link.label}
+                    onPress={() => openWebsite(link.url)}
+                    style={styles.websiteButton}
+                  >
+                    <Text style={styles.websiteText}>{link.label}  ›</Text>
+                  </Pressable>
+                )) : null}
                 {item.url ? (
                   <Pressable
                     accessibilityRole="link"
