@@ -1,4 +1,18 @@
 [
-  {"id":"f1","title":"A locally selected inspirational film","language":"English","category":"Drama"},
-  {"id":"f2","title":"A locally selected feel-good film","language":"Sinhala","category":"Feel-good"}
+  {
+    "id": "f1",
+    "title": "A Little Light",
+    "language": "English",
+    "category": "Drama",
+    "description": "A locally created story recommendation about finding hope during a difficult week.",
+    "details": "This sample entry is part of PsychePal's offline catalogue. It can be used to prompt reflection about supportive relationships, small steps, and resilience."
+  },
+  {
+    "id": "f2",
+    "title": "Small Joys",
+    "language": "Sinhala",
+    "category": "Feel-good",
+    "description": "A locally created, uplifting film recommendation about everyday moments.",
+    "details": "This sample entry is part of PsychePal's offline catalogue. Consider what ordinary moments, people, or activities can bring comfort and encouragement."
+  }
 ]

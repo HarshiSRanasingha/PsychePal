@@ -1,4 +1,18 @@
 [
-  {"id":"b1","title":"The Little Prince","language":"English","category":"Fiction"},
-  {"id":"b2","title":"A locally selected poetry collection","language":"Sinhala","category":"Poetry"}
+  {
+    "id": "b1",
+    "title": "The Little Prince",
+    "language": "English",
+    "category": "Fiction",
+    "description": "A gentle story about friendship, curiosity, and seeing what matters.",
+    "details": "A reflective fiction recommendation for readers who enjoy imaginative stories and themes of kindness, connection, and perspective."
+  },
+  {
+    "id": "b2",
+    "title": "A Collection of Quiet Moments",
+    "language": "Sinhala",
+    "category": "Poetry",
+    "description": "A locally curated poetry selection for a calm reading break.",
+    "details": "This sample collection is intended for short, quiet reading. Choose a poem, take your time, and reflect on the images or feelings it brings to mind."
+  }
 ]

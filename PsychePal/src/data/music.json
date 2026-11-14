@@ -1,4 +1,18 @@
 [
-  {"id":"m1","title":"Calm Instrumental Playlist","language":"Instrumental","category":"Relaxation"},
-  {"id":"m2","title":"Nature Sounds","language":"Instrumental","category":"Mindfulness"}
+  {
+    "id": "m1",
+    "title": "Calm Instrumental Playlist",
+    "language": "Instrumental",
+    "category": "Relaxation",
+    "description": "A locally listed instrumental music suggestion for a quiet pause.",
+    "details": "Use this recommendation as a reminder to choose gentle instrumental music from audio already available on your device. PsychePal does not stream audio."
+  },
+  {
+    "id": "m2",
+    "title": "Nature Sounds",
+    "language": "Instrumental",
+    "category": "Mindfulness",
+    "description": "A nature-inspired listening suggestion for a grounding break.",
+    "details": "Try listening to nature sounds already available offline and notice a few details in the sound, such as rhythm, distance, or changes in volume."
+  }
 ]
