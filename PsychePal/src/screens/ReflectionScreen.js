@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalStore from '../data/localStore';
 import { useFocusEffect } from '@react-navigation/native';
 import Screen from '../components/Screen';
 import CozyHero from '../components/CozyHero';
@@ -62,7 +62,7 @@ export default function ReflectionScreen() {
 
   const loadNotes = useCallback(async () => {
     try {
-      const saved = await AsyncStorage.getItem('reflectionNotes');
+      const saved = await LocalStore.getItem('reflectionNotes');
       const loadedNotes = saved ? JSON.parse(saved) : [];
       if (!Array.isArray(loadedNotes)) throw new Error('Reflection notes data is not a list.');
       setNotes(loadedNotes);
@@ -91,7 +91,7 @@ export default function ReflectionScreen() {
     };
     const updated = [entry, ...notes];
     try {
-      await AsyncStorage.setItem('reflectionNotes', JSON.stringify(updated));
+      await LocalStore.setItem('reflectionNotes', JSON.stringify(updated));
       setNotes(updated);
       clearReflection();
       Alert.alert('Reflection saved', 'Your personal reflection note has been saved on this device.');
@@ -103,7 +103,7 @@ export default function ReflectionScreen() {
   async function removeNote(id) {
     const updated = notes.filter(note => note.id !== id);
     try {
-      await AsyncStorage.setItem('reflectionNotes', JSON.stringify(updated));
+      await LocalStore.setItem('reflectionNotes', JSON.stringify(updated));
       setNotes(updated);
     } catch (error) {
       Alert.alert('Could not delete reflection', error.message || 'Please try again.');

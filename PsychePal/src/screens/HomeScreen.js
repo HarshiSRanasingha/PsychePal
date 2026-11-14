@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Alert, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalStore from '../data/localStore';
 import Screen from '../components/Screen';
 import { SoftLandscape } from '../components/CozyArt';
 import { CozyText as Text } from '../components/CozyText';
@@ -53,7 +53,7 @@ export default function HomeScreen({ navigation }) {
     let active = true;
     async function loadHomeData() {
       try {
-        const moodValue = await AsyncStorage.getItem('moodRecords');
+        const moodValue = await LocalStore.getItem('moodRecords');
         if (active) {
           const records = JSON.parse(moodValue || '[]');
           const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
@@ -65,7 +65,7 @@ export default function HomeScreen({ navigation }) {
       }
 
       try {
-        const settingsValue = await AsyncStorage.getItem('profileSettings');
+        const settingsValue = await LocalStore.getItem('profileSettings');
         if (!active) return;
         const settings = settingsValue ? JSON.parse(settingsValue) : {};
         if (!settings || typeof settings !== 'object' || Array.isArray(settings)) {
