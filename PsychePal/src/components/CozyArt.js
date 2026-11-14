@@ -34,16 +34,17 @@ export function CloudPal({ size = 72 }) {
 }
 
 export function SoftLandscape({ style }) {
+  const { darkMode } = useAppSettings();
   return (
     <View accessibilityElementsHidden style={[styles.landscape, style]}>
-      <View style={styles.sun} />
-      <View style={[styles.cloudPuff, styles.skyCloudOne]} />
-      <View style={[styles.cloudPuff, styles.skyCloudTwo]} />
-      <View style={styles.hillBack} />
-      <View style={styles.hillFront} />
-      <View style={styles.treeTrunk} />
-      <View style={styles.treeTop} />
-      <View style={styles.flower} />
+      <View style={[styles.sun, darkMode && styles.darkSun]} />
+      <View style={[styles.cloudPuff, styles.skyCloudOne, darkMode && styles.darkSkyCloud]} />
+      <View style={[styles.cloudPuff, styles.skyCloudTwo, darkMode && styles.darkSkyCloud]} />
+      <View style={[styles.hillBack, darkMode && styles.darkHillBack]} />
+      <View style={[styles.hillFront, darkMode && styles.darkHillFront]} />
+      <View style={[styles.treeTrunk, darkMode && styles.darkTreeTrunk]} />
+      <View style={[styles.treeTop, darkMode && styles.darkTreeTop]} />
+      <View style={[styles.flower, darkMode && styles.darkFlower]} />
     </View>
   );
 }
@@ -55,7 +56,7 @@ export function MoodFace({ mood, color, size = 48 }) {
   const sleepy = mood === 'Tired';
   const smiling = mood === 'Happy' || mood === 'Calm';
   return (
-    <View style={[adaptStyle(styles.moodFace, darkMode), { width: size, height: size, borderRadius: size / 2, ...adaptStyle({ backgroundColor: color }, darkMode) }]}>
+    <View style={[adaptStyle(styles.moodFace, darkMode), { width: size, height: size, borderRadius: size / 2, backgroundColor: color }]}>
       <View style={styles.faceHighlight} />
       <View style={styles.faceEyes}>
         <View style={[styles.faceEye, sleepy && styles.sleepyEye]} />
@@ -109,6 +110,13 @@ const styles = StyleSheet.create({
   treeTrunk: { width: 5, height: 22, position: 'absolute', bottom: 16, left: '72%', backgroundColor: '#B38C71', borderRadius: 3 },
   treeTop: { width: 23, height: 25, position: 'absolute', bottom: 33, left: '68%', backgroundColor: '#8EB19A', borderRadius: 15 },
   flower: { width: 8, height: 8, position: 'absolute', bottom: 23, left: '29%', borderRadius: 4, backgroundColor: '#F3D28D' },
+  darkSun: { backgroundColor: '#E8B5D3' },
+  darkSkyCloud: { backgroundColor: '#B986A8' },
+  darkHillBack: { backgroundColor: '#67425F' },
+  darkHillFront: { backgroundColor: '#4C2B47' },
+  darkTreeTrunk: { backgroundColor: '#A77C9A' },
+  darkTreeTop: { backgroundColor: '#865673' },
+  darkFlower: { backgroundColor: '#E8B5D3' },
   moodFace: { alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(255,255,255,0.8)' },
   faceHighlight: { width: '48%', height: '22%', position: 'absolute', left: '12%', top: '9%', borderRadius: 99, backgroundColor: 'rgba(255,255,255,0.44)', transform: [{ rotate: '-32deg' }] },
   faceEyes: { width: '38%', position: 'absolute', top: '39%', left: '31%', flexDirection: 'row', justifyContent: 'space-between' },

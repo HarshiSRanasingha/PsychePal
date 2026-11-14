@@ -16,7 +16,8 @@ import { CloudPal } from './src/components/CozyArt';
 import AppSettingsContext from './src/context/AppSettingsContext';
 import { translate } from './src/i18n/translations';
 import PastelBackground from './src/components/PastelBackground';
-import { Theme } from './src/styles/theme';
+import { DarkPalette, Theme } from './src/styles/theme';
+import { adaptStyle } from './src/styles/darkMode';
 import HomeScreen from './src/screens/HomeScreen';
 import MoodScreen from './src/screens/MoodScreen';
 import ChatScreen from './src/screens/ChatScreen';
@@ -52,17 +53,7 @@ function parseAppSettings(value) {
 }
 
 function getPalette(darkMode) {
-  return darkMode
-    ? {
-      primary: '#9FC8AA',
-      primaryDark: '#C3D9CA',
-      background: '#151D19',
-      surface: '#202A24',
-      text: '#E5ECE7',
-      muted: '#AEBBB2',
-      border: '#3A4941',
-    }
-    : Theme;
+  return darkMode ? DarkPalette : Theme;
 }
 
 function Tabs() {
@@ -108,6 +99,7 @@ function Tabs() {
 
 function SplashScreen() {
   const fade = useRef(new Animated.Value(0)).current;
+  const { darkMode } = React.useContext(AppSettingsContext);
 
   useEffect(() => {
     Animated.timing(fade, {
@@ -121,7 +113,7 @@ function SplashScreen() {
     <PastelBackground>
       <View style={styles.splash}>
         <Animated.View style={[styles.brand, { opacity: fade }]}>
-          <View style={styles.logo}>
+          <View style={adaptStyle(styles.logo, darkMode)}>
             <CloudPal size={72} />
             <View style={styles.logoSparkle} />
             <View style={styles.logoDot} />
@@ -135,11 +127,12 @@ function SplashScreen() {
 }
 
 function WelcomeScreen({ onStart }) {
+  const { darkMode } = React.useContext(AppSettingsContext);
   return (
     <PastelBackground>
       <View style={styles.welcome}>
         <View style={styles.welcomeContent}>
-          <View style={[styles.logo, styles.welcomeLogo]}>
+          <View style={adaptStyle([styles.logo, styles.welcomeLogo], darkMode)}>
             <CloudPal size={72} />
             <View style={styles.logoSparkle} />
             <View style={styles.logoDot} />

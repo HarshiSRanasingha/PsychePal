@@ -4,7 +4,7 @@ import Screen from '../components/Screen';
 import { CozyText as Text } from '../components/CozyText';
 import { useAppSettings } from '../context/AppSettingsContext';
 import { translate } from '../i18n/translations';
-import { Theme } from '../styles/theme';
+import { DarkPalette, Theme } from '../styles/theme';
 
 const languages = [
   { code: 'en', label: 'English' },
@@ -67,8 +67,8 @@ export default function SettingsScreen({ navigation }) {
             accessibilityLabel={t('I need urgent support')}
             value={emergencyMode}
             onValueChange={setEmergencyMode}
-            trackColor={{ false: darkMode ? '#3A4941' : Theme.border, true: darkMode ? '#66886F' : '#A8C7B0' }}
-            thumbColor={emergencyMode ? '#9FC8AA' : '#F4F3F4'}
+            trackColor={{ false: darkMode ? DarkPalette.border : Theme.border, true: darkMode ? DarkPalette.button : '#A8C7B0' }}
+            thumbColor={emergencyMode ? (darkMode ? DarkPalette.primary : '#9FC8AA') : '#F4F3F4'}
           />
         </View>
         <Text style={styles.description}>{t('Show a calmer screen with support options. This will not contact anyone for you.')}</Text>

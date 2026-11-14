@@ -1,32 +1,50 @@
 import { StyleSheet } from 'react-native';
+import { DarkPalette } from './theme';
 
 const foregroundColors = {
-  '#34433d': '#e5ece7',
-  '#496a58': '#b9d5c2',
-  '#6e927d': '#9fc8aa',
-  '#7d8880': '#aebbb2',
-  '#a94442': '#ef9992',
+  '#34433d': DarkPalette.text,
+  '#496a58': DarkPalette.primaryDark,
+  '#6e927d': DarkPalette.primary,
+  '#7d8880': DarkPalette.muted,
+  '#a94442': '#FFB6C7',
 };
 
-function luminance(red, green, blue) {
-  return (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
+function parseColor(color) {
+  if (typeof color !== 'string') return null;
+  const hex = color.match(/^#([0-9a-f]{6})$/i);
+  if (hex) {
+    return [0, 2, 4].map(index => parseInt(hex[1].slice(index, index + 2), 16));
+  }
+  const rgb = color.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*[\d.]+)?\s*\)$/i);
+  return rgb ? rgb.slice(1, 4).map(Number) : null;
 }
 
 function darkenBackground(color) {
   if (typeof color !== 'string') return color;
-  if (/^rgba?\(\s*255,\s*255,\s*255/i.test(color)) return '#36443c';
-  const match = color.match(/^#([0-9a-f]{6})$/i);
-  if (!match) return color;
+  const knownColors = {
+    '#fbf8f3': DarkPalette.background,
+    '#fffefa': DarkPalette.surface,
+    '#6e927d': DarkPalette.button,
+    '#729a87': DarkPalette.button,
+    '#eae6de': DarkPalette.border,
+  };
+  const known = knownColors[color.toLowerCase()];
+  if (known) return known;
 
-  const hex = match[1];
-  const channels = [
-    parseInt(hex.slice(0, 2), 16),
-    parseInt(hex.slice(2, 4), 16),
-    parseInt(hex.slice(4, 6), 16),
-  ];
-  if (luminance(...channels) < 0.66) return color;
-  const base = [24, 32, 27];
-  return `#${channels.map((channel, index) => Math.round(channel * 0.18 + base[index] * 0.82).toString(16).padStart(2, '0')).join('')}`;
+  const channels = parseColor(color);
+  if (!channels || Math.max(...channels) < 168) return color;
+  const base = [29, 11, 25];
+  return `#${channels.map((channel, index) => Math.round(channel * 0.12 + base[index]).toString(16).padStart(2, '0')).join('')}`;
+}
+
+function lightenForeground(color) {
+  if (typeof color !== 'string') return color;
+  const known = foregroundColors[color.toLowerCase()];
+  if (known) return known;
+  const channels = parseColor(color);
+  if (!channels) return color;
+  const brightness = (0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]) / 255;
+  return brightness < 0.65 ? DarkPalette.muted : color;
 }
 
 export function adaptStyle(style, darkMode) {
@@ -45,8 +63,8 @@ export function adaptStyle(style, darkMode) {
   if (adapted.borderColor) {
     adapted.borderColor = darkenBackground(adapted.borderColor);
   }
-  if (typeof adapted.color === 'string') {
-    adapted.color = foregroundColors[adapted.color.toLowerCase()] || adapted.color;
+  if (adapted.color) {
+    adapted.color = lightenForeground(adapted.color);
   }
   return adapted;
 }

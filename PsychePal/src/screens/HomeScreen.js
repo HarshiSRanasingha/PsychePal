@@ -7,7 +7,7 @@ import { SoftLandscape } from '../components/CozyArt';
 import { CozyText as Text } from '../components/CozyText';
 import { useAppSettings } from '../context/AppSettingsContext';
 import quotes from '../data/dailyQuotes.json';
-import { Theme } from '../styles/theme';
+import { DarkPalette, Theme } from '../styles/theme';
 
 const selfCareSuggestions = [
   'Take a five-minute pause and notice three things around you.',
@@ -184,7 +184,7 @@ export default function HomeScreen({ navigation }) {
               ))}
             </View>
             <View style={[styles.exploreIconBox, { backgroundColor: item.accent }]}>
-              <Text style={[styles.exploreIcon, { color: darkMode ? '#E5ECE7' : item.iconColor }]}>{item.icon}</Text>
+              <Text style={[styles.exploreIcon, { color: darkMode ? DarkPalette.primaryDark : item.iconColor }]}>{item.icon}</Text>
             </View>
             <Text style={styles.exploreTitle}>{item.title}</Text>
             <Text style={styles.exploreDescription}>{item.description}</Text>
