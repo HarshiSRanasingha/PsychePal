@@ -58,6 +58,7 @@ test('dark styles remain stable when adapted twice and handle pressed styles', (
   const style = { backgroundColor: '#6E927D', color: '#FFFFFF' };
   const dark = adaptStyle(style, true);
   assert.equal(dark.backgroundColor, DarkPalette.button);
+  assert.equal(adaptStyle({ backgroundColor: '#496A58' }, true).backgroundColor, DarkPalette.button);
   assert.deepEqual({ ...adaptStyle(dark, true) }, { ...dark });
   const pressed = adaptStyle(({ pressed }) => [style, pressed && { opacity: 0.8 }], true);
   assert.equal(pressed({ pressed: true }).backgroundColor, DarkPalette.button);

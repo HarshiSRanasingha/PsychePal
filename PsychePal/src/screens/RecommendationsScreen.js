@@ -51,6 +51,12 @@ const media = [
   ['Books', 'Books by category and language', bookCategories],
 ];
 
+const mediaArtwork = {
+  Music: { color: '#EDF2FB', accent: '#D5E4F8', symbol: '♫' },
+  Movies: { color: '#FDF0ED', accent: '#F9DED8', symbol: '▶' },
+  Books: { color: '#F1ECF9', accent: '#E4DAF6', symbol: '▤' },
+};
+
 export default function RecommendationsScreen() {
   const [selectedType, setSelectedType] = useState('Music');
   const [selection, setSelection] = useState(null);
@@ -105,63 +111,90 @@ export default function RecommendationsScreen() {
 
   return (
     <Screen>
-      <CozyHero
-        eyebrow="A LITTLE INSPIRATION"
-        title="Find something you love"
-        description="A calming song, a story, or something new to explore."
-        art="🦋"
-        colors={['#F7E5D9', '#E9E6F3']}
-      />
-      <View style={styles.types}>
-        {media.map(([type, description]) => (
-          <Pressable
-            key={type}
-            style={[styles.typeCard, selectedType === type && styles.activeType]}
-            onPress={() => chooseType(type)}
-          >
-            <Text style={[styles.typeTitle, selectedType === type && styles.activeTypeText]}>{type}</Text>
-            <Text style={[styles.typeDescription, selectedType === type && styles.activeTypeText]}>{description}</Text>
-          </Pressable>
-        ))}
+      <View style={styles.page}>
+        <View pointerEvents="none" aria-hidden accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={StyleSheet.absoluteFill}>
+          <View style={[styles.backgroundOrb, styles.backgroundOrbTop]} />
+          <View style={[styles.backgroundOrb, styles.backgroundOrbMiddle]} />
+          <View style={[styles.backgroundOrb, styles.backgroundOrbBottom]} />
+          <Text style={[styles.backgroundSymbol, styles.musicSymbol]}>♫</Text>
+          <Text style={[styles.backgroundSymbol, styles.sparkleSymbol]}>✦</Text>
+          <Text style={[styles.backgroundSymbol, styles.bookSymbol]}>✧</Text>
+        </View>
+        <CozyHero
+          eyebrow="A LITTLE INSPIRATION"
+          title="Find something you love"
+          description="A calming song, a story, or something new to explore."
+          art="🦋"
+          colors={['#FCECE5', '#ECE8F7']}
+        />
+        <View style={styles.types}>
+          {media.map(([type, description]) => (
+            <Pressable
+              key={type}
+              accessibilityRole="button"
+              accessibilityState={{ selected: selectedType === type }}
+              style={[styles.typeCard, { backgroundColor: mediaArtwork[type].color }, selectedType === type && styles.activeType]}
+              onPress={() => chooseType(type)}
+            >
+              <View pointerEvents="none" aria-hidden accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={[styles.typeOrb, { backgroundColor: mediaArtwork[type].accent }, selectedType === type && styles.activeTypeOrb]} />
+              <Text pointerEvents="none" aria-hidden accessibilityElementsHidden style={[styles.typeSymbol, selectedType === type && styles.activeTypeSymbol]}>{mediaArtwork[type].symbol}</Text>
+              <Text style={[styles.typeTitle, selectedType === type && styles.activeTypeText]}>{type}</Text>
+              <Text style={[styles.typeDescription, selectedType === type && styles.activeTypeText]}>{description}</Text>
+            </Pressable>
+          ))}
+        </View>
+        <Text style={styles.label}>{selectedType === 'Music' ? 'Music type' : selectedType === 'Movies' ? 'Genre' : 'Book category'}</Text>
+        <View style={styles.categories}>
+          {options.map(option => (
+            <Pressable key={option} style={[styles.category, selection === option && styles.activeCategory]} onPress={() => chooseSelection(option)}>
+              <Text style={[styles.categoryText, selection === option && styles.activeCategoryText]}>{option}</Text>
+            </Pressable>
+          ))}
+        </View>
+        {selection ? (
+          <>
+            <Text style={styles.label}>Language</Text>
+            <View style={styles.categories}>
+              {availableLanguages.map(option => (
+                <Pressable key={option} style={[styles.category, language === option && styles.activeCategory]} onPress={() => setLanguage(option)}>
+                  <Text style={[styles.categoryText, language === option && styles.activeCategoryText]}>{option}</Text>
+                </Pressable>
+              ))}
+            </View>
+          </>
+        ) : null}
+        {language ? (
+          <>
+            <Text style={styles.sectionHeading}>{selection} · {language}</Text>
+            {showResults()}
+          </>
+        ) : (
+          <Text style={styles.empty}>Choose {selection ? 'a language' : selectedType === 'Music' ? 'a music type' : selectedType === 'Movies' ? 'a genre' : 'a book category'} to see recommendations.</Text>
+        )}
       </View>
-      <Text style={styles.label}>{selectedType === 'Music' ? 'Music type' : selectedType === 'Movies' ? 'Genre' : 'Book category'}</Text>
-      <View style={styles.categories}>
-        {options.map(option => (
-          <Pressable key={option} style={[styles.category, selection === option && styles.activeCategory]} onPress={() => chooseSelection(option)}>
-            <Text style={[styles.categoryText, selection === option && styles.activeCategoryText]}>{option}</Text>
-          </Pressable>
-        ))}
-      </View>
-      {selection ? (
-        <>
-          <Text style={styles.label}>Language</Text>
-          <View style={styles.categories}>
-            {availableLanguages.map(option => (
-              <Pressable key={option} style={[styles.category, language === option && styles.activeCategory]} onPress={() => setLanguage(option)}>
-                <Text style={[styles.categoryText, language === option && styles.activeCategoryText]}>{option}</Text>
-              </Pressable>
-            ))}
-          </View>
-        </>
-      ) : null}
-      {language ? (
-        <>
-          <Text style={styles.sectionHeading}>{selection} · {language}</Text>
-          {showResults()}
-        </>
-      ) : (
-        <Text style={styles.empty}>Choose {selection ? 'a language' : selectedType === 'Music' ? 'a music type' : selectedType === 'Movies' ? 'a genre' : 'a book category'} to see recommendations.</Text>
-      )}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  page: { width: '100%', maxWidth: 1100, alignSelf: 'center', overflow: 'hidden' },
+  backgroundOrb: { position: 'absolute', borderRadius: 999, opacity: 0.45 },
+  backgroundOrbTop: { width: 250, height: 250, right: -100, top: 110, backgroundColor: '#F4DDEA' },
+  backgroundOrbMiddle: { width: 220, height: 220, left: -125, top: 360, backgroundColor: '#E0EAF7' },
+  backgroundOrbBottom: { width: 200, height: 200, right: -110, bottom: 10, backgroundColor: '#F8E5D8' },
+  backgroundSymbol: { position: 'absolute', color: '#BFA6CB', opacity: 0.3, fontWeight: '700' },
+  musicSymbol: { right: 24, top: 280, fontSize: 44, transform: [{ rotate: '12deg' }] },
+  sparkleSymbol: { left: 18, top: 315, fontSize: 26 },
+  bookSymbol: { right: 38, bottom: 70, fontSize: 38 },
   types: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 18 },
-  typeCard: { width: '48%', minHeight: 96, backgroundColor: 'rgba(255,255,255,0.78)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 20, padding: 14 },
-  activeType: { backgroundColor: Theme.primary, borderColor: Theme.primary },
+  typeCard: { width: '48%', minHeight: 110, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 20, padding: 16, overflow: 'hidden' },
+  typeOrb: { position: 'absolute', width: 100, height: 100, right: -30, bottom: -40, borderRadius: 50, opacity: 0.8 },
+  activeTypeOrb: { backgroundColor: '#BFD9C4' },
+  typeSymbol: { position: 'absolute', right: 18, top: 12, color: '#91A6B4', opacity: 0.42, fontSize: 30, fontWeight: '800' },
+  activeTypeSymbol: { color: '#FFFFFF', opacity: 0.35 },
+  activeType: { backgroundColor: Theme.primaryDark, borderColor: Theme.primaryDark },
   typeTitle: { color: Theme.primaryDark, fontSize: 17, fontWeight: '800', marginBottom: 5 },
-  typeDescription: { color: Theme.muted, fontSize: 12, lineHeight: 17 },
+  typeDescription: { color: '#53665D', fontSize: 12, lineHeight: 17, maxWidth: '80%' },
   activeTypeText: { color: '#FFFFFF' },
   label: { color: Theme.text, fontWeight: '700', marginBottom: 8 },
   categories: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 14 },

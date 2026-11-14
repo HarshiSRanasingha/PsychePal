@@ -1,16 +1,21 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Alert, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Platform, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Screen from '../components/Screen';
 import CozyHero from '../components/CozyHero';
 import { CozyText as Text } from '../components/CozyText';
-import { Theme } from '../styles/theme';
+import { useAppSettings } from '../context/AppSettingsContext';
+import { adaptStyle } from '../styles/darkMode';
+import { DarkPalette, Theme } from '../styles/theme';
 
-const emotions = ['All', 'Happy', 'Calm', 'Neutral', 'Sad', 'Anxious', 'Angry', 'Tired'];
+const emotions = ['All', 'Happy', 'Calm', 'Neutral', 'Sad', 'Anxious', 'Angry', 'Tired', 'Distressed'];
+const emotionIcons = { Happy: '😊', Calm: '😌', Neutral: '😐', Sad: '😔', Anxious: '😟', Angry: '😠', Tired: '😴', Distressed: '😣' };
 
 export default function MoodHistoryScreen() {
+  const { width, fontScale } = useWindowDimensions();
+  const { darkMode } = useAppSettings();
   const [records, setRecords] = useState([]);
   const [period, setPeriod] = useState('All');
   const [emotion, setEmotion] = useState('All');
@@ -59,50 +64,89 @@ export default function MoodHistoryScreen() {
 
   return (
     <Screen>
-      <CozyHero
-        eyebrow="YOUR JOURNEY"
-        title="Mood History"
-        description="Notice patterns gently, one day at a time."
-        art="🌿"
-        colors={['#E6F1E8', '#E9EDF7']}
-      />
-      <View style={styles.streak}><Text style={styles.streakText}>🌱 {streak} day check-in streak</Text></View>
-      <View style={styles.summaryRow}><View style={[styles.summaryCard, styles.summaryMint]}><Text style={styles.summaryValue}>{filtered.length}</Text><Text style={styles.summaryLabel}>Entries</Text></View><View style={[styles.summaryCard, styles.summaryLavender]}><Text style={styles.summaryValue}>{average}</Text><Text style={styles.summaryLabel}>Avg intensity</Text></View><View style={[styles.summaryCard, styles.summaryPeach]}><Text style={styles.summaryValue}>{commonMood}</Text><Text style={styles.summaryLabel}>Most common</Text></View></View>
-      <Text style={styles.sectionLabel}>Summary</Text>
-      <View style={styles.wrap}>{['Day', 'Week', 'All'].map(option => <Pressable accessibilityRole="button" accessibilityState={{ selected: period === option }} key={option} onPress={() => setPeriod(option)} style={[styles.option, period === option && styles.activeOption]}><Text style={[styles.optionText, period === option && styles.activeOptionText]}>{option === 'Day' ? 'Daily' : option === 'Week' ? 'Weekly' : 'All time'}</Text></Pressable>)}</View>
-      <Pressable accessibilityRole="button" accessibilityLabel="Filter mood history by date" style={styles.dateButton} onPress={() => setShowDatePicker(true)}><Text style={styles.dateText}>{selectedDate ? selectedDate.toLocaleDateString() : 'Filter by date'}</Text></Pressable>
-      {selectedDate ? <Pressable accessibilityRole="button" onPress={() => setSelectedDate(null)}><Text style={styles.clearDate}>Clear date filter</Text></Pressable> : null}
-      {showDatePicker ? <DateTimePicker value={selectedDate || new Date()} mode="date" display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={(event, value) => { setShowDatePicker(false); if (value && event.type !== 'dismissed') setSelectedDate(value); }} /> : null}
-      <Text style={styles.sectionLabel}>Emotion</Text>
-      <View style={styles.wrap}>{emotions.map(option => <Pressable accessibilityRole="button" accessibilityState={{ selected: emotion === option }} key={option} onPress={() => setEmotion(option)} style={[styles.option, emotion === option && styles.activeOption]}><Text style={[styles.optionText, emotion === option && styles.activeOptionText]}>{option}</Text></Pressable>)}</View>
-      <Text style={styles.sectionLabel}>Mood intensity trend</Text>
-      <View style={styles.chart}>{trend.length ? trend.map(record => <View key={record.id} style={styles.barColumn}><Text style={styles.barValue}>{record.intensity}</Text><View style={[styles.bar, { height: 18 + (Number(record.intensity) / maxIntensity) * 82 }]} /><Text style={styles.barDate}>{new Date(record.date).toLocaleDateString([], { weekday: 'short' })}</Text></View>) : <Text style={styles.empty}>No trend data for these filters.</Text>}</View>
-      <Text style={styles.sectionLabel}>Entries</Text>
-      {!filtered.length ? <Text style={styles.empty}>No mood entries match these filters.</Text> :
-        filtered.map(record => <View key={record.id} style={styles.item}><Text style={styles.itemTitle}>{record.mood} - Intensity {record.intensity}/10</Text><Text style={styles.itemMeta}>{new Date(record.date).toLocaleString()}</Text>{record.note ? <Text style={styles.itemNote}>{record.note}</Text> : null}</View>)}
+      <View style={styles.dashboard}>
+        <CozyHero
+          eyebrow="YOUR JOURNEY"
+          title="Mood History"
+          description="Notice patterns gently, one day at a time."
+          art="🌿"
+          colors={['#E8F3EB', '#FCF7EF']}
+          landscape
+        />
+        <View style={styles.streak}><Text style={styles.streakText}>🌱 {streak} day check-in streak</Text></View>
+        <View style={[styles.summaryRow, (width < 420 || fontScale > 1.4) && styles.summaryRowNarrow]}>
+          {[
+            { label: 'Entries', value: filtered.length, icon: '▤', style: styles.summaryMint },
+            { label: 'Avg intensity', value: average, icon: '✦', style: styles.summaryLavender },
+            { label: 'Most common', value: commonMood, icon: '☼', style: styles.summaryPeach },
+          ].map(item => (
+            <View key={item.label} style={[styles.summaryCard, item.style]}>
+              <View style={styles.summaryIcon}><Text style={styles.summaryIconText}>{item.icon}</Text></View>
+              <View style={styles.summaryCopy}><Text style={styles.summaryValue}>{item.value}</Text><Text style={styles.summaryLabel}>{item.label}</Text></View>
+              <View pointerEvents="none" style={styles.summaryOrb} />
+            </View>
+          ))}
+        </View>
+        <Text style={styles.sectionLabel}>Summary</Text>
+        <View style={styles.wrap}>{['Day', 'Week', 'All'].map(option => <Pressable accessibilityRole="button" accessibilityState={{ selected: period === option }} key={option} onPress={() => setPeriod(option)} style={[styles.option, period === option && styles.activeOption]}><Text style={[styles.optionText, period === option && styles.activeOptionText]}>{option === 'Day' ? 'Daily' : option === 'Week' ? 'Weekly' : 'All time'}</Text></Pressable>)}</View>
+        {Platform.OS === 'web' ? React.createElement('input', {
+          type: 'date',
+          'aria-label': 'Filter mood history by date',
+          value: selectedDate ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}` : '',
+          onChange: event => {
+            const value = event.target.value;
+            if (!value) {
+              setSelectedDate(null);
+              return;
+            }
+            const [year, month, day] = value.split('-').map(Number);
+            setSelectedDate(new Date(year, month - 1, day));
+          },
+          style: { ...adaptStyle(styles.dateButton, darkMode), color: darkMode ? DarkPalette.text : Theme.text, width: '100%', fontSize: 14, fontFamily: 'Nunito_400Regular, sans-serif', borderStyle: 'solid' },
+        }) : <Pressable accessibilityRole="button" accessibilityLabel="Filter mood history by date" style={styles.dateButton} onPress={() => setShowDatePicker(true)}><Text style={styles.dateText}>{selectedDate ? selectedDate.toLocaleDateString() : 'Filter by date'}</Text></Pressable>}
+        {selectedDate ? <Pressable accessibilityRole="button" onPress={() => setSelectedDate(null)}><Text style={styles.clearDate}>Clear date filter</Text></Pressable> : null}
+        {showDatePicker ? <DateTimePicker value={selectedDate || new Date()} mode="date" display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={(event, value) => { setShowDatePicker(false); if (value && event.type !== 'dismissed') setSelectedDate(value); }} /> : null}
+        <Text style={styles.sectionLabel}>Emotion</Text>
+        <View style={styles.wrap}>{emotions.map(option => <Pressable accessibilityRole="button" accessibilityState={{ selected: emotion === option }} key={option} onPress={() => setEmotion(option)} style={[styles.option, emotion === option && styles.activeOption]}><Text style={[styles.optionText, emotion === option && styles.activeOptionText]}>{emotionIcons[option] ? `${emotionIcons[option]} ` : ''}{option}</Text></Pressable>)}</View>
+        <Text style={styles.sectionLabel}>Mood intensity trend</Text>
+        <View style={styles.chart}>{trend.length ? trend.map(record => <View key={record.id} style={styles.barColumn}><Text style={styles.barValue}>{record.intensity}</Text><View style={[styles.bar, { height: 18 + (Number(record.intensity) / maxIntensity) * 82 }]} /><Text style={styles.barDate}>{new Date(record.date).toLocaleDateString([], { weekday: 'short' })}</Text></View>) : <View style={styles.emptyPanel}><Text style={styles.emptyIcon}>⌁</Text><Text style={styles.emptyTitle}>No trend data for these filters.</Text><Text style={styles.empty}>Start logging your mood to see your trends here.</Text></View>}</View>
+        <Text style={styles.sectionLabel}>Entries</Text>
+        {!filtered.length ? <View style={styles.emptyEntries}><Text style={styles.emptyIcon}>▤</Text><Text style={styles.emptyTitle}>No mood entries match these filters.</Text><Text style={styles.empty}>Try adjusting your filters or add a new entry.</Text></View> :
+          filtered.map(record => <View key={record.id} style={styles.item}><Text style={styles.itemTitle}>{record.mood} - Intensity {record.intensity}/10</Text><Text style={styles.itemMeta}>{new Date(record.date).toLocaleString()}</Text>{record.note ? <Text style={styles.itemNote}>{record.note}</Text> : null}</View>)}
+      </View>
     </Screen>
   );
 }
 const styles = StyleSheet.create({
+  dashboard: { width: '100%', maxWidth: 1360, alignSelf: 'center' },
   streak: { backgroundColor: '#E8F2E9', borderRadius: 18, padding: 14, marginBottom: 14 },
   streakText: { color: '#2C6E49', fontWeight: '700' },
   sectionLabel: { color: Theme.text, fontSize: 15, fontWeight: '800', marginTop: 18, marginBottom: 9 },
-  summaryRow: { flexDirection: 'row', gap: 8 },
-  summaryCard: { flex: 1, minHeight: 82, justifyContent: 'center', borderRadius: 18, padding: 9 },
+  summaryRow: { flexDirection: 'row', gap: 14 },
+  summaryRowNarrow: { flexDirection: 'column' },
+  summaryCard: { flex: 1, minHeight: 88, flexDirection: 'row', alignItems: 'center', borderRadius: 18, padding: 14, overflow: 'hidden' },
   summaryMint: { backgroundColor: '#E7F1E9' }, summaryLavender: { backgroundColor: '#EEE8F5' }, summaryPeach: { backgroundColor: '#F8EDE0' },
-  summaryValue: { color: Theme.primaryDark, fontSize: 17, fontWeight: '800', textAlign: 'center' },
-  summaryLabel: { color: Theme.muted, fontSize: 11, textAlign: 'center', marginTop: 4 },
+  summaryIcon: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFEFA', marginRight: 14 },
+  summaryIconText: { color: Theme.primary, fontSize: 24, fontWeight: '800' },
+  summaryCopy: { flexShrink: 1, zIndex: 1 },
+  summaryOrb: { position: 'absolute', width: 100, height: 100, borderRadius: 50, right: -32, bottom: -65, backgroundColor: 'rgba(255,255,255,0.5)' },
+  summaryValue: { color: Theme.primaryDark, fontSize: 21, fontWeight: '800' },
+  summaryLabel: { color: Theme.muted, fontSize: 12, marginTop: 3 },
   wrap: { flexDirection: 'row', flexWrap: 'wrap' },
   option: { minHeight: 38, justifyContent: 'center', borderWidth: 1, borderColor: Theme.border, borderRadius: 18, paddingHorizontal: 13, marginRight: 6, marginBottom: 6, backgroundColor: 'rgba(255,255,255,0.72)' },
-  activeOption: { backgroundColor: Theme.primary, borderColor: Theme.primary },
+  activeOption: { backgroundColor: Theme.primaryDark, borderColor: Theme.primaryDark },
   optionText: { color: Theme.text }, activeOptionText: { color: '#FFFFFF', fontWeight: '700' },
   dateButton: { borderWidth: 1, borderColor: Theme.border, borderRadius: 16, padding: 14, backgroundColor: 'rgba(255,255,255,0.82)' },
   dateText: { color: Theme.text }, clearDate: { color: Theme.primary, fontWeight: '700', marginTop: 8 },
-  chart: { height: 150, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-around', backgroundColor: 'rgba(255,255,255,0.76)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 20, padding: 10 },
+  chart: { minHeight: 150, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-around', backgroundColor: 'rgba(255,255,255,0.76)', borderWidth: 1, borderColor: Theme.border, borderRadius: 20, padding: 14 },
   barColumn: { alignItems: 'center', justifyContent: 'flex-end', minWidth: 30 },
   bar: { width: 18, borderRadius: 5, backgroundColor: Theme.primary },
   barValue: { color: Theme.text, fontSize: 11, fontWeight: '700' }, barDate: { color: Theme.muted, fontSize: 10, marginTop: 4 },
-  empty: { color: Theme.muted, lineHeight: 22 },
+  emptyPanel: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  emptyEntries: { alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.82)', borderColor: Theme.border, borderWidth: 1, borderRadius: 20, padding: 22, minHeight: 140 },
+  emptyIcon: { color: Theme.primary, fontSize: 32, lineHeight: 40 },
+  emptyTitle: { color: Theme.text, fontSize: 13, fontWeight: '800', textAlign: 'center', marginTop: 4 },
+  empty: { color: Theme.muted, lineHeight: 22, textAlign: 'center' },
   item: { backgroundColor: 'rgba(255,255,255,0.82)', borderColor: 'rgba(255,255,255,0.9)', borderWidth: 1, borderRadius: 20, padding: 16, marginBottom: 10 },
   itemTitle: { color: Theme.text, fontWeight: '700' }, itemMeta: { color: Theme.muted, fontSize: 12, marginTop: 2 }, itemNote: { color: Theme.text, lineHeight: 20, marginTop: 8 },
 });

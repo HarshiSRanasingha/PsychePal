@@ -25,6 +25,7 @@ function darkenBackground(color) {
     '#fbf8f3': DarkPalette.background,
     '#fffefa': DarkPalette.surface,
     '#6e927d': DarkPalette.button,
+    '#496a58': DarkPalette.button,
     '#729a87': DarkPalette.button,
     '#eae6de': DarkPalette.border,
   };
