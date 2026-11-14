@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Animated, Alert, StyleSheet, Platform, Pressable, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalStore from '../data/localStore';
 import Screen from '../components/Screen';
 import PrimaryButton from '../components/PrimaryButton';
 import { MoodFace, SoftLandscape } from '../components/CozyArt';
@@ -91,11 +91,11 @@ export default function MoodScreen({ navigation }) {
     if (!selected) return Alert.alert('Choose a mood', 'Please select how you feel first.');
     try {
       const moodIntensity = Math.min(10, Math.max(1, Number(intensity) || 5));
-      const stored = await AsyncStorage.getItem('moodRecords');
+      const stored = await LocalStore.getItem('moodRecords');
       const existing = JSON.parse(stored || '[]');
       if (!Array.isArray(existing)) throw new Error('Your saved mood check-ins are not in the expected format.');
       const record = { id: Date.now().toString(), mood: selected, intensity: moodIntensity, note: note.trim(), date: recordedAt.toISOString() };
-      await AsyncStorage.setItem('moodRecords', JSON.stringify([record, ...existing]));
+      await LocalStore.setItem('moodRecords', JSON.stringify([record, ...existing]));
       setIntensity(5);
       setNote('');
       setRecordedAt(new Date());

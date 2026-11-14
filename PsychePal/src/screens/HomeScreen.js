@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Alert, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalStore from '../data/localStore';
 import Screen from '../components/Screen';
 import { SoftLandscape } from '../components/CozyArt';
 import { CozyText as Text } from '../components/CozyText';
@@ -23,8 +23,9 @@ const exploreItems = [
   { title: 'Mood History', description: 'Review your previous mood check-ins.', icon: '▥', background: '#F5FAF7', accent: '#D7F0E2', iconColor: '#32A76B' },
   { title: 'Thought Reflection', description: 'Explore self-awareness, personality, strengths, and thoughts.', icon: '☁', background: '#F5F8FE', accent: '#DCEAFE', iconColor: '#318BE2' },
   { title: 'Relaxation Toolkit', description: 'Try a breathing or grounding exercise.', icon: '❧', background: '#FFFAF4', accent: '#FFEBC7', iconColor: '#E9A31B' },
-  { title: 'Recommendations', description: 'Browse books, music, and movie suggestions.', icon: '♥', background: '#FDF6F9', accent: '#FCE1ED', iconColor: '#EC6BA4' },
+  { title: 'Recommendations', description: 'Browse books, music, films, web games, and social links.', icon: '♥', background: '#FDF6F9', accent: '#FCE1ED', iconColor: '#EC6BA4' },
   { title: 'Personal Diary', description: 'Write and manage private journal entries.', icon: '▤', background: '#F9F7FE', accent: '#EBE2FC', iconColor: '#A77AE4' },
+  { title: 'Counselling', description: 'Find counselling by language and category.', icon: '✿', background: '#F5FAF7', accent: '#D7F0E2', iconColor: '#32A76B' },
   { title: 'Support Directory', description: 'Find relevant support contact information.', icon: '☎', background: '#FFF8F3', accent: '#FFE5D3', iconColor: '#E8771D' },
   { title: 'Safety & Resources', screen: 'Resources', description: 'Helpful resources for your well-being.', icon: '✦', background: '#F4F8FE', accent: '#DCE9FC', iconColor: '#378AE2' },
 ];
@@ -56,7 +57,7 @@ export default function HomeScreen({ navigation }) {
     let active = true;
     async function loadHomeData() {
       try {
-        const moodValue = await AsyncStorage.getItem('moodRecords');
+        const moodValue = await LocalStore.getItem('moodRecords');
         if (active) {
           const records = JSON.parse(moodValue || '[]');
           const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
@@ -68,7 +69,7 @@ export default function HomeScreen({ navigation }) {
       }
 
       try {
-        const settingsValue = await AsyncStorage.getItem('profileSettings');
+        const settingsValue = await LocalStore.getItem('profileSettings');
         if (!active) return;
         const settings = settingsValue ? JSON.parse(settingsValue) : {};
         if (!settings || typeof settings !== 'object' || Array.isArray(settings)) {

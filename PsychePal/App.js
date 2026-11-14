@@ -15,6 +15,9 @@ import CozyText from './src/components/CozyText';
 import { CloudPal } from './src/components/CozyArt';
 import AppSettingsContext from './src/context/AppSettingsContext';
 import { translate } from './src/i18n/translations';
+import { LoginScreen, RegisterScreen } from './src/screens/AuthScreens';
+import { finishPendingLegacyCleanup, listLocalAccounts } from './src/data/localAccounts';
+import { getDatabase, setActiveAccountId } from './src/data/localStore';
 import PastelBackground from './src/components/PastelBackground';
 import { DarkPalette, Theme } from './src/styles/theme';
 import { adaptStyle } from './src/styles/darkMode';
@@ -29,6 +32,7 @@ import RelaxationScreen from './src/screens/RelaxationScreen';
 import RecommendationsScreen from './src/screens/RecommendationsScreen';
 import DiaryScreen from './src/screens/DiaryScreen';
 import SupportScreen from './src/screens/SupportScreen';
+import CounsellingScreen from './src/screens/CounsellingScreen';
 import GamesScreen from './src/screens/GamesScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import EmergencyScreen from './src/screens/EmergencyScreen';
@@ -154,6 +158,9 @@ export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [showWelcome, setShowWelcome] = useState(false);
   const [appSettings, setAppSettings] = useState(DEFAULT_APP_SETTINGS);
+  const [account, setAccount] = useState(null);
+  const [hasAccounts, setHasAccounts] = useState(false);
+  const [databaseError, setDatabaseError] = useState('');
   const [fontsLoaded, fontError] = useFonts({
     Nunito_400Regular,
     Nunito_600SemiBold,
@@ -165,6 +172,15 @@ export default function App() {
     if (!fontsLoaded && !fontError) return undefined;
     let active = true;
     const timer = setTimeout(async () => {
+      try {
+        await getDatabase();
+        await finishPendingLegacyCleanup();
+        const accounts = await listLocalAccounts();
+        if (active) setHasAccounts(accounts.length > 0);
+      } catch (error) {
+        if (active) setDatabaseError(error.message || 'Could not open the local database.');
+      }
+
       try {
         const savedSettings = await AsyncStorage.getItem(APP_SETTINGS_KEY);
         if (savedSettings && active) setAppSettings(parseAppSettings(savedSettings));
@@ -217,8 +233,36 @@ export default function App() {
     }
   }
 
+  function activateAccount(activeAccount, migrationWarning) {
+    setActiveAccountId(activeAccount.id);
+    setAccount(activeAccount);
+    setHasAccounts(true);
+    if (migrationWarning) {
+      Alert.alert('Profile created', migrationWarning);
+    }
+  }
+
+  function logout() {
+    setActiveAccountId(null);
+    setAccount(null);
+  }
+
+  async function retryDatabase() {
+    setDatabaseError('');
+    try {
+      await getDatabase();
+      await finishPendingLegacyCleanup();
+      const accounts = await listLocalAccounts();
+      setHasAccounts(accounts.length > 0);
+    } catch (error) {
+      setDatabaseError(error.message || 'Could not open the local database.');
+    }
+  }
+
   const settingsContext = {
     ...appSettings,
+    account,
+    logout,
     setLanguage: value => updateAppSetting('language', value),
     setDarkMode: value => updateAppSetting('darkMode', value),
     setEmergencyMode: value => updateAppSetting('emergencyMode', value),
@@ -248,6 +292,15 @@ export default function App() {
     );
   }
 
+  if (databaseError) {
+    return (
+      <AppSettingsContext.Provider value={settingsContext}>
+        <StatusBar style={appSettings.darkMode ? 'light' : 'dark'} />
+        <DatabaseErrorScreen message={databaseError} onRetry={retryDatabase} />
+      </AppSettingsContext.Provider>
+    );
+  }
+
   if (showWelcome) {
     return (
       <AppSettingsContext.Provider value={settingsContext}>
@@ -262,7 +315,8 @@ export default function App() {
       <NavigationContainer theme={navigationTheme}>
         <StatusBar style={appSettings.darkMode ? 'light' : 'dark'} />
         <Stack.Navigator
-          key={appSettings.emergencyMode ? 'emergency' : 'main'}
+          key={`${account ? `account-${account.id}` : hasAccounts ? 'login' : 'register'}-${appSettings.emergencyMode ? 'emergency' : 'main'}`}
+          initialRouteName={account ? undefined : hasAccounts ? 'Login' : 'Register'}
           screenOptions={{
             headerStyle: { backgroundColor: palette.background },
             headerTintColor: palette.primary,
@@ -270,7 +324,16 @@ export default function App() {
             headerTitleStyle: { color: palette.text, fontFamily: 'Nunito_800ExtraBold', fontWeight: '800' },
           }}
         >
-          {appSettings.emergencyMode ? (
+          {!account ? (
+            <>
+              <Stack.Screen name="Login" options={{ headerShown: false }}>
+                {props => <LoginScreen {...props} onAuthenticated={activeAccount => activateAccount(activeAccount)} />}
+              </Stack.Screen>
+              <Stack.Screen name="Register" options={{ headerShown: false }}>
+                {props => <RegisterScreen {...props} onAuthenticated={activateAccount} />}
+              </Stack.Screen>
+            </>
+          ) : appSettings.emergencyMode ? (
             <>
               <Stack.Screen
                 name="Emergency Support"
@@ -292,6 +355,7 @@ export default function App() {
               <Stack.Screen name="Recommendations" component={RecommendationsScreen} />
               <Stack.Screen name="Personal Diary" component={DiaryScreen} />
               <Stack.Screen name="Support Directory" component={SupportScreen} />
+              <Stack.Screen name="Counselling" component={CounsellingScreen} />
               <Stack.Screen name="Relaxing Games" component={GamesScreen} />
             </>
           )}
@@ -303,6 +367,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   splash: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  databaseError: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   brand: { alignItems: 'center' },
   logo: {
     width: 116,
@@ -348,3 +413,15 @@ const styles = StyleSheet.create({
   welcomeDescription: { color: Theme.muted, fontSize: 16, lineHeight: 24, textAlign: 'center', marginTop: 14 },
   startButton: { marginTop: 36 },
 });
+
+function DatabaseErrorScreen({ message, onRetry }) {
+  return (
+    <PastelBackground>
+      <View style={styles.databaseError}>
+        <CozyText style={styles.welcomeTitle}>Could not open local storage</CozyText>
+        <CozyText style={styles.welcomeDescription}>{message}</CozyText>
+        <PrimaryButton title="Try Again" onPress={onRetry} />
+      </View>
+    </PastelBackground>
+  );
+}

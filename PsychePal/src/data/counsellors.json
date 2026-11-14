@@ -1,0 +1,62 @@
+[
+  {
+    "id": "demo-1",
+    "name": "Nimal Perera",
+    "demo": true,
+    "languages": ["Sinhala", "Tamil", "English"],
+    "categories": ["Child counselling", "Educational counselling", "Women counselling", "Family counselling", "Relationship counselling", "Grief counselling", "Stress and anxiety counselling"],
+    "description": "A fictional counsellor profile for demonstrating supportive conversations.",
+    "contacts": [
+      { "label": "Demo phone", "value": "+94 XX XXX 0001", "type": "phone" },
+      { "label": "Demo email", "value": "counsellor1@example.com", "type": "email" }
+    ]
+  },
+  {
+    "id": "demo-2",
+    "name": "Kavitha Raman",
+    "demo": true,
+    "languages": ["Sinhala", "Tamil", "English"],
+    "categories": ["Child counselling", "Educational counselling", "Women counselling", "Family counselling", "Relationship counselling", "Grief counselling", "Stress and anxiety counselling"],
+    "description": "A fictional counsellor profile for demonstrating a listening and reflection session.",
+    "contacts": [
+      { "label": "Demo phone", "value": "+94 XX XXX 0002", "type": "phone" },
+      { "label": "Demo email", "value": "counsellor2@example.com", "type": "email" }
+    ]
+  },
+  {
+    "id": "demo-3",
+    "name": "Ayesha Fernando",
+    "demo": true,
+    "languages": ["Sinhala", "Tamil", "English"],
+    "categories": ["Child counselling", "Educational counselling", "Women counselling", "Family counselling", "Relationship counselling", "Grief counselling", "Stress and anxiety counselling"],
+    "description": "A fictional counsellor profile for demonstrating a conversation about personal concerns.",
+    "contacts": [
+      { "label": "Demo phone", "value": "+94 XX XXX 0003", "type": "phone" },
+      { "label": "Demo email", "value": "counsellor3@example.com", "type": "email" }
+    ]
+  },
+  {
+    "id": "demo-4",
+    "name": "Arul Kumar",
+    "demo": true,
+    "languages": ["Sinhala", "Tamil", "English"],
+    "categories": ["Child counselling", "Educational counselling", "Women counselling", "Family counselling", "Relationship counselling", "Grief counselling", "Stress and anxiety counselling"],
+    "description": "A fictional counsellor profile for demonstrating a counselling appointment.",
+    "contacts": [
+      { "label": "Demo phone", "value": "+94 XX XXX 0004", "type": "phone" },
+      { "label": "Demo email", "value": "counsellor4@example.com", "type": "email" }
+    ]
+  },
+  {
+    "id": "demo-5",
+    "name": "Tharindu Silva",
+    "demo": true,
+    "languages": ["Sinhala", "Tamil", "English"],
+    "categories": ["Child counselling", "Educational counselling", "Women counselling", "Family counselling", "Relationship counselling", "Grief counselling", "Stress and anxiety counselling"],
+    "description": "A fictional counsellor profile for demonstrating a conversation about everyday challenges.",
+    "contacts": [
+      { "label": "Demo phone", "value": "+94 XX XXX 0005", "type": "phone" },
+      { "label": "Demo email", "value": "counsellor5@example.com", "type": "email" }
+    ]
+  }
+]
