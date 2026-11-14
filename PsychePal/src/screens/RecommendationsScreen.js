@@ -4,9 +4,6 @@ import Screen from '../components/Screen';
 import CozyHero from '../components/CozyHero';
 import { CozyText as Text } from '../components/CozyText';
 import TextInput from '../components/CozyInput';
-import books from '../data/books.json';
-import movies from '../data/movies.json';
-import music from '../data/music.json';
 import recommendationCatalog from '../data/recommendationCatalog.json';
 import socialLinks from '../data/socialLinks.json';
 import { Theme } from '../styles/theme';
@@ -32,9 +29,9 @@ function makeRecommendations(type) {
 }
 
 const catalogs = {
-  Books: [...books, ...makeRecommendations('Books')],
-  Music: [...music, ...makeRecommendations('Music')],
-  Films: [...movies, ...makeRecommendations('Films')],
+  Books: makeRecommendations('Books'),
+  Music: makeRecommendations('Music'),
+  Films: makeRecommendations('Films'),
   'Web Games': makeRecommendations('Web Games'),
 };
 const types = [...Object.keys(catalogs), 'Social Media'];
