@@ -77,7 +77,7 @@ export default function HomeScreen({ navigation }) {
     ['Mood History', 'Review your previous mood check-ins.'],
     ['Thought Reflection', 'Explore self-awareness, personality, strengths, and thoughts.'],
     ['Relaxation Toolkit', 'Try a breathing or grounding exercise.'],
-    ['Recommendations', 'Browse books, music, and movie suggestions.'],
+    ['Recommendations', 'Browse books, music, films, web games, and social links.'],
     ['Personal Diary', 'Write and manage private journal entries.'],
     ['Support Directory', 'Find relevant support contact information.'],
   ];
