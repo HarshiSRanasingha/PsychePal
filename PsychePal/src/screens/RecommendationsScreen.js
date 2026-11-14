@@ -46,6 +46,14 @@ async function openWebsite(url) {
   }
 }
 
+const mediaArtwork = {
+  Music: { color: '#EDF2FB', accent: '#D5E4F8', symbol: '♫' },
+  Films: { color: '#FDF0ED', accent: '#F9DED8', symbol: '▶' },
+  Books: { color: '#F1ECF9', accent: '#E4DAF6', symbol: '▤' },
+  'Web Games': { color: '#F5FAF7', accent: '#D7F0E2', symbol: '✦' },
+  'Social Media': { color: '#FFF8F3', accent: '#FFE5D3', symbol: '♥' },
+};
+
 export default function RecommendationsScreen() {
   const [selectedType, setSelectedType] = useState('Music');
   const [category, setCategory] = useState('All');
@@ -91,29 +99,40 @@ export default function RecommendationsScreen() {
 
   return (
     <Screen>
-      <CozyHero
-        eyebrow="A LITTLE INSPIRATION"
-        title="Find something you love"
-        description="Browse recommendations offline. Links to websites and games require internet access."
-        art="🦋"
-        colors={['#F7E5D9', '#E9E6F3']}
-      />
-      <View style={styles.types}>
-        {types.map(type => (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityState={{ selected: selectedType === type }}
-            key={type}
-            style={[styles.typeCard, selectedType === type && styles.activeType]}
-            onPress={() => chooseType(type)}
-          >
-            <Text style={[styles.typeTitle, selectedType === type && styles.activeTypeText]}>{type}</Text>
-            <Text style={[styles.typeDescription, selectedType === type && styles.activeTypeText]}>
-              {type === 'Social Media' ? `${socialLinks.length} website links` : `${catalogs[type].length} offline recommendations`}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
+      <View style={styles.page}>
+        <View pointerEvents="none" aria-hidden accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={StyleSheet.absoluteFill}>
+          <View style={[styles.backgroundOrb, styles.backgroundOrbTop]} />
+          <View style={[styles.backgroundOrb, styles.backgroundOrbMiddle]} />
+          <View style={[styles.backgroundOrb, styles.backgroundOrbBottom]} />
+          <Text style={[styles.backgroundSymbol, styles.musicSymbol]}>♫</Text>
+          <Text style={[styles.backgroundSymbol, styles.sparkleSymbol]}>✦</Text>
+          <Text style={[styles.backgroundSymbol, styles.bookSymbol]}>✧</Text>
+        </View>
+        <CozyHero
+          eyebrow="A LITTLE INSPIRATION"
+          title="Find something you love"
+          description="Browse recommendations offline. Links to websites and games require internet access."
+          art="🦋"
+          colors={['#FCECE5', '#ECE8F7']}
+        />
+        <View style={styles.types}>
+          {types.map(type => (
+            <Pressable
+              key={type}
+              accessibilityRole="button"
+              accessibilityState={{ selected: selectedType === type }}
+              style={[styles.typeCard, { backgroundColor: mediaArtwork[type].color }, selectedType === type && styles.activeType]}
+              onPress={() => chooseType(type)}
+            >
+              <View pointerEvents="none" aria-hidden accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={[styles.typeOrb, { backgroundColor: mediaArtwork[type].accent }, selectedType === type && styles.activeTypeOrb]} />
+              <Text pointerEvents="none" aria-hidden accessibilityElementsHidden style={[styles.typeSymbol, selectedType === type && styles.activeTypeSymbol]}>{mediaArtwork[type].symbol}</Text>
+              <Text style={[styles.typeTitle, selectedType === type && styles.activeTypeText]}>{type}</Text>
+              <Text style={[styles.typeDescription, selectedType === type && styles.activeTypeText]}>
+                {type === 'Social Media' ? `${socialLinks.length} website links` : `${catalogs[type].length} offline recommendations`}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
       {selectedType === 'Social Media' ? (
         <View>
           <Text style={styles.offlineNote}>These buttons open third-party websites and require an internet connection.</Text>
@@ -204,16 +223,30 @@ export default function RecommendationsScreen() {
           {!filteredItems.length ? <Text style={styles.empty}>No matching recommendations found.</Text> : null}
         </>
       )}
+      </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  types: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
-  typeCard: { flex: 1, minWidth: '30%', minHeight: 75, justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.78)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 18, padding: 12 },
-  activeType: { backgroundColor: Theme.primary, borderColor: Theme.primary },
-  typeTitle: { color: Theme.primaryDark, fontSize: 16, fontWeight: '800', marginBottom: 4 },
-  typeDescription: { color: Theme.muted, fontSize: 10, lineHeight: 15 },
+  page: { width: '100%', maxWidth: 1100, alignSelf: 'center', overflow: 'hidden' },
+  backgroundOrb: { position: 'absolute', borderRadius: 999, opacity: 0.45 },
+  backgroundOrbTop: { width: 250, height: 250, right: -100, top: 110, backgroundColor: '#F4DDEA' },
+  backgroundOrbMiddle: { width: 220, height: 220, left: -125, top: 360, backgroundColor: '#E0EAF7' },
+  backgroundOrbBottom: { width: 200, height: 200, right: -110, bottom: 10, backgroundColor: '#F8E5D8' },
+  backgroundSymbol: { position: 'absolute', color: '#BFA6CB', opacity: 0.3, fontWeight: '700' },
+  musicSymbol: { right: 24, top: 280, fontSize: 44, transform: [{ rotate: '12deg' }] },
+  sparkleSymbol: { left: 18, top: 315, fontSize: 26 },
+  bookSymbol: { right: 38, bottom: 70, fontSize: 38 },
+  types: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 18 },
+  typeCard: { width: '48%', minHeight: 110, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 20, padding: 16, overflow: 'hidden' },
+  typeOrb: { position: 'absolute', width: 100, height: 100, right: -30, bottom: -40, borderRadius: 50, opacity: 0.8 },
+  activeTypeOrb: { backgroundColor: '#BFD9C4' },
+  typeSymbol: { position: 'absolute', right: 18, top: 12, color: '#91A6B4', opacity: 0.42, fontSize: 30, fontWeight: '800' },
+  activeTypeSymbol: { color: '#FFFFFF', opacity: 0.35 },
+  activeType: { backgroundColor: Theme.primaryDark, borderColor: Theme.primaryDark },
+  typeTitle: { color: Theme.primaryDark, fontSize: 17, fontWeight: '800', marginBottom: 5 },
+  typeDescription: { color: '#53665D', fontSize: 12, lineHeight: 17, maxWidth: '80%' },
   activeTypeText: { color: '#FFFFFF' },
   input: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 16, padding: 13, marginBottom: 13 },
   label: { color: Theme.text, fontWeight: '700', marginBottom: 7 },

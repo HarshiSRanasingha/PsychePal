@@ -3,6 +3,7 @@ import { TextInput as NativeTextInput, StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
 import { useAppSettings } from '../context/AppSettingsContext';
 import { adaptStyle } from '../styles/darkMode';
+import { DarkPalette } from '../styles/theme';
 
 export default function CozyInput({ style, ...props }) {
   const { darkMode } = useAppSettings();
@@ -13,8 +14,8 @@ export default function CozyInput({ style, ...props }) {
   return (
     <NativeTextInput
       {...props}
-      placeholderTextColor={darkMode ? '#AEBBB2' : props.placeholderTextColor}
-      style={[adaptStyle(style, darkMode), fontFamily ? { fontFamily } : null]}
+      placeholderTextColor={darkMode ? DarkPalette.muted : props.placeholderTextColor}
+      style={[darkMode && { color: DarkPalette.text }, adaptStyle(style, darkMode), fontFamily ? { fontFamily } : null]}
     />
   );
 }
