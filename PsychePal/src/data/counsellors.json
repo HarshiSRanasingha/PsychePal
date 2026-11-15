@@ -1,62 +1,58 @@
 [
   {
-    "id": "demo-1",
-    "name": "Nimal Perera",
-    "demo": true,
+    "id": "imh",
+    "name": "Institute of Mental Health (IMH)",
     "languages": ["Sinhala", "Tamil", "English"],
-    "categories": ["Child counselling", "Educational counselling", "Women counselling", "Family counselling", "Relationship counselling", "Grief counselling", "Stress and anxiety counselling"],
-    "description": "A fictional counsellor profile for demonstrating supportive conversations.",
+    "languageNote": "The provider lists its professional services in Sinhala, Tamil and English. Confirm current availability when contacting them.",
+    "categories": ["General counselling", "Teen counselling", "Relationship counselling"],
+    "description": "The institute lists psychological and mental health counselling for teens, couples, adults and older people. Contact the provider about appointments, fees and suitability.",
     "contacts": [
-      { "label": "Demo phone", "value": "+94 XX XXX 0001", "type": "phone" },
-      { "label": "Demo email", "value": "counsellor1@example.com", "type": "email" }
-    ]
+      { "label": "Contact the provider", "value": "https://www.imhlk.com/contact-us/", "type": "web" }
+    ],
+    "sourceUrl": "https://www.imhlk.com/our-services/",
+    "verifiedOn": "2026-11-15"
   },
   {
-    "id": "demo-2",
-    "name": "Kavitha Raman",
-    "demo": true,
-    "languages": ["Sinhala", "Tamil", "English"],
-    "categories": ["Child counselling", "Educational counselling", "Women counselling", "Family counselling", "Relationship counselling", "Grief counselling", "Stress and anxiety counselling"],
-    "description": "A fictional counsellor profile for demonstrating a listening and reflection session.",
+    "id": "women-in-need",
+    "name": "Women In Need (WIN)",
+    "languages": [],
+    "languageNote": "The helpline lists support in Sinhala, Tamil and English. Ask about language availability for counselling appointments.",
+    "categories": ["Women counselling", "Family counselling"],
+    "description": "WIN supports women and girls affected by violence and lists psychological, family and trauma counselling. Its helpline is for people facing abuse or violence.",
     "contacts": [
-      { "label": "Demo phone", "value": "+94 XX XXX 0002", "type": "phone" },
-      { "label": "Demo email", "value": "counsellor2@example.com", "type": "email" }
-    ]
+      { "label": "Helpline", "value": "077 567 6555", "type": "phone" },
+      { "label": "Contact page", "value": "https://www.winsl.net/contact-us/", "type": "web" }
+    ],
+    "sourceUrl": "https://www.winsl.net/our-services/",
+    "verifiedOn": "2026-11-15"
   },
   {
-    "id": "demo-3",
-    "name": "Ayesha Fernando",
-    "demo": true,
-    "languages": ["Sinhala", "Tamil", "English"],
-    "categories": ["Child counselling", "Educational counselling", "Women counselling", "Family counselling", "Relationship counselling", "Grief counselling", "Stress and anxiety counselling"],
-    "description": "A fictional counsellor profile for demonstrating a conversation about personal concerns.",
+    "id": "ncmh",
+    "name": "National Council for Mental Health",
+    "languages": [],
+    "categories": ["General counselling"],
+    "description": "The council lists counselling and mental health services. Ask the provider about language, appointments, fees and suitability.",
+    "address": "96/20 Kitulwatta Road, Colombo 08",
+    "hours": "Monday to Friday, 8:30 AM–4:30 PM, excluding public holidays. Confirm before visiting.",
     "contacts": [
-      { "label": "Demo phone", "value": "+94 XX XXX 0003", "type": "phone" },
-      { "label": "Demo email", "value": "counsellor3@example.com", "type": "email" }
-    ]
+      { "label": "Call", "value": "+94 11 268 5960", "type": "phone" },
+      { "label": "Call", "value": "+94 77 699 6367", "type": "phone" }
+    ],
+    "sourceUrl": "https://ncmh.lk/page/what-we-do/57",
+    "verifiedOn": "2026-11-15"
   },
   {
-    "id": "demo-4",
-    "name": "Arul Kumar",
-    "demo": true,
-    "languages": ["Sinhala", "Tamil", "English"],
-    "categories": ["Child counselling", "Educational counselling", "Women counselling", "Family counselling", "Relationship counselling", "Grief counselling", "Stress and anxiety counselling"],
-    "description": "A fictional counsellor profile for demonstrating a counselling appointment.",
+    "id": "nimh",
+    "name": "National Institute of Mental Health",
+    "languages": [],
+    "categories": ["General counselling"],
+    "description": "NIMH lists a psychological treatment day service. Call to ask about services, referrals, appointments and language availability.",
+    "address": "Mulleriyawa New Town, Sri Lanka",
     "contacts": [
-      { "label": "Demo phone", "value": "+94 XX XXX 0004", "type": "phone" },
-      { "label": "Demo email", "value": "counsellor4@example.com", "type": "email" }
-    ]
-  },
-  {
-    "id": "demo-5",
-    "name": "Tharindu Silva",
-    "demo": true,
-    "languages": ["Sinhala", "Tamil", "English"],
-    "categories": ["Child counselling", "Educational counselling", "Women counselling", "Family counselling", "Relationship counselling", "Grief counselling", "Stress and anxiety counselling"],
-    "description": "A fictional counsellor profile for demonstrating a conversation about everyday challenges.",
-    "contacts": [
-      { "label": "Demo phone", "value": "+94 XX XXX 0005", "type": "phone" },
-      { "label": "Demo email", "value": "counsellor5@example.com", "type": "email" }
-    ]
+      { "label": "Institute", "value": "+94 11 257 8234", "type": "phone" },
+      { "label": "National Mental Health Helpline", "value": "1926", "type": "phone" }
+    ],
+    "sourceUrl": "https://nimh.health.gov.lk/en/",
+    "verifiedOn": "2026-11-15"
   }
 ]

@@ -1,6 +1,6 @@
 {
   "Books": {
-    "Fiction": ["The Midnight Library — Matt Haig", "A Man Called Ove — Fredrik Backman", "The Alchemist — Paulo Coelho", "Anne of Green Gables — L. M. Montgomery", "The Secret Garden — Frances Hodgson Burnett"],
+    "Fiction": ["The Midnight Library — Matt Haig", "A Man Called Ove — Fredrik Backman", "The Alchemist — Paulo Coelho", "Anne of Green Gables — L. M. Montgomery", "The Secret Garden — Frances Hodgson Burnett", "Madol Doova — Martin Wickramasinghe", "Gamperaliya — Martin Wickramasinghe", "Ponniyin Selvan — Kalki Krishnamurthy", "Sivagamiyin Sapatham — Kalki Krishnamurthy"],
     "Poetry": ["Devotions — Mary Oliver", "The Sun and Her Flowers — Rupi Kaur", "The Prophet — Kahlil Gibran", "A Thousand Mornings — Mary Oliver", "Where the Sidewalk Ends — Shel Silverstein"],
     "Mindfulness": ["Wherever You Go, There You Are — Jon Kabat-Zinn", "The Miracle of Mindfulness — Thich Nhat Hanh", "Peace Is Every Step — Thich Nhat Hanh", "The Mindful Way Through Depression — Mark Williams and others", "The Art of Happiness — Dalai Lama and Howard C. Cutler"],
     "Self-compassion": ["Self-Compassion — Kristin Neff", "The Mindful Self-Compassion Workbook — Kristin Neff and Christopher Germer", "Radical Acceptance — Tara Brach", "The Gifts of Imperfection — Brené Brown", "Self-Compassion Step by Step — Kristin Neff"],
@@ -21,7 +21,7 @@
     "Soul": ["What a Wonderful World — Louis Armstrong", "Lean on Me — Bill Withers", "Lovely Day — Bill Withers", "Three Little Birds — Bob Marley and the Wailers", "Ain't No Mountain High Enough — Marvin Gaye and Tammi Terrell"],
     "Pop": ["Here Comes the Sun — The Beatles", "Count on Me — Bruno Mars", "I'm Yours — Jason Mraz", "Put Your Records On — Corinne Bailey Rae", "Sunday Best — Surfaces"],
     "Ambient": ["Music for Airports 1/1 — Brian Eno", "A Late Anthropocene — Brian Eno", "A Moment Apart — ODESZA", "Awake — Tycho", "Open Eye Signal — Jon Hopkins"],
-    "Soundtracks": ["Merry-Go-Round of Life — Joe Hisaishi", "One Summer's Day — Joe Hisaishi", "Cornfield Chase — Hans Zimmer", "Married Life — Michael Giacchino", "The Ludlows — James Horner"]
+    "Soundtracks": ["Merry-Go-Round of Life — Joe Hisaishi", "One Summer's Day — Joe Hisaishi", "Cornfield Chase — Hans Zimmer", "Married Life — Michael Giacchino", "The Ludlows — James Horner", "Galana Gangaki Jeevithe — Nanda Malini and Narada Disasekera", "Dedunu Paaya — Nanda Malini", "Chinna Chinna Aasai — Minmini", "Vennilave Vennilave — Hariharan and Sadhana Sargam"]
   },
   "Films": {
     "Drama": ["The Pursuit of Happyness", "Good Will Hunting", "The Shawshank Redemption", "Little Women (2019)", "The King's Speech", "Ho Gaana Pokuna", "Machan (2008)", "Komaali Kings", "'96 (2018)"],

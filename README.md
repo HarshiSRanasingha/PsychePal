@@ -1,81 +1,127 @@
 # PsychePal
 
-PsychePal is a React Native wellbeing companion for everyday mood check-ins, private reflection, relaxation, and mental wellness learning. Its warm pastel interface is designed to feel calm and welcoming, and its core features work offline by saving user data on the device.
+**A gentle space for everyday mental wellbeing.**
 
-> PsychePal provides general self-care and educational support. It does not diagnose or treat mental health conditions and is not a replacement for qualified professional care or emergency services.
+PsychePal is an offline-first wellbeing companion built with React Native and Expo. It brings mood check-ins, reflection, self-care tools, and educational resources together in a calm, approachable interface.
 
-## Features
+> **Important:** PsychePal is for general education and self-care. It does not diagnose or treat mental health conditions and is not a substitute for professional care or emergency services. If you are in immediate danger, contact local emergency services or go to the nearest hospital.
 
-- **Home:** Daily encouragement, mood check-in entry points, and shortcuts to the app's tools.
-- **Mood check-ins:** Choose a mood, record its intensity and an optional note, and receive a gentle acknowledgement.
-- **Mood history:** Review check-ins, filter by time period, date, and emotion, and view an intensity trend and check-in streak.
-- **Chat:** An offline, rule-based conversation for supportive everyday prompts. It is not generative AI or counseling.
-- **Resources:** Choose English, Sinhala, or Tamil and explore 10 categories with five short reads each. Mark articles as read to save progress for the current local profile; the earlier English resources remain available under More reading.
-- **Diary and goals:** Create, edit, and delete private journal entries; save daily gratitude and track personal goals.
-- **Reflection:** Work through guided self-awareness prompts and keep personal reflection notes.
-- **Relaxation:** Choose from 10 breathing, grounding, and other gentle exercises, or use a relaxation timer.
-- **Recommendations and games:** Browse colorful suggestions by language and category, and open relevant external searches in a browser or app store. Items without verified language information are labeled as not specified.
-- **Support directory:** Search locally stored service information and use the listed contact links. Confirm current details with the provider.
-- **Profile and preferences:** Choose from 30 companion avatars, personalize local settings, and sign out to return to the login screen.
-- **Local accounts:** Create multiple on-device profiles and sign in without an internet connection.
-- **Offline database:** Keep mood, reflection, diary, gratitude, goal, and profile records in a SQLite database, separated by local profile.
-- **Cozy interface:** Pastel gradients, rounded cards, custom illustrations, and Nunito typography.
+## Explore the app
 
-## Run with Expo Go
+| Area | What you can do |
+| --- | --- |
+| **Home** | Find daily encouragement, a thought for today, and shortcuts to your wellbeing tools. |
+| **Mood** | Record a feeling, its intensity, an optional note, and the date and time. Explore mood history, trends, filters, and streaks. |
+| **Chat** | Use an offline, rule-based companion for supportive everyday prompts. It is not generative AI, therapy, or a crisis service. |
+| **Reflection** | Explore guided prompts, reflect on your thoughts, and save personal notes. |
+| **Diary and goals** | Write and manage diary entries, record gratitude, and track personal goals. |
+| **Relaxation** | Try 10 breathing, grounding, and other gentle exercises, along with a relaxation timer. |
+| **Resources** | Choose English, Sinhala, or Tamil and browse 10 topics with five readings per topic. Explicitly mark readings as read to save progress for your local profile. English includes expanded guides and additional existing resources; Sinhala and Tamil currently have shorter notes. |
+| **Recommendations** | Explore colorful suggestions by language and category, including books, music, and other activities. External searches and links may require internet access. |
+| **Counselling** | Browse a small directory of real Sri Lankan organizations by category and language, with source links and verification dates. Providers whose languages have not been confirmed are shown separately. |
+| **Profile and settings** | Personalize your experience with one of 30 companion avatars, manage preferences and local data, and sign out. |
 
-### Requirements
+## Technology
 
-- Node.js LTS and npm
-- Expo Go installed on an Android or iOS device
-- A computer and phone on the same local network (or a suitable Expo tunnel connection)
+| Technology | Purpose |
+| --- | --- |
+| React Native, React, Expo | Cross-platform application and development tooling |
+| React Navigation | Stack and bottom-tab navigation |
+| Expo SQLite | Local accounts and profile-specific records; WebAssembly-backed SQLite on web |
+| AsyncStorage | Device-local settings and onboarding preferences |
+| Expo Crypto and `@noble/hashes` | Random salts and PBKDF2-SHA256 password hashing |
+| Expo Linear Gradient and Nunito | Visual styling and typography |
+| Node.js test runner | Automated tests for app data and behavior |
 
-### Start the app
+Dependency versions and scripts are defined in [`PsychePal/package.json`](PsychePal/package.json).
+
+## Getting started
+
+### Prerequisites
+
+- Node.js LTS and npm.
+- For a phone: a compatible Expo Go installation and a network connection to the development server. SDK compatibility may require a development build instead.
+- For an emulator or simulator: the corresponding Android or Apple development tools. The iOS simulator requires macOS.
+
+### Install and run
 
 From the repository root:
 
-```bash
+```sh
 cd PsychePal
 npm install
 npm start
 ```
 
-Scan the displayed QR code with Expo Go (on iOS, use the Camera app to open the Expo Go link). If the device cannot connect over the local network, start Expo with tunnel mode:
+Open the displayed link or scan the QR code with a compatible Expo Go app. Other available commands, run from the app directory:
 
-```bash
-npx expo start --tunnel
-```
-
-The project also provides these scripts:
-
-```bash
+```sh
 npm run android
 npm run ios
 npm run web
 ```
 
-The `android` and `ios` scripts open a native emulator/simulator when one is installed. `web` starts the browser version. The app is configured to launch in Expo Go with `npm start`.
+The Android and iOS commands use an available emulator or simulator. Web starts the browser version.
 
-## App structure
+### Run tests and build for web
+
+From the app directory:
+
+```sh
+node --test
+npx expo export --platform web
+```
+
+On Windows PowerShell, if execution policy blocks `npx.ps1`, use `npx.cmd expo export --platform web` instead.
+
+The web build uses SQLite WebAssembly. A hosting server must serve the WebAssembly assets and send these headers for the app document:
+
+```text
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Embedder-Policy: credentialless
+```
+
+The development configuration is in [`PsychePal/metro.config.js`](PsychePal/metro.config.js). External resources must also be compatible with the hosting policy.
+
+## Project structure
 
 ```text
 PsychePal/
-├── App.js
-├── app.json
-├── package.json
-└── src/
-    ├── components/   # Shared UI, illustrations, buttons, and screen backgrounds
-    ├── data/         # SQLite account/data storage and local resource content
-    ├── navigation/   # Tab and stack navigation
-    ├── screens/      # App screens
-    └── styles/       # Shared theme
+├── README.md
+└── PsychePal/
+    ├── App.js             # App entry point and navigation
+    ├── app.json           # Expo configuration
+    ├── package.json       # Scripts and dependencies
+    ├── metro.config.js    # Bundler and web configuration
+    ├── src/
+    │   ├── components/    # Shared interface components
+    │   ├── context/       # Application context
+    │   ├── data/          # Local storage, content, and service directory
+    │   ├── i18n/          # Localization
+    │   ├── screens/       # Application screens
+    │   └── styles/        # Shared theme
+    └── tests/             # Node.js tests
 ```
 
-## Data, privacy, and safety
+## Data and privacy
 
-Mood check-ins, diary entries, gratitude notes, goals, reflections, reading progress, and profile preferences are stored in the local SQLite database. The first local profile created imports any existing records from the previous AsyncStorage format. Local accounts are device-only: they do not sync, and passwords cannot be recovered or reset. Passwords are stored as salted hashes, but the SQLite database and personal records are not encrypted; local sign-in is not a security boundary against someone with access to the device or its files. Use the device's screen lock and back up data before removing the app or clearing its storage.
+- Accounts and wellbeing records are stored locally, not synchronized between devices. The first local profile can import records from the earlier AsyncStorage format.
+- Passwords are stored as salted PBKDF2-SHA256 hashes, but **the database and personal records are not encrypted**. Local sign-in does not protect data from someone with access to the device or its files.
+- There is no password recovery or reset. Use a device screen lock and back up data before removing the app or clearing its storage.
+- Reading progress belongs to the active local profile. Marking a reading as read is an explicit action.
+- Core local features work offline after the app is available on the device. Provider links, external recommendations, app-store searches, and development setup may require connectivity.
 
-The short reading guides are general educational material, not medical advice. Their Sinhala and Tamil translations have not been professionally reviewed.
+## Content and service limitations
 
-The web build uses SQLite's WebAssembly implementation. Its hosting server must support WebAssembly and send `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: credentialless` headers for the app document.
+- Reading content is general educational information, not medical advice. Sinhala and Tamil translations have **not** been professionally reviewed; their readings are shorter than the English guides.
+- The counselling directory lists organizations, not guaranteed appointments or individual counsellors. Availability, fees, services, and language coverage can change; confirm details directly with the provider using the linked source.
+- Recommendation language information may be unspecified where it has not been confirmed.
+- Native Android and iOS device testing and independent clinical/content review remain important before treating the app as production-ready.
 
-Opening external recommendations, store searches, or service links requires a compatible app and may use the internet. Support-directory information is provided for discovery, not as a guarantee of availability or a substitute for emergency help. If there is immediate danger, contact local emergency services or go to the nearest hospital.
+## Future improvements
+
+- Expand and professionally review Sinhala and Tamil readings and translations, alongside clinical review of educational content.
+- Regularly verify service listings and expand the directory using reliable, clearly attributed sources.
+- Test accessibility, usability, and app behavior across physical Android and iOS devices.
+- Explore encrypted storage, secure recovery, and user-controlled backup or synchronization while preserving privacy.
+- Continue improving personalization, inclusive language support, and offline self-care tools.

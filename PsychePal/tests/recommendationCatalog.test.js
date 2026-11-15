@@ -36,6 +36,18 @@ test('known film languages are selectable without guessing unknown languages', (
   assert.equal(languageForRecommendation('An unknown title'), 'Not specified');
 });
 
+test('Sinhala and Tamil book and music recommendations retain their language', () => {
+  for (const [type, category, title, language] of [
+    ['Books', 'Fiction', 'Madol Doova — Martin Wickramasinghe', 'Sinhala'],
+    ['Books', 'Fiction', 'Ponniyin Selvan — Kalki Krishnamurthy', 'Tamil'],
+    ['Music', 'Soundtracks', 'Dedunu Paaya — Nanda Malini', 'Sinhala'],
+    ['Music', 'Soundtracks', 'Chinna Chinna Aasai — Minmini', 'Tamil'],
+  ]) {
+    assert.ok(catalog[type][category].includes(title));
+    assert.equal(languageForRecommendation(title), language);
+  }
+});
+
 test('book, music, and film links search for the selected recommendation', () => {
   const title = "A Story & Song — O'Neil";
   const expectedSearch = "A Story & Song O'Neil";

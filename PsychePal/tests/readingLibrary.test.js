@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { languages, topics, parseReadResources } = require('../src/data/readingLibrary');
 const exercises = require('../src/data/relaxationExercises');
+const expansions = require('../src/data/readingExpansion');
 
 test('every resource language has ten categories with five distinct readable guides', () => {
   assert.deepEqual(languages.map(language => language.code), ['en', 'si', 'ta']);
@@ -9,6 +10,9 @@ test('every resource language has ten categories with five distinct readable gui
   assert.equal(new Set(topics.map(topic => topic.id)).size, topics.length);
   topics.forEach(topic => {
     assert.ok(topic.articles.length >= 5, topic.id);
+    assert.equal(expansions[topic.id].length, topic.articles.length);
+    assert.equal(new Set(expansions[topic.id]).size, topic.articles.length);
+    assert.ok(expansions[topic.id].every(article => article.trim().split(/\s+/).length >= 40));
     languages.forEach((language, index) => {
       assert.ok(topic.names[index].trim(), `${topic.id}: ${language.code} name`);
       assert.ok(topic.intro[index].trim(), `${topic.id}: ${language.code} introduction`);

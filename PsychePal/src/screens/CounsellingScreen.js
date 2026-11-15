@@ -7,11 +7,12 @@ import counsellors from '../data/counsellors.json';
 import openContact from '../data/openContact';
 import { Theme } from '../styles/theme';
 
-const { languages, categories, findCounsellors } = require('../data/counselling');
+const { languages, categories, findCounsellors, findLanguageUnconfirmed } = require('../data/counselling');
 export default function CounsellingScreen({ navigation }) {
   const [language, setLanguage] = useState(null);
   const [category, setCategory] = useState(null);
   const matches = findCounsellors(counsellors, language, category);
+  const unconfirmed = language ? findLanguageUnconfirmed(counsellors, category) : [];
 
   function renderOption(value, selected, onSelect) {
     return (
@@ -30,24 +31,16 @@ export default function CounsellingScreen({ navigation }) {
   function renderCard(service) {
     return (
       <View key={service.id} style={styles.card}>
-        {service.demo ? (
-          <View style={styles.demoBadge}>
-            <Text style={styles.demoLabel}>FICTIONAL DEMO PROFILE</Text>
-          </View>
-        ) : null}
         <Text style={styles.name}>{service.name}</Text>
         {service.organization ? <Text style={styles.organization}>{service.organization}</Text> : null}
-        {service.languages ? <Text style={styles.detail}>Languages: {service.languages.join(', ')}</Text> : null}
+        <Text style={styles.detail}>Languages: {service.languages.length ? service.languages.join(', ') : 'Not confirmed — ask the provider'}</Text>
+        {service.languageNote ? <Text style={styles.verification}>{service.languageNote}</Text> : null}
         {service.categories ? <Text style={styles.detail}>Categories: {service.categories.join(', ')}</Text> : null}
         <Text style={styles.description}>{service.description}</Text>
         {service.address ? <Text style={styles.detail}>Address: {service.address}</Text> : null}
         {service.hours ? <Text style={styles.detail}>Hours: {service.hours}</Text> : null}
         <Text style={styles.contactHeading}>Contact details</Text>
-        {service.contacts.map((contact, index) => service.demo ? (
-          <Text key={`${contact.value}-${index}`} style={styles.demoContact}>
-            {contact.label}: {contact.value}
-          </Text>
-        ) : (
+        {service.contacts.map((contact, index) => (
           <Pressable
             key={`${contact.value}-${index}`}
             accessibilityRole={contact.type === 'web' ? 'link' : 'button'}
@@ -59,13 +52,9 @@ export default function CounsellingScreen({ navigation }) {
           </Pressable>
         ))}
         <Text style={styles.verification}>
-          {service.demo
-            ? 'This person and these contact details are fictional. You cannot contact them.'
-            : service.verifiedOn
-              ? `Details checked against the listed source on ${service.verifiedOn}. Please confirm current information.`
-              : 'Details have not been verified. Please confirm current information with the service.'}
+          {`Details checked against the listed source on ${service.verifiedOn}. Please confirm current information.`}
         </Text>
-        {!service.demo && service.sourceUrl ? (
+        {service.sourceUrl ? (
           <Pressable
             accessibilityRole="link"
             accessibilityLabel={`Open source for ${service.name}`}
@@ -84,14 +73,14 @@ export default function CounsellingScreen({ navigation }) {
       <CozyHero
         eyebrow="FIND THE RIGHT SUPPORT"
         title="Counselling"
-        description="Explore example counselling profiles by language and category."
+        description="Explore real services and find ways to ask about counselling."
         art="🤝"
         colors={['#E6F0E7', '#E9E7F4']}
       />
       <View style={styles.noticeCard}>
         <Text style={styles.noticeTitle}>About these listings</Text>
         <Text style={styles.demoNotice}>
-          Demo only: all example profiles and contact details are fictional. They cannot provide counselling.
+          These are organisations, not individual counsellor profiles. Languages, eligibility, fees, and availability can change; confirm details directly with each provider.
         </Text>
         <Pressable
           accessibilityRole="button"
@@ -104,7 +93,7 @@ export default function CounsellingScreen({ navigation }) {
       <View style={styles.filtersCard}>
         <Text style={styles.filtersEyebrow}>FIND WHAT FEELS RIGHT</Text>
         <Text style={styles.filtersTitle}>Explore by preference</Text>
-        <Text style={styles.filtersHelper}>Select a language and a category to explore example profiles.</Text>
+        <Text style={styles.filtersHelper}>Select a language and category. Some services may need to confirm language availability.</Text>
         <Text style={styles.label}>Which language would you like?</Text>
         <View style={styles.options}>
           {languages.map(value => renderOption(value, language, setLanguage))}
@@ -118,12 +107,19 @@ export default function CounsellingScreen({ navigation }) {
         <Text style={styles.note}>Choose both a language and a category to see matching listings.</Text>
       ) : (
         <>
-          <Text style={styles.heading}>Matching profiles</Text>
+          <Text style={styles.heading}>Services with language information</Text>
           {matches.length ? matches.map(renderCard) : (
             <Text style={styles.note}>
-              No profiles are available for this language and category.
+              No matching service has confirmed language information for this category. Try another category or see the support directory.
             </Text>
           )}
+          {unconfirmed.length ? (
+            <>
+              <Text style={styles.heading}>Ask about language availability</Text>
+              <Text style={styles.note}>These services list this type of support, but their languages were not confirmed. Contact them to ask.</Text>
+              {unconfirmed.map(renderCard)}
+            </>
+          ) : null}
           <Text style={styles.note}>
             For immediate danger, contact local emergency services or go to the nearest emergency department.
           </Text>
@@ -153,9 +149,6 @@ const styles = StyleSheet.create({
   heading: { color: Theme.text, fontWeight: '800', fontSize: 20, marginTop: 6, marginBottom: 12 },
   note: { color: Theme.muted, fontSize: 13, lineHeight: 20, marginBottom: 16, paddingHorizontal: 3 },
   card: { backgroundColor: Theme.surface, borderRadius: 22, padding: 20, marginBottom: 14, borderWidth: 1, borderColor: Theme.border, shadowColor: '#78947F', shadowOpacity: 0.05, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 1 },
-  demoBadge: { alignSelf: 'flex-start', backgroundColor: '#F7EEDC', borderRadius: 12, paddingHorizontal: 10, paddingVertical: 6, marginBottom: 10 },
-  demoLabel: { color: Theme.primaryDark, fontSize: 10, fontWeight: '800', letterSpacing: 0.5 },
-  demoContact: { color: Theme.text, lineHeight: 20, marginTop: 6 },
   name: { color: Theme.text, fontSize: 17, fontWeight: '800' },
   organization: { color: Theme.primary, fontWeight: '600', marginTop: 3, marginBottom: 9 },
   description: { color: Theme.text, lineHeight: 21, marginTop: 5 },

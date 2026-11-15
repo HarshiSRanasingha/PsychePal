@@ -9,12 +9,13 @@ import existingResources from '../data/psychologyResources.json';
 import { Theme } from '../styles/theme';
 
 const { languages, topics, parseReadResources } = require('../data/readingLibrary');
+const readingExpansion = require('../data/readingExpansion');
 const READ_KEY = 'readResources';
 const colors = ['#F3EAF7', '#EAF3EC', '#FCF1E6', '#E9F1F8', '#F9EAEA'];
 const labels = {
-  en: { language: '1. Choose a language', category: '2. Choose a category', articles: '3. Pick something to read', search: 'Search resources...', empty: 'No matching resources found.', reads: '5 short reads', read: '✓ Read', open: 'Open short read', mark: 'Mark as read', marked: '✓ Marked as read', saving: 'Saving...', close: 'Close', hint: 'Select a language to see its reading categories.', disclaimer: 'For general education, not a substitute for professional care. Translations have not been professionally reviewed. If there is immediate danger, contact local emergency services.' },
-  si: { language: '1. භාෂාවක් තෝරන්න', category: '2. මාතෘකාවක් තෝරන්න', articles: '3. කියවීමට ලිපියක් තෝරන්න', search: 'සම්පත් සොයන්න...', empty: 'ගැළපෙන සම්පත් හමු නොවීය.', reads: 'කෙටි ලිපි 5ක්', read: '✓ කියවා ඇත', open: 'කියවන්න', mark: 'කියවූ බව සලකුණු කරන්න', marked: '✓ කියවා ඇත', saving: 'සුරකිමින්...', close: 'වසන්න', hint: 'මාතෘකා බැලීමට භාෂාවක් තෝරන්න.', disclaimer: 'සාමාන්‍ය දැනුවත් කිරීම සඳහා පමණි; වෘත්තීය ප්‍රතිකාර සඳහා ආදේශකයක් නොවේ. පරිවර්තන වෘත්තීය සමාලෝචනයකට ලක් කර නැත. ක්ෂණික අනතුරකදී හදිසි සේවා අමතන්න.' },
-  ta: { language: '1. மொழியைத் தேர்வுசெய்க', category: '2. தலைப்பைத் தேர்வுசெய்க', articles: '3. வாசிக்க ஒன்றைத் தேர்வுசெய்க', search: 'வளங்களைத் தேடுங்கள்...', empty: 'பொருந்தும் வளங்கள் இல்லை.', reads: '5 சிறிய வாசிப்புகள்', read: '✓ வாசித்தது', open: 'வாசிக்கவும்', mark: 'வாசித்ததாகக் குறிக்கவும்', marked: '✓ வாசித்ததாகக் குறிக்கப்பட்டது', saving: 'சேமிக்கிறது...', close: 'மூடு', hint: 'தலைப்புகளைப் பார்க்க ஒரு மொழியைத் தேர்ந்தெடுங்கள்.', disclaimer: 'பொதுக் கல்விக்காக மட்டுமே; தொழில்முறை சிகிச்சைக்கு மாற்றல்ல. மொழிபெயர்ப்புகள் தொழில்முறை மதிப்பாய்வு செய்யப்படவில்லை. உடனடி ஆபத்தில் உள்ளூர் அவசர சேவையைத் தொடர்புகொள்ளுங்கள்.' },
+  en: { language: '1. Choose a language', category: '2. Choose a category', articles: '3. Pick something to read', search: 'Search resources...', empty: 'No matching resources found.', reads: '5 articles', read: '✓ Read', open: 'Open article', mark: 'Mark as read', marked: '✓ Marked as read', saving: 'Saving...', close: 'Close', hint: 'Select a language to see its reading categories.', disclaimer: 'For general education, not a substitute for professional care. Translations have not been professionally reviewed. If there is immediate danger, contact local emergency services.' },
+  si: { language: '1. භාෂාවක් තෝරන්න', category: '2. මාතෘකාවක් තෝරන්න', articles: '3. කියවීමට ලිපියක් තෝරන්න', search: 'සම්පත් සොයන්න...', empty: 'ගැළපෙන සම්පත් හමු නොවීය.', reads: 'කෙටි ලිපි 5ක්', read: '✓ කියවා ඇත', open: 'කියවන්න', mark: 'කියවූ බව සලකුණු කරන්න', marked: '✓ කියවා ඇත', saving: 'සුරකිමින්...', close: 'වසන්න', hint: 'මාතෘකා බැලීමට භාෂාවක් තෝරන්න.', note: 'සිංහලෙන් කෙටි සටහන් ඇත. වැඩි විස්තර ඉංග්‍රීසියෙන් තිබේ.', disclaimer: 'සාමාන්‍ය දැනුවත් කිරීම සඳහා පමණි; වෘත්තීය ප්‍රතිකාර සඳහා ආදේශකයක් නොවේ. පරිවර්තන වෘත්තීය සමාලෝචනයකට ලක් කර නැත. ක්ෂණික අනතුරකදී හදිසි සේවා අමතන්න.' },
+  ta: { language: '1. மொழியைத் தேர்வுசெய்க', category: '2. தலைப்பைத் தேர்வுசெய்க', articles: '3. வாசிக்க ஒன்றைத் தேர்வுசெய்க', search: 'வளங்களைத் தேடுங்கள்...', empty: 'பொருந்தும் வளங்கள் இல்லை.', reads: '5 சிறிய வாசிப்புகள்', read: '✓ வாசித்தது', open: 'வாசிக்கவும்', mark: 'வாசித்ததாகக் குறிக்கவும்', marked: '✓ வாசித்ததாகக் குறிக்கப்பட்டது', saving: 'சேமிக்கிறது...', close: 'மூடு', hint: 'தலைப்புகளைப் பார்க்க ஒரு மொழியைத் தேர்ந்தெடுங்கள்.', note: 'தமிழில் சிறிய குறிப்புகள் உள்ளன. விரிவான கட்டுரைகள் ஆங்கிலத்தில் உள்ளன.', disclaimer: 'பொதுக் கல்விக்காக மட்டுமே; தொழில்முறை சிகிச்சைக்கு மாற்றல்ல. மொழிபெயர்ப்புகள் தொழில்முறை மதிப்பாய்வு செய்யப்படவில்லை. உடனடி ஆபத்தில் உள்ளூர் அவசர சேவையைத் தொடர்புகொள்ளுங்கள்.' },
 };
 
 export default function ResourcesScreen() {
@@ -52,7 +53,7 @@ export default function ResourcesScreen() {
       category: topic.id,
       categoryName: topic.names[languageIndex],
       title: titles[languageIndex],
-      details: `${topic.intro[languageIndex]}\n\n${bodies[languageIndex]}`,
+      details: `${topic.intro[languageIndex]}\n\n${bodies[languageIndex]}${language === 'en' ? `\n\n${readingExpansion[topic.id][index]}` : ''}`,
     })));
   if (language === 'en') {
     allArticles.push(...existingResources.map(item => ({
@@ -104,6 +105,7 @@ export default function ResourcesScreen() {
         {language ? (
           <>
             <TextInput accessibilityLabel={text.search} value={query} onChangeText={setQuery} placeholder={text.search} style={styles.search} />
+            {text.note ? <Text style={styles.hint}>{text.note}</Text> : null}
             <Text style={styles.sectionTitle}>{text.category}</Text>
             <View style={styles.grid}>
               {topics.map((topic, index) => (
