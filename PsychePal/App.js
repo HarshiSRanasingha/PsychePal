@@ -74,6 +74,7 @@ function Tabs() {
         tabBarInactiveTintColor: palette.muted,
         tabBarStyle: { backgroundColor: palette.surface, borderTopColor: palette.border, height: 72, paddingTop: 8, paddingBottom: 8 },
         tabBarLabelStyle: { fontSize: 11, fontWeight: '800', fontFamily: 'Nunito_800ExtraBold' },
+        tabBarLabelPosition: 'below-icon',
         tabBarLabel: t(route.name),
         headerTitle: t(route.name),
         headerTitleStyle: { fontWeight: '800', fontFamily: 'Nunito_800ExtraBold', color: palette.text },

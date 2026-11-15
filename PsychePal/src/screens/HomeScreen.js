@@ -105,10 +105,68 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.reminder}>
             <Text style={styles.reminderIcon}>☀</Text>
             <View style={styles.reminderCopy}>
-              <Text style={styles.reminderTitle}>A little reminder</Text>
+              <Text style={styles.reminderTitle}>{today.getHours() < 12 ? 'Good morning!' : today.getHours() < 18 ? 'Good afternoon!' : 'Good evening!'}</Text>
               <Text style={styles.reminderText}>Take a moment for yourself today.</Text>
             </View>
           </View>
+        </View>
+
+        <View style={[styles.actionRow, narrowScreen && styles.actionRowNarrow]}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => navigation.navigate('Relaxation Toolkit')}
+            style={({ pressed }) => [styles.actionCard, styles.breathingCard, pressed && styles.pressed]}
+          >
+            <View pointerEvents="none" style={[styles.actionWave, styles.breathingWave]} />
+            <View style={styles.actionIconBox}><Text style={[styles.actionIcon, styles.breathingIcon]}>❧</Text></View>
+            <View style={styles.actionCopy}>
+              <Text style={styles.actionTitle}>Take a breath</Text>
+              <Text style={styles.actionDescription}>A small pause for you</Text>
+            </View>
+            <View style={[styles.actionArrowBox, styles.breathingArrow]}><Text style={styles.actionArrow}>→</Text></View>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => navigation.navigate('Personal Diary')}
+            style={({ pressed }) => [styles.actionCard, styles.diaryCard, pressed && styles.pressed]}
+          >
+            <View pointerEvents="none" style={[styles.actionWave, styles.diaryWave]} />
+            <View style={styles.actionIconBox}><Text style={[styles.actionIcon, styles.diaryIcon]}>✎</Text></View>
+            <View style={styles.actionCopy}>
+              <Text style={styles.actionTitle}>Write it out</Text>
+              <Text style={styles.actionDescription}>A page just for you</Text>
+            </View>
+            <View style={[styles.actionArrowBox, styles.diaryArrow]}><Text style={styles.actionArrow}>→</Text></View>
+          </Pressable>
+        </View>
+
+        <Text style={styles.sectionHeading}>Explore your space</Text>
+        <View style={styles.exploreGrid}>
+          {exploreItems.map(item => (
+            <Pressable
+              key={item.title}
+              accessibilityRole="button"
+              accessibilityLabel={`${item.title}. ${item.description}`}
+              onPress={() => navigation.navigate(item.screen || item.title)}
+              style={({ pressed }) => [
+                styles.exploreCard,
+                { width: cardWidth, backgroundColor: item.background, borderColor: item.accent, minHeight: 190 * Math.max(fontScale, 1) },
+                pressed && styles.pressed,
+              ]}
+            >
+              <View pointerEvents="none" style={[styles.exploreOrb, { backgroundColor: item.accent }]} />
+              <View pointerEvents="none" style={styles.exploreDots}>
+                {[0, 1, 2, 3, 4, 5].map(dot => (
+                  <View key={dot} style={[styles.exploreDot, { backgroundColor: item.accent }]} />
+                ))}
+              </View>
+              <View style={[styles.exploreIconBox, { backgroundColor: item.accent }]}>
+                <Text style={[styles.exploreIcon, { color: darkMode ? DarkPalette.primaryDark : item.iconColor }]}>{item.icon}</Text>
+              </View>
+              <Text style={styles.exploreTitle}>{item.title}</Text>
+              <Text style={styles.exploreDescription}>{item.description}</Text>
+            </Pressable>
+          ))}
         </View>
 
         <Text style={styles.sectionHeading}>A little care, right now</Text>
@@ -197,65 +255,6 @@ export default function HomeScreen({ navigation }) {
           </View>
         ) : null}
 
-        <View style={[styles.actionRow, styles.actionRowSpacing, narrowScreen && styles.actionRowNarrow]}>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => navigation.navigate('Relaxation Toolkit')}
-            style={({ pressed }) => [styles.actionCard, styles.breathingCard, pressed && styles.pressed]}
-          >
-            <View pointerEvents="none" style={[styles.actionWave, styles.breathingWave]} />
-            <View style={styles.actionIconBox}><Text style={[styles.actionIcon, styles.breathingIcon]}>❧</Text></View>
-            <View style={styles.actionCopy}>
-              <Text style={styles.actionTitle}>Take a breath</Text>
-              <Text style={styles.actionDescription}>A small pause for you</Text>
-            </View>
-            <View style={[styles.actionArrowBox, styles.breathingArrow]}><Text style={styles.actionArrow}>→</Text></View>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => navigation.navigate('Personal Diary')}
-            style={({ pressed }) => [styles.actionCard, styles.diaryCard, pressed && styles.pressed]}
-          >
-            <View pointerEvents="none" style={[styles.actionWave, styles.diaryWave]} />
-            <View style={styles.actionIconBox}><Text style={[styles.actionIcon, styles.diaryIcon]}>✎</Text></View>
-            <View style={styles.actionCopy}>
-              <Text style={styles.actionTitle}>Write it out</Text>
-              <Text style={styles.actionDescription}>A page just for you</Text>
-            </View>
-            <View style={[styles.actionArrowBox, styles.diaryArrow]}><Text style={styles.actionArrow}>→</Text></View>
-          </Pressable>
-        </View>
-
-        <Text style={styles.sectionHeading}>Explore your space</Text>
-        <View style={styles.exploreGrid}>
-          {exploreItems.map(item => (
-            <Pressable
-              key={item.title}
-              accessibilityRole="button"
-              accessibilityLabel={`${item.title}. ${item.description}`}
-              onPress={() => navigation.navigate(item.screen || item.title)}
-              style={({ pressed }) => [
-                styles.exploreCard,
-                item.title === 'Thought Reflection' && styles.reflectionCard,
-                { width: item.title === 'Thought Reflection' ? '100%' : cardWidth, backgroundColor: item.background, borderColor: item.accent, minHeight: 190 * Math.max(fontScale, 1) },
-                pressed && styles.pressed,
-              ]}
-            >
-              <View pointerEvents="none" style={[styles.exploreOrb, { backgroundColor: item.accent }]} />
-              <View pointerEvents="none" style={styles.exploreDots}>
-                {[0, 1, 2, 3, 4, 5].map(dot => (
-                  <View key={dot} style={[styles.exploreDot, { backgroundColor: item.accent }]} />
-                ))}
-              </View>
-              <View style={[styles.exploreIconBox, { backgroundColor: item.accent }]}>
-                <Text style={[styles.exploreIcon, { color: darkMode ? DarkPalette.primaryDark : item.iconColor }]}>{item.icon}</Text>
-              </View>
-              <Text style={styles.exploreTitle}>{item.title}</Text>
-              <Text style={styles.exploreDescription}>{item.description}</Text>
-            </Pressable>
-          ))}
-        </View>
-
       </View>
     </Screen>
   );
@@ -306,7 +305,6 @@ const styles = StyleSheet.create({
   sectionHeading: { color: '#1C2D50', fontSize: 18, fontWeight: '800', marginTop: 26, marginBottom: 16 },
   exploreGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 18 },
   exploreCard: { borderRadius: 22, borderWidth: 1, padding: 20, overflow: 'hidden' },
-  reflectionCard: { borderWidth: 2 },
   exploreOrb: { position: 'absolute', width: 150, height: 150, borderRadius: 75, right: -65, bottom: -85, opacity: 0.65 },
   exploreDots: { position: 'absolute', top: 18, right: 17, width: 36, flexDirection: 'row', flexWrap: 'wrap', gap: 6, opacity: 0.9 },
   exploreDot: { width: 6, height: 6, borderRadius: 3 },
@@ -315,7 +313,6 @@ const styles = StyleSheet.create({
   exploreTitle: { color: '#1C2D50', fontSize: 16, fontWeight: '800', lineHeight: 21, marginBottom: 7 },
   exploreDescription: { color: '#536482', fontSize: 13, lineHeight: 19, maxWidth: 220 },
   actionRow: { flexDirection: 'row', gap: 20 },
-  actionRowSpacing: { marginTop: 26 },
   actionRowNarrow: { flexDirection: 'column', gap: 12 },
   actionCard: { flex: 1, minHeight: 116, flexDirection: 'row', alignItems: 'center', borderRadius: 22, padding: 16, borderWidth: 1, overflow: 'hidden' },
   breathingCard: { backgroundColor: '#F1EDFA', borderColor: '#E4DCF8' },

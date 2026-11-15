@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Animated, Alert, StyleSheet, Platform, Pressable, View } from 'react-native';
+import { Animated, Alert, StyleSheet, Platform, Pressable, useWindowDimensions, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as LocalStore from '../data/localStore';
@@ -86,6 +86,8 @@ export default function MoodScreen({ navigation }) {
   const moodScales = useRef(moods.map(() => new Animated.Value(1))).current;
   const successMotion = useRef(new Animated.Value(0)).current;
   const { darkMode } = useAppSettings();
+  const { width } = useWindowDimensions();
+  const moodCardWidth = width >= 560 ? '23.5%' : '48%';
   const selectedMood = moods.find(mood => mood[0] === selected);
   const moodColors = selectedMood ? [selectedMood[1], selectedMood[2]] : ['#CFE5D5', '#8FB49A'];
   const heroColors = darkMode ? ['#402B3D', '#30283B'] : ['#FFF4E8', '#EAF3EC'];
@@ -146,6 +148,7 @@ export default function MoodScreen({ navigation }) {
 
   return (
     <Screen>
+      <View style={styles.page}>
       <LinearGradient
         colors={heroColors}
         start={{ x: 0, y: 0 }}
@@ -169,7 +172,7 @@ export default function MoodScreen({ navigation }) {
             onPress={() => chooseMood(mood, index)}
             style={({ pressed }) => [
               styles.moodCard,
-              { backgroundColor: selected === mood ? selectedColor : color },
+              { width: moodCardWidth, backgroundColor: selected === mood ? selectedColor : color },
               selected === mood && [styles.selectedMood, { borderColor: selectedColor }],
               selected && selected !== mood && styles.unselectedMood,
               pressed && styles.pressedMood
@@ -266,10 +269,12 @@ export default function MoodScreen({ navigation }) {
       <View style={styles.saveButtonWrap}>
         <PrimaryButton title="Save Check-in" onPress={saveMood} />
       </View>
+      </View>
     </Screen>
   );
 }
 const styles = StyleSheet.create({
+  page: { width: '100%', maxWidth: 860, alignSelf: 'center' },
   headerCard: {
     minHeight: 180,
     overflow: 'hidden',
@@ -312,9 +317,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   moodCard: {
-    width: '31%',
-    aspectRatio: 1,
-    borderRadius: 24,
+    minHeight: 112,
+    paddingVertical: 14,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
