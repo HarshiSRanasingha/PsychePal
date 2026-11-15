@@ -26,6 +26,7 @@ const exploreItems = [
   { title: 'Relaxation Toolkit', description: 'Try a breathing or grounding exercise.', icon: '❧', background: '#FFFAF4', accent: '#FFEBC7', iconColor: '#E9A31B' },
   { title: 'Recommendations', description: 'Browse books, music, and movie suggestions.', icon: '♥', background: '#FDF6F9', accent: '#FCE1ED', iconColor: '#EC6BA4' },
   { title: 'Personal Diary', description: 'Write and manage private journal entries.', icon: '▤', background: '#F9F7FE', accent: '#EBE2FC', iconColor: '#A77AE4' },
+  { title: 'Counselling', description: 'Find counselling by language and category.', icon: '✿', background: '#F5FAF7', accent: '#D7F0E2', iconColor: '#32A76B' },
   { title: 'Support Directory', description: 'Find relevant support contact information.', icon: '☎', background: '#FFF8F3', accent: '#FFE5D3', iconColor: '#E8771D' },
   { title: 'Safety & Resources', screen: 'Resources', description: 'Helpful resources for your well-being.', icon: '✦', background: '#F4F8FE', accent: '#DCE9FC', iconColor: '#378AE2' },
 ];

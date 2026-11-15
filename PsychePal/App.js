@@ -29,6 +29,7 @@ import RelaxationScreen from './src/screens/RelaxationScreen';
 import RecommendationsScreen from './src/screens/RecommendationsScreen';
 import DiaryScreen from './src/screens/DiaryScreen';
 import SupportScreen from './src/screens/SupportScreen';
+import CounsellingScreen from './src/screens/CounsellingScreen';
 import GamesScreen from './src/screens/GamesScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import EmergencyScreen from './src/screens/EmergencyScreen';
@@ -292,6 +293,7 @@ export default function App() {
               <Stack.Screen name="Recommendations" component={RecommendationsScreen} />
               <Stack.Screen name="Personal Diary" component={DiaryScreen} />
               <Stack.Screen name="Support Directory" component={SupportScreen} />
+              <Stack.Screen name="Counselling" component={CounsellingScreen} />
               <Stack.Screen name="Relaxing Games" component={GamesScreen} />
             </>
           )}
