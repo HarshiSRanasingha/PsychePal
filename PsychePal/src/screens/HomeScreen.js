@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { Alert, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as LocalStore from '../data/localStore';
 import Screen from '../components/Screen';
-import { SoftLandscape } from '../components/CozyArt';
+import { MoodFace, SoftLandscape } from '../components/CozyArt';
 import { CozyText as Text } from '../components/CozyText';
 import { useAppSettings } from '../context/AppSettingsContext';
 import quotes from '../data/dailyQuotes.json';
@@ -35,6 +36,8 @@ export default function HomeScreen({ navigation }) {
   const narrowScreen = width < 600;
   const cardWidth = width < 340 || (fontScale > 1.4 && narrowScreen) ? '100%' : width >= 1000 ? '23%' : width >= 620 ? '31%' : '47%';
   const { darkMode } = useAppSettings();
+  const thoughtColors = darkMode ? ['#422D40', '#333048'] : ['#FFF4E8', '#EAF3EC'];
+  const checkInColors = darkMode ? ['#352C3D', '#293940'] : ['#F0F6EF', '#E9F1F6'];
   const [todayMood, setTodayMood] = useState(null);
   const [profileSettings, setProfileSettings] = useState({ preferredName: '', showDailyMotivation: true, showSelfCare: true });
   const today = new Date();
@@ -110,31 +113,66 @@ export default function HomeScreen({ navigation }) {
 
         <Text style={styles.sectionHeading}>A little care, right now</Text>
         {profileSettings.showDailyMotivation ? (
-          <View style={styles.heroCard}>
-            <Text style={styles.heroEyebrow}>A THOUGHT FOR TODAY</Text>
-            <Text style={styles.quote}>“{quote.text}”</Text>
-            <Text style={styles.quoteSignoff}>A gentle reminder for you</Text>
+          <LinearGradient
+            colors={thoughtColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.heroCard}
+          >
             <SoftLandscape style={styles.landscape} />
-          </View>
+            <View style={styles.quoteMark}><Text style={styles.quoteMarkText}>“</Text></View>
+            <View style={styles.heroContent}>
+              <Text style={styles.heroEyebrow}>A THOUGHT FOR TODAY</Text>
+              <Text style={styles.quote}>{quote.text}</Text>
+              <View style={styles.heroFooter}>
+                <Text style={styles.quoteSignoff}>A gentle reminder for you</Text>
+                <View style={styles.readingBadge}><Text style={styles.readingBadgeText}>✦  Pause & reflect</Text></View>
+              </View>
+            </View>
+          </LinearGradient>
         ) : null}
 
         <Pressable
           accessibilityRole="button"
           onPress={() => navigation.navigate('Mood')}
+          accessibilityHint="Opens your personal mood check-in"
           style={({ pressed }) => [styles.moodCard, pressed && styles.pressed]}
         >
-          <View style={styles.moodCopy}>
-            <Text style={styles.cardEyebrow}>CHECK IN WITH YOURSELF</Text>
-            <Text style={styles.moodTitle}>How are you feeling?</Text>
-            <Text style={styles.moodDescription}>
-              {todayMood ? `Today you felt ${todayMood.mood.toLowerCase()}. Check in again anytime.` : 'There’s no right answer. Just notice what’s here.'}
-            </Text>
-            <Text style={styles.moodLink}> {todayMood ? 'Check in again  ›' : 'Take a gentle check-in  ›'}</Text>
-          </View>
-          <View style={styles.moodSun}><Text style={styles.moodSunText}>{todayMood ? '🌷' : '☁️'}</Text></View>
-          {todayMood ? (
-            <Text style={styles.moodSummary}>{todayMood.mood} · intensity {todayMood.intensity}/10</Text>
-          ) : null}
+          <LinearGradient
+            colors={checkInColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.moodCardGradient}
+          >
+            <View style={styles.moodCardTop}>
+              <View style={styles.moodCopy}>
+                <View style={styles.checkInLabel}>
+                  <View style={styles.checkInDot} />
+                  <Text style={styles.cardEyebrow}>A MOMENT FOR YOU</Text>
+                </View>
+                <Text style={styles.moodTitle}>Check in with yourself</Text>
+                <Text style={styles.moodDescription}>
+                  {todayMood ? `You felt ${todayMood.mood.toLowerCase()} today. Your feelings can change—check in whenever you need.` : 'There’s no right answer. Take a breath and notice what’s here.'}
+                </Text>
+              </View>
+              <View style={styles.moodArt}>
+                {todayMood ? (
+                  <MoodFace mood={todayMood.mood} color="#E8F1E8" size={62} />
+                ) : (
+                  <Text style={styles.moodArtText}>☁</Text>
+                )}
+              </View>
+            </View>
+            {todayMood ? (
+              <View style={styles.moodSummary}>
+                <Text style={styles.moodSummaryText}>{todayMood.mood} · intensity {todayMood.intensity}/10</Text>
+              </View>
+            ) : null}
+            <View style={styles.moodLink}>
+              <Text style={styles.moodLinkText}>{todayMood ? 'Check in again' : 'Begin a gentle check-in'}</Text>
+              <Text style={styles.moodLinkArrow}>→</Text>
+            </View>
+          </LinearGradient>
         </Pressable>
 
         {profileSettings.showSelfCare ? (
@@ -236,20 +274,33 @@ const styles = StyleSheet.create({
   reminderCopy: { flexShrink: 1 },
   reminderTitle: { color: '#5D524D', fontSize: 13, fontWeight: '800' },
   reminderText: { color: '#796E69', fontSize: 12, lineHeight: 17 },
-  heroCard: { minHeight: 238, overflow: 'hidden', backgroundColor: '#F6E8D9', borderRadius: 28, padding: 21, marginBottom: 17, borderWidth: 1, borderColor: 'rgba(255,255,255,0.85)', elevation: 3, shadowColor: '#A88F78', shadowOpacity: 0.1, shadowRadius: 16, shadowOffset: { width: 0, height: 7 } },
-  heroEyebrow: { color: '#806D5B', fontSize: 10, fontWeight: '800', letterSpacing: 1.2, marginBottom: 10 },
-  quote: { color: '#4C5145', fontSize: 19, lineHeight: 26, fontWeight: '700', maxWidth: '90%' },
-  quoteSignoff: { color: '#806D5B', fontSize: 12, marginTop: 8 },
-  landscape: { height: 110 },
-  moodCard: { minHeight: 158, position: 'relative', overflow: 'hidden', backgroundColor: '#E4EFE7', borderRadius: 25, padding: 19, marginBottom: 9, borderWidth: 1, borderColor: 'rgba(255,255,255,0.85)', elevation: 2, shadowColor: '#78947F', shadowOpacity: 0.1, shadowRadius: 14, shadowOffset: { width: 0, height: 5 } },
-  moodCopy: { maxWidth: '78%', zIndex: 1 },
+  heroCard: { minHeight: 235, position: 'relative', overflow: 'hidden', borderRadius: 26, padding: 21, marginBottom: 17, borderWidth: 1, borderColor: 'rgba(255,255,255,0.85)', elevation: 3, shadowColor: '#829588', shadowOpacity: 0.08, shadowRadius: 18, shadowOffset: { width: 0, height: 7 } },
+  landscape: { height: 91, opacity: 0.55 },
+  quoteMark: { position: 'absolute', top: 9, right: 16, width: 54, height: 54, borderRadius: 27, backgroundColor: 'rgba(255,255,255,0.32)', alignItems: 'center', justifyContent: 'center' },
+  quoteMarkText: { color: '#799887', fontSize: 57, lineHeight: 66, fontWeight: '800' },
+  heroContent: { zIndex: 1, flex: 1, justifyContent: 'space-between' },
+  heroEyebrow: { color: '#657F71', fontSize: 10, fontWeight: '800', letterSpacing: 1.3, marginBottom: 13 },
+  quote: { color: '#34433D', fontSize: 20, lineHeight: 28, fontWeight: '700', maxWidth: '91%' },
+  heroFooter: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginTop: 14 },
+  quoteSignoff: { color: '#70857A', fontSize: 12, fontWeight: '600' },
+  readingBadge: { backgroundColor: 'rgba(255,255,255,0.62)', borderRadius: 20, paddingHorizontal: 11, paddingVertical: 7 },
+  readingBadgeText: { color: '#647E70', fontSize: 10, fontWeight: '700' },
+  moodCard: { overflow: 'hidden', borderRadius: 25, marginBottom: 9, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', elevation: 2, shadowColor: '#78947F', shadowOpacity: 0.08, shadowRadius: 15, shadowOffset: { width: 0, height: 5 } },
+  moodCardGradient: { minHeight: 205, padding: 19, justifyContent: 'space-between' },
+  moodCardTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
+  moodCopy: { flex: 1, zIndex: 1 },
+  checkInLabel: { flexDirection: 'row', alignItems: 'center', marginBottom: 9 },
+  checkInDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: '#7FA48C', marginRight: 7 },
   cardEyebrow: { color: Theme.primary, fontSize: 9, fontWeight: '800', letterSpacing: 1.3, marginBottom: 8 },
-  moodTitle: { color: Theme.text, fontSize: 20, lineHeight: 25, fontWeight: '800' },
-  moodDescription: { color: '#62746A', lineHeight: 19, fontSize: 12, marginTop: 5 },
-  moodLink: { color: Theme.primaryDark, fontWeight: '800', fontSize: 12, marginTop: 10 },
-  moodSun: { width: 83, height: 83, position: 'absolute', right: -9, top: 21, alignItems: 'center', justifyContent: 'center', borderRadius: 42, backgroundColor: '#F6E6BC' },
-  moodSunText: { fontSize: 33 },
-  moodSummary: { color: Theme.primaryDark, fontWeight: '700', fontSize: 12, marginTop: 10 },
+  moodTitle: { color: '#34433D', fontSize: 21, lineHeight: 27, fontWeight: '800' },
+  moodDescription: { color: '#687A70', lineHeight: 19, fontSize: 12, marginTop: 6, maxWidth: 390 },
+  moodArt: { width: 82, height: 82, borderRadius: 41, backgroundColor: 'rgba(255,255,255,0.68)', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.8)' },
+  moodArtText: { color: '#8EAB9A', fontSize: 43, lineHeight: 50 },
+  moodSummary: { alignSelf: 'flex-start', borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.62)', paddingHorizontal: 11, paddingVertical: 7, marginTop: 12 },
+  moodSummaryText: { color: '#547260', fontWeight: '700', fontSize: 11 },
+  moodLink: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', alignSelf: 'flex-start', minWidth: 190, backgroundColor: '#6E927D', borderRadius: 24, paddingVertical: 10, paddingHorizontal: 15, marginTop: 15 },
+  moodLinkText: { color: '#FFFFFF', fontWeight: '800', fontSize: 12 },
+  moodLinkArrow: { color: '#FFFFFF', fontSize: 18, lineHeight: 20, marginLeft: 14 },
   pressed: { opacity: 0.85, transform: [{ scale: 0.985 }] },
   sectionHeading: { color: '#1C2D50', fontSize: 18, fontWeight: '800', marginTop: 26, marginBottom: 16 },
   exploreGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 18 },

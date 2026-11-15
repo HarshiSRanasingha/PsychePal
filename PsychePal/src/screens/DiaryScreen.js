@@ -200,28 +200,35 @@ export default function DiaryScreen() {
         colors={['#F9EADF', '#F3E7F1']}
       />
 
-      <Text style={styles.subheading}>{editingId ? 'Edit diary entry' : 'Create a diary entry'}</Text>
-      <TextInput value={title} onChangeText={setTitle} placeholder="Entry title" style={styles.input} />
-      <TextInput
-        value={body}
-        onChangeText={setBody}
-        placeholder="Write your thoughts..."
-        multiline
-        style={[styles.input, styles.multiline]}
-      />
-      <PrimaryButton title={editingId ? 'Save Changes' : 'Save Entry'} onPress={saveEntry} />
-      {editingId ? <PrimaryButton title="Cancel Editing" onPress={clearEntryForm} secondary /> : null}
+      <View style={styles.section}>
+        <Text style={styles.sectionEyebrow}>YOUR SPACE TO REFLECT</Text>
+        <Text style={styles.subheading}>{editingId ? 'Edit diary entry' : 'Create a diary entry'}</Text>
+        <Text style={styles.helper}>Let your thoughts unfold, one word at a time.</Text>
+        <TextInput value={title} onChangeText={setTitle} placeholder="Entry title" style={styles.input} />
+        <TextInput
+          value={body}
+          onChangeText={setBody}
+          placeholder="Write your thoughts..."
+          multiline
+          style={[styles.input, styles.multiline]}
+        />
+        <PrimaryButton title={editingId ? 'Save Changes' : 'Save Entry'} onPress={saveEntry} />
+        {editingId ? <PrimaryButton title="Cancel Editing" onPress={clearEntryForm} secondary /> : null}
+      </View>
 
-      <Text style={styles.subheading}>Daily gratitude</Text>
-      <Text style={styles.helper}>What is one thing you appreciate today?</Text>
-      <TextInput
-        value={gratitude}
-        onChangeText={setGratitude}
-        placeholder="Today, I’m grateful for..."
-        multiline
-        style={[styles.input, styles.multiline, styles.gratitudeInput]}
-      />
-      <PrimaryButton title="Save Today's Gratitude" onPress={saveGratitude} />
+      <View style={[styles.section, styles.gratitudeSection]}>
+        <Text style={styles.sectionEyebrow}>A LITTLE MOMENT OF JOY</Text>
+        <Text style={styles.subheading}>Daily gratitude</Text>
+        <Text style={styles.helper}>What is one thing you appreciate today?</Text>
+        <TextInput
+          value={gratitude}
+          onChangeText={setGratitude}
+          placeholder="Today, I’m grateful for..."
+          multiline
+          style={[styles.input, styles.multiline, styles.gratitudeInput]}
+        />
+        <PrimaryButton title="Save Today's Gratitude" onPress={saveGratitude} />
+      </View>
       {gratitudes.map(item => (
         <View key={item.date} style={styles.card}>
           <Text style={styles.cardDate}>{new Date(`${item.date}T00:00:00`).toLocaleDateString()}</Text>
@@ -230,17 +237,20 @@ export default function DiaryScreen() {
       ))}
       {!gratitudes.length ? <Text style={styles.empty}>Your gratitude notes will appear here.</Text> : null}
 
-      <Text style={styles.subheading}>Personal goals</Text>
-      <Text style={styles.helper}>Set a goal and a target number of steps to track.</Text>
-      <TextInput value={goalTitle} onChangeText={setGoalTitle} placeholder="What would you like to work toward?" style={styles.input} />
-      <TextInput
-        value={goalTarget}
-        onChangeText={setGoalTarget}
-        placeholder="Target steps (for example, 5)"
-        keyboardType="number-pad"
-        style={styles.input}
-      />
-      <PrimaryButton title="Add Goal" onPress={addGoal} />
+      <View style={[styles.section, styles.goalsSection]}>
+        <Text style={styles.sectionEyebrow}>GROW AT YOUR OWN PACE</Text>
+        <Text style={styles.subheading}>Personal goals</Text>
+        <Text style={styles.helper}>Set a goal and a target number of steps to track.</Text>
+        <TextInput value={goalTitle} onChangeText={setGoalTitle} placeholder="What would you like to work toward?" style={styles.input} />
+        <TextInput
+          value={goalTarget}
+          onChangeText={setGoalTarget}
+          placeholder="Target steps (for example, 5)"
+          keyboardType="number-pad"
+          style={styles.input}
+        />
+        <PrimaryButton title="Add Goal" onPress={addGoal} />
+      </View>
       {goals.map(goal => {
         const progress = Number(goal.progress) || 0;
         const target = Number(goal.target) || 1;
@@ -288,7 +298,7 @@ export default function DiaryScreen() {
       })}
       {!goals.length ? <Text style={styles.empty}>Add a personal goal to start tracking your progress.</Text> : null}
 
-      <Text style={styles.subheading}>Saved entries</Text>
+      <Text style={styles.savedHeading}>Saved entries</Text>
       {entries.map(entry => (
         <View key={entry.id} style={styles.card}>
           <Text style={styles.entryTitle}>{entry.title}</Text>
@@ -310,12 +320,17 @@ export default function DiaryScreen() {
 }
 
 const styles = StyleSheet.create({
-  subheading: { fontSize: 18, fontWeight: '800', color: Theme.text, marginTop: 22, marginBottom: 10 },
-  helper: { color: Theme.muted, marginBottom: 9, lineHeight: 20 },
-  input: { backgroundColor: 'rgba(255,255,255,0.82)', borderWidth: 1, borderColor: Theme.border, borderRadius: 18, padding: 14, marginBottom: 10, color: Theme.text },
-  multiline: { minHeight: 110, textAlignVertical: 'top' },
-  gratitudeInput: { minHeight: 80 },
-  card: { backgroundColor: 'rgba(255,255,255,0.8)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 20, padding: 16, marginBottom: 12 },
+  section: { backgroundColor: Theme.surface, borderRadius: 24, padding: 20, marginTop: 16, marginBottom: 12, borderWidth: 1, borderColor: Theme.border, shadowColor: '#78947F', shadowOpacity: 0.06, shadowRadius: 14, shadowOffset: { width: 0, height: 5 }, elevation: 1 },
+  gratitudeSection: { backgroundColor: '#FCF7EC' },
+  goalsSection: { backgroundColor: '#F1F7F1' },
+  sectionEyebrow: { color: Theme.primary, fontSize: 10, fontWeight: '800', letterSpacing: 1.1, marginBottom: 6 },
+  subheading: { fontSize: 20, fontWeight: '800', color: Theme.text, marginBottom: 6 },
+  savedHeading: { fontSize: 20, fontWeight: '800', color: Theme.text, marginTop: 22, marginBottom: 12 },
+  helper: { color: Theme.muted, marginBottom: 14, lineHeight: 20 },
+  input: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 16, padding: 15, marginBottom: 10, color: Theme.text },
+  multiline: { minHeight: 130, textAlignVertical: 'top' },
+  gratitudeInput: { minHeight: 90 },
+  card: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 20, padding: 18, marginBottom: 12, shadowColor: '#78947F', shadowOpacity: 0.04, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 1 },
   entryTitle: { color: Theme.text, fontSize: 16, fontWeight: '700', marginBottom: 4 },
   goalTitle: { color: Theme.primaryDark, fontSize: 16, fontWeight: '700', marginBottom: 5 },
   cardDate: { color: Theme.muted, fontSize: 12, marginBottom: 8 },
@@ -325,10 +340,10 @@ const styles = StyleSheet.create({
   textButton: { paddingVertical: 8, paddingHorizontal: 10 },
   textButtonLabel: { color: Theme.primary, fontWeight: '700' },
   deleteLabel: { color: '#A94442', fontWeight: '700' },
-  actionButton: { backgroundColor: Theme.lavender, paddingVertical: 9, paddingHorizontal: 12, borderRadius: 10 },
+  actionButton: { backgroundColor: Theme.accent, paddingVertical: 10, paddingHorizontal: 14, borderRadius: 18 },
   actionText: { color: Theme.primaryDark, fontWeight: '700' },
   disabledButton: { opacity: 0.6 },
   progressTrack: { height: 8, backgroundColor: Theme.lavender, borderRadius: 5, marginTop: 11, overflow: 'hidden' },
   progressFill: { height: '100%', backgroundColor: Theme.success, borderRadius: 5 },
-  empty: { color: Theme.muted, marginBottom: 4 },
+  empty: { color: Theme.muted, marginBottom: 4, paddingHorizontal: 4, lineHeight: 20 },
 });
