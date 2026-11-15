@@ -7,6 +7,7 @@ PsychePal is an offline-first wellbeing companion built with React Native and Ex
 > **Important:** PsychePal is for general education and self-care. It does not diagnose or treat mental health conditions and is not a substitute for professional care or emergency services. If you are in immediate danger, contact local emergency services or go to the nearest hospital.
 
 ## Explore the app
+demo video link : https://drive.google.com/file/d/1h9L6iSRO53t6Y8wEjzyLcq323O5tWnMd/view?usp=sharing
 
 | Area | What you can do |
 | --- | --- |
