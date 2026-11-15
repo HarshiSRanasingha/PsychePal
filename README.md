@@ -10,13 +10,13 @@ PsychePal is a React Native wellbeing companion for everyday mood check-ins, pri
 - **Mood check-ins:** Choose a mood, record its intensity and an optional note, and receive a gentle acknowledgement.
 - **Mood history:** Review check-ins, filter by time period, date, and emotion, and view an intensity trend and check-in streak.
 - **Chat:** An offline, rule-based conversation for supportive everyday prompts. It is not generative AI or counseling.
-- **Resources:** Browse and search mental wellness learning materials.
+- **Resources:** Choose English, Sinhala, or Tamil and explore 10 categories with five short reads each. Mark articles as read to save progress for the current local profile; the earlier English resources remain available under More reading.
 - **Diary and goals:** Create, edit, and delete private journal entries; save daily gratitude and track personal goals.
 - **Reflection:** Work through guided self-awareness prompts and keep personal reflection notes.
-- **Relaxation:** Follow breathing and grounding exercises or use a short relaxation timer.
-- **Recommendations and games:** Browse suggestions and open relevant external searches in a browser or app store.
+- **Relaxation:** Choose from 10 breathing, grounding, and other gentle exercises, or use a relaxation timer.
+- **Recommendations and games:** Browse colorful suggestions by language and category, and open relevant external searches in a browser or app store. Items without verified language information are labeled as not specified.
 - **Support directory:** Search locally stored service information and use the listed contact links. Confirm current details with the provider.
-- **Profile and preferences:** Personalize the app's local profile settings.
+- **Profile and preferences:** Choose from 30 companion avatars, personalize local settings, and sign out to return to the login screen.
 - **Local accounts:** Create multiple on-device profiles and sign in without an internet connection.
 - **Offline database:** Keep mood, reflection, diary, gratitude, goal, and profile records in a SQLite database, separated by local profile.
 - **Cozy interface:** Pastel gradients, rounded cards, custom illustrations, and Nunito typography.
@@ -70,11 +70,11 @@ PsychePal/
     └── styles/       # Shared theme
 ```
 
-The updated project proposal is available in [PROJECT_PROPOSAL.md](./PROJECT_PROPOSAL.md).
-
 ## Data, privacy, and safety
 
-Mood check-ins, diary entries, gratitude notes, goals, reflections, and profile preferences are stored in the local SQLite database. The first local profile created imports any existing records from the previous AsyncStorage format. Local accounts are device-only: they do not sync, and passwords cannot be recovered or reset. Passwords are stored as salted hashes, but the SQLite database and personal records are not encrypted; local sign-in is not a security boundary against someone with access to the device or its files. Use the device's screen lock and back up data before removing the app or clearing its storage.
+Mood check-ins, diary entries, gratitude notes, goals, reflections, reading progress, and profile preferences are stored in the local SQLite database. The first local profile created imports any existing records from the previous AsyncStorage format. Local accounts are device-only: they do not sync, and passwords cannot be recovered or reset. Passwords are stored as salted hashes, but the SQLite database and personal records are not encrypted; local sign-in is not a security boundary against someone with access to the device or its files. Use the device's screen lock and back up data before removing the app or clearing its storage.
+
+The short reading guides are general educational material, not medical advice. Their Sinhala and Tamil translations have not been professionally reviewed.
 
 The web build uses SQLite's WebAssembly implementation. Its hosting server must support WebAssembly and send `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: credentialless` headers for the app document.
 

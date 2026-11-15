@@ -17,6 +17,7 @@ const APP_DATA_KEYS = [
   'diaryEntries',
   'gratitudeEntries',
   'personalGoals',
+  'readResources',
   SETTINGS_KEY,
 ];
 
@@ -26,7 +27,11 @@ const DEFAULT_SETTINGS = {
   showDailyMotivation: true,
   showSelfCare: true,
 };
-const AVATARS = ['☁️', '🐻', '🌿', '🌙', '🌼', '🦋'];
+const AVATARS = [
+  '☁️', '🐻', '🌿', '🌙', '🌼', '🦋', '🐱', '🐶', '🐼', '🐨',
+  '🦊', '🐰', '🐸', '🐧', '🐳', '🐢', '🦉', '🐝', '🌻', '🌷',
+  '🌵', '🍀', '🌈', '⭐', '🌞', '🍄', '🐣', '🦄', '🐙', '🐬',
+];
 
 function parseSettings(value) {
   if (!value) return DEFAULT_SETTINGS;
@@ -84,7 +89,7 @@ export default function ProfileScreen({ navigation }) {
   function clearStoredData() {
     Alert.alert(
       'Clear stored data?',
-      'This permanently deletes your mood history, reflections, diary entries, gratitude notes, goals, and profile preferences from this device.',
+      'This permanently deletes your mood history, reflections, diary entries, gratitude notes, goals, reading progress, and profile preferences from this device.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -204,20 +209,20 @@ export default function ProfileScreen({ navigation }) {
         <Text style={styles.appDescription}>
           Local sign-in does not encrypt this device's database. Protect your device with its screen lock.
         </Text>
-        <Pressable accessibilityRole="button" onPress={logout} style={styles.logoutButton}>
-          <Text style={styles.logoutButtonText}>Sign Out</Text>
-        </Pressable>
       </View>
 
       <Text style={styles.sectionHeading}>Data and privacy</Text>
       <View style={styles.card}>
         <Text style={styles.appDescription}>
-          Clear stored data permanently removes your mood history, reflections, diary entries, gratitude notes, goals, and profile preferences from this device.
+          Clear stored data permanently removes your mood history, reflections, diary entries, gratitude notes, goals, reading progress, and profile preferences from this device.
         </Text>
         <Pressable accessibilityRole="button" onPress={clearStoredData} style={styles.clearButton}>
           <Text style={styles.clearButtonText}>Clear Stored Data</Text>
         </Pressable>
       </View>
+      <Pressable accessibilityRole="button" onPress={logout} style={styles.logoutButton}>
+        <Text style={styles.logoutButtonText}>Sign Out</Text>
+      </Pressable>
     </Screen>
   );
 }
@@ -230,8 +235,8 @@ const styles = StyleSheet.create({
   subtitle: { color: Theme.muted, lineHeight: 21, marginBottom: 3, textAlign: 'center' },
   sectionHeading: { color: Theme.text, fontSize: 17, fontWeight: '800', marginTop: 16, marginBottom: 10 },
   card: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', borderRadius: 20, padding: 15, marginBottom: 12, elevation: 2, shadowColor: '#788078', shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 3 } },
-  avatarChoices: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 17 },
-  avatarChoice: { width: 43, height: 43, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F1F0EC', borderWidth: 1, borderColor: 'transparent' },
+  avatarChoices: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 20 },
+  avatarChoice: { width: 48, height: 48, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F6F2F7', borderWidth: 1, borderColor: 'transparent' },
   selectedAvatar: { backgroundColor: '#E2EFE4', borderColor: '#70917C' },
   avatarChoiceText: { fontSize: 22 },
   fieldLabel: { color: Theme.primaryDark, fontWeight: '700', marginBottom: 6 },
@@ -247,6 +252,6 @@ const styles = StyleSheet.create({
   appDescription: { color: Theme.text, lineHeight: 20, marginTop: 8 },
   clearButton: { alignSelf: 'flex-start', borderWidth: 1, borderColor: '#A94442', borderRadius: 10, paddingHorizontal: 13, paddingVertical: 10, marginTop: 13 },
   clearButtonText: { color: '#A94442', fontWeight: '700' },
-  logoutButton: { alignSelf: 'flex-start', borderWidth: 1, borderColor: Theme.primary, borderRadius: 10, paddingHorizontal: 13, paddingVertical: 10, marginTop: 13 },
-  logoutButtonText: { color: Theme.primaryDark, fontWeight: '700' },
+  logoutButton: { alignItems: 'center', borderWidth: 1, borderColor: Theme.primary, borderRadius: 20, paddingHorizontal: 18, paddingVertical: 14, marginTop: 8, marginBottom: 12, backgroundColor: '#F3F8F3' },
+  logoutButtonText: { color: Theme.primaryDark, fontWeight: '800' },
 });

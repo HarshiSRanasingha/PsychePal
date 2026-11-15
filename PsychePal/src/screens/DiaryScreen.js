@@ -320,7 +320,7 @@ export default function DiaryScreen() {
 }
 
 const styles = StyleSheet.create({
-  section: { backgroundColor: Theme.surface, borderRadius: 24, padding: 20, marginTop: 16, marginBottom: 12, borderWidth: 1, borderColor: Theme.border, shadowColor: '#78947F', shadowOpacity: 0.06, shadowRadius: 14, shadowOffset: { width: 0, height: 5 }, elevation: 1 },
+  section: { backgroundColor: Theme.surface, borderRadius: 26, padding: 22, marginTop: 18, marginBottom: 14, borderWidth: 1, borderColor: Theme.border, shadowColor: '#78947F', shadowOpacity: 0.06, shadowRadius: 16, shadowOffset: { width: 0, height: 5 }, elevation: 1 },
   gratitudeSection: { backgroundColor: '#FCF7EC' },
   goalsSection: { backgroundColor: '#F1F7F1' },
   sectionEyebrow: { color: Theme.primary, fontSize: 10, fontWeight: '800', letterSpacing: 1.1, marginBottom: 6 },
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
   savedHeading: { fontSize: 20, fontWeight: '800', color: Theme.text, marginTop: 22, marginBottom: 12 },
   helper: { color: Theme.muted, marginBottom: 14, lineHeight: 20 },
   input: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 16, padding: 15, marginBottom: 10, color: Theme.text },
-  multiline: { minHeight: 130, textAlignVertical: 'top' },
+  multiline: { minHeight: 150, textAlignVertical: 'top' },
   gratitudeInput: { minHeight: 90 },
   card: { backgroundColor: Theme.surface, borderWidth: 1, borderColor: Theme.border, borderRadius: 20, padding: 18, marginBottom: 12, shadowColor: '#78947F', shadowOpacity: 0.04, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 1 },
   entryTitle: { color: Theme.text, fontSize: 16, fontWeight: '700', marginBottom: 4 },

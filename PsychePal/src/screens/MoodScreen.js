@@ -274,8 +274,8 @@ const styles = StyleSheet.create({
     minHeight: 180,
     overflow: 'hidden',
     justifyContent: 'center',
-    borderRadius: 25,
-    padding: 21,
+    borderRadius: 28,
+    padding: 24,
     marginBottom: 24,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.82)',
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
   moodCard: {
     width: '31%',
     aspectRatio: 1,
-    borderRadius: 20,
+    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
@@ -331,8 +331,8 @@ const styles = StyleSheet.create({
   },
   moodLabel: {
     color: Theme.text,
-    fontWeight: '600',
-    fontSize: 13,
+    fontWeight: '800',
+    fontSize: 14,
     marginTop: 6,
   },
   selectedMood: {

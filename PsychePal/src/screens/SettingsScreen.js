@@ -87,11 +87,11 @@ export default function SettingsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: Theme.surface, borderRadius: 19, padding: 16, marginTop: 12, borderWidth: 1, borderColor: Theme.border },
+  card: { backgroundColor: Theme.surface, borderRadius: 24, padding: 20, marginTop: 14, borderWidth: 1, borderColor: Theme.border, shadowColor: '#78947F', shadowOpacity: 0.06, shadowRadius: 14, shadowOffset: { width: 0, height: 4 }, elevation: 1 },
   sectionTitle: { color: Theme.primaryDark, fontSize: 18, fontWeight: '800', marginBottom: 6 },
   description: { color: Theme.muted, lineHeight: 20 },
   optionRow: { flexDirection: 'row', gap: 8, marginTop: 14 },
-  option: { flex: 1, minHeight: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 12, borderWidth: 1, borderColor: Theme.border, backgroundColor: Theme.background, paddingHorizontal: 6 },
+  option: { flex: 1, minHeight: 48, alignItems: 'center', justifyContent: 'center', borderRadius: 16, borderWidth: 1, borderColor: Theme.border, backgroundColor: Theme.background, paddingHorizontal: 6 },
   appearanceOption: { flex: 1 },
   selectedOption: { backgroundColor: Theme.accent, borderColor: Theme.primary },
   optionText: { color: Theme.text, fontWeight: '700', textAlign: 'center' },

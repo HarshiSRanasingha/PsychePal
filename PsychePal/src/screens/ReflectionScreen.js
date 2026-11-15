@@ -82,7 +82,7 @@ export default function ReflectionScreen() {
   useFocusEffect(useCallback(() => { loadNotes(); }, [loadNotes]));
 
   async function saveReflection() {
-    if (![situation, thought, feeling, alternative].some(value => value.trim())) {
+    if (![situation, thought, feeling, evidence, alternative].some(value => value.trim())) {
       Alert.alert('Nothing to save', 'Write something in the reflection fields first.');
       return;
     }
@@ -240,11 +240,11 @@ const styles = StyleSheet.create({
   input: { backgroundColor: '#FBF8F2', color: Theme.text, borderWidth: 1, borderColor: Theme.border, borderRadius: 14, minHeight: 105, padding: 14, textAlignVertical: 'top' },
   inputFocused: { borderColor: Theme.primary },
   sections: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 6, gap: 8 },
-  sectionButton: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: Theme.border, borderRadius: 16, paddingHorizontal: 12, paddingVertical: 10, marginBottom: 4 },
+  sectionButton: { flexGrow: 1, minWidth: '46%', minHeight: 68, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: Theme.border, borderRadius: 20, paddingHorizontal: 16, paddingVertical: 14, marginBottom: 4 },
   activeSection: { backgroundColor: Theme.primaryDark, borderColor: Theme.primaryDark },
   sectionHover: { opacity: 0.85 },
-  sectionIcon: { color: Theme.primaryDark, fontSize: 18, marginRight: 7 },
-  sectionButtonText: { color: Theme.text, fontSize: 12, fontWeight: '700' },
+  sectionIcon: { color: Theme.primaryDark, fontSize: 24, marginRight: 10 },
+  sectionButtonText: { color: Theme.text, fontSize: 14, fontWeight: '800', flexShrink: 1 },
   activeSectionText: { color: '#FFFFFF' },
   guidanceHeading: { color: Theme.primaryDark, fontSize: 19, fontWeight: '800', marginTop: 14, marginBottom: 8 },
   progressCard: { marginVertical: 6 },

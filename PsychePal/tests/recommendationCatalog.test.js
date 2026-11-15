@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const catalog = require('../src/data/recommendationCatalog.json');
 const socialLinks = require('../src/data/socialLinks.json');
 const { recommendationLinks } = require('../src/data/recommendationLinks');
+const { languageForRecommendation } = require('../src/data/recommendationLanguages');
 
 test('each recommendation type has enough distinct resources in every category', () => {
   for (const [type, minimum] of Object.entries({ Books: 10, Music: 10, Films: 4, 'Web Games': 5 })) {
@@ -25,6 +26,14 @@ test('social buttons link to the requested platforms', () => {
     'Facebook', 'Instagram', 'TikTok', 'YouTube', 'Netflix', 'Twitter / X',
   ]);
   assert.ok(socialLinks.every(link => new URL(link.url).protocol === 'https:'));
+});
+
+test('known film languages are selectable without guessing unknown languages', () => {
+  for (const [title, language] of [['Ho Gaana Pokuna', 'Sinhala'], ['Machan (2008)', 'Sinhala'], ['Komaali Kings', 'Tamil'], ["'96 (2018)", 'Tamil']]) {
+    assert.ok(catalog.Films.Drama.includes(title));
+    assert.equal(languageForRecommendation(title), language);
+  }
+  assert.equal(languageForRecommendation('An unknown title'), 'Not specified');
 });
 
 test('book, music, and film links search for the selected recommendation', () => {

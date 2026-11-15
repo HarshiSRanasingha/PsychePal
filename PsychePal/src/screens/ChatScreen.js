@@ -82,7 +82,7 @@ export default function ChatScreen() {
       <Text style={styles.label}>Conversation style</Text>
       <View style={styles.styles}>
         {conversationStyles.map(([label, value]) => (
-          <Pressable key={value} style={[styles.styleButton, conversationStyle === value && styles.activeStyle]} onPress={() => changeStyle(value)}>
+          <Pressable key={value} accessibilityRole="button" accessibilityState={{ selected: conversationStyle === value }} style={[styles.styleButton, conversationStyle === value && styles.activeStyle]} onPress={() => changeStyle(value)}>
             <Text style={[styles.styleText, conversationStyle === value && styles.activeStyleText]}>{label}</Text>
           </Pressable>
         ))}
@@ -111,7 +111,7 @@ export default function ChatScreen() {
   );
 }
 const styles = StyleSheet.create({
-  chatHero: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#E8EDF3', borderRadius: 23, padding: 14, marginBottom: 12, overflow: 'hidden' },
+  chatHero: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#E8EDF3', borderRadius: 26, padding: 18, marginBottom: 14, overflow: 'hidden' },
   avatarWrap: { width: 75, height: 66, alignItems: 'center', justifyContent: 'center', backgroundColor: '#DDE8E5', borderRadius: 20, marginRight: 13 },
   heroCopy: { flex: 1 },
   heading: { fontSize: 23, fontWeight: '800', color: Theme.text },
@@ -119,11 +119,11 @@ const styles = StyleSheet.create({
   disclaimer: { color: Theme.muted, lineHeight: 19, fontSize: 12, marginBottom: 17 },
   label: { color: Theme.text, fontWeight: '700', marginBottom: 8 },
   styles: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 16 },
-  styleButton: { flex: 1, alignItems: 'center', borderWidth: 1, borderColor: Theme.border, borderRadius: 10, paddingVertical: 9, marginRight: 6 },
+  styleButton: { flexGrow: 1, alignItems: 'center', borderWidth: 1, borderColor: Theme.border, borderRadius: 18, paddingHorizontal: 12, paddingVertical: 10, marginRight: 6, marginBottom: 6, backgroundColor: '#FFFEFA' },
   activeStyle: { backgroundColor: '#729A87', borderColor: '#729A87' },
   styleText: { color: Theme.text, fontWeight: '700' },
   activeStyleText: { color: '#FFFFFF' },
-  history: { marginTop: 5, marginBottom: 13, padding: 14, borderRadius: 23, backgroundColor: 'rgba(238,234,244,0.68)' },
+  history: { marginTop: 5, marginBottom: 17, padding: 18, borderRadius: 25, backgroundColor: 'rgba(238,234,244,0.68)' },
   messageRow: { flexDirection: 'row', alignItems: 'flex-end', marginBottom: 10 },
   userRow: { justifyContent: 'flex-end' },
   miniAvatar: { width: 34, height: 34, borderRadius: 17, backgroundColor: '#DDE8E5', alignItems: 'center', justifyContent: 'center', marginRight: 7, overflow: 'hidden' },

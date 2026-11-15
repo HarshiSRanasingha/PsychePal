@@ -9,6 +9,7 @@ import socialLinks from '../data/socialLinks.json';
 import { Theme } from '../styles/theme';
 
 const { recommendationLinks } = require('../data/recommendationLinks');
+const { languageForRecommendation } = require('../data/recommendationLanguages');
 
 function makeRecommendations(type) {
   return Object.entries(recommendationCatalog[type]).flatMap(([category, entries]) =>
@@ -19,7 +20,7 @@ function makeRecommendations(type) {
         id: `${type}-${category}-${index}`,
         title,
         category,
-        language: isGame ? 'Web' : 'Not specified',
+        language: languageForRecommendation(title),
         description: isGame ? 'Play this game on its website.' : `A ${category.toLowerCase()} ${type === 'Music' ? 'listening' : type === 'Books' ? 'reading' : 'film'} suggestion.`,
         details: isGame
           ? 'The game opens on a third-party website and requires an internet connection.'
@@ -61,8 +62,8 @@ export default function RecommendationsScreen() {
   const [query, setQuery] = useState('');
   const [expandedId, setExpandedId] = useState(null);
   const items = catalogs[selectedType] || [];
-  const categories = ['All', ...new Set(items.map(item => item.category))];
-  const languages = ['All', ...new Set(items.map(item => item.language))];
+  const categories = ['All', ...new Set(items.filter(item => language === 'All' || item.language === language).map(item => item.category))];
+  const languages = ['All', 'English', 'Sinhala', 'Tamil', 'Not specified'];
 
   const filteredItems = useMemo(() => {
     const searchTerm = query.trim().toLocaleLowerCase();
@@ -136,17 +137,19 @@ export default function RecommendationsScreen() {
       {selectedType === 'Social Media' ? (
         <View>
           <Text style={styles.offlineNote}>These buttons open third-party websites and require an internet connection.</Text>
-          {socialLinks.map(link => (
+          <View style={styles.resultsGrid}>
+          {socialLinks.map((link, index) => (
             <Pressable
               accessibilityRole="link"
               accessibilityLabel={`Open ${link.title}`}
               key={link.title}
               onPress={() => openWebsite(link.url)}
-              style={styles.websiteButton}
+              style={[styles.socialCard, { backgroundColor: ['#F8EDE7', '#EAF3EC', '#EDEDF8', '#F9F3E2'][index % 4] }]}
             >
               <Text style={styles.websiteText}>{link.title}  ›</Text>
             </Pressable>
           ))}
+          </View>
         </View>
       ) : (
         <>
@@ -164,25 +167,23 @@ export default function RecommendationsScreen() {
             placeholder={`Search ${selectedType.toLowerCase()}...`}
             style={styles.input}
           />
-          <Text style={styles.label}>Filter by category</Text>
+          <Text style={styles.label}>Choose a language</Text>
+          <View style={styles.filters}>
+            {languages.map(value => renderFilter(value, language, value => { setLanguage(value); setCategory('All'); setExpandedId(null); }))}
+          </View>
+          <Text style={styles.offlineNote}>Language is shown only when known. Some recommendations may be available in other languages.</Text>
+          <Text style={styles.label}>Choose a category</Text>
           <View style={styles.filters}>
             {categories.map(value => renderFilter(value, category, setCategory))}
           </View>
-          {languages.length > 2 ? (
-            <>
-              <Text style={styles.label}>Filter by language or style</Text>
-              <View style={styles.filters}>
-                {languages.map(value => renderFilter(value, language, setLanguage))}
-              </View>
-            </>
-          ) : null}
           <Text style={styles.sectionHeading}>
             {filteredItems.length} {filteredItems.length === 1 ? 'recommendation' : 'recommendations'}
           </Text>
-          {filteredItems.map(item => {
+          <View style={styles.resultsGrid}>
+          {filteredItems.map((item, index) => {
             const expanded = expandedId === item.id;
             return (
-              <View key={item.id} style={styles.resultCard}>
+              <View key={item.id} style={[styles.resultCard, { backgroundColor: ['#F8EDE7', '#EAF3EC', '#EDEDF8', '#F9F3E2'][index % 4] }]}>
                 <Pressable
                   accessibilityRole="button"
                   accessibilityState={{ expanded }}
@@ -190,7 +191,7 @@ export default function RecommendationsScreen() {
                   onPress={() => setExpandedId(expanded ? null : item.id)}
                   style={({ pressed }) => pressed && styles.pressed}
                 >
-                  <Text style={styles.category}>{item.category}{item.language !== 'Not specified' && item.language !== 'Web' ? ` · ${item.language}` : ''}</Text>
+                  <Text style={styles.category}>{item.category}{item.language !== 'Not specified' ? ` · ${item.language}` : ''}</Text>
                   <Text style={styles.resultTitle}>{item.title}</Text>
                   <Text style={styles.description}>{item.description}</Text>
                   <Text style={styles.readMore}>{expanded ? 'Hide details  ‹' : 'View details and links  ›'}</Text>
@@ -220,7 +221,8 @@ export default function RecommendationsScreen() {
               </View>
             );
           })}
-          {!filteredItems.length ? <Text style={styles.empty}>No matching recommendations found.</Text> : null}
+          </View>
+          {!filteredItems.length ? <Text style={styles.empty}>No recommendations with this language information are available in this section yet. Try another language or choose “All”.</Text> : null}
         </>
       )}
       </View>
@@ -256,7 +258,8 @@ const styles = StyleSheet.create({
   chipText: { color: Theme.text, fontSize: 12 },
   activeChipText: { color: '#FFFFFF', fontWeight: '700' },
   sectionHeading: { color: Theme.text, fontSize: 17, fontWeight: '800', marginTop: 6, marginBottom: 9 },
-  resultCard: { backgroundColor: Theme.surface, borderRadius: 19, padding: 15, marginBottom: 10, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)' },
+  resultsGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+  resultCard: { width: '48%', minHeight: 155, borderRadius: 21, padding: 15, marginBottom: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)' },
   pressed: { opacity: 0.84 },
   category: { color: Theme.primary, fontWeight: '800', fontSize: 10, letterSpacing: 0.5, marginBottom: 5 },
   resultTitle: { color: Theme.text, fontSize: 16, fontWeight: '800', lineHeight: 21 },
@@ -267,4 +270,5 @@ const styles = StyleSheet.create({
   offlineNote: { color: Theme.muted, fontSize: 12, lineHeight: 18, marginBottom: 13 },
   websiteButton: { backgroundColor: Theme.lavender, borderRadius: 14, padding: 12, marginTop: 8 },
   websiteText: { color: Theme.primaryDark, fontWeight: '700' },
+  socialCard: { width: '48%', minHeight: 105, borderRadius: 20, justifyContent: 'center', padding: 16, marginBottom: 12 },
 });

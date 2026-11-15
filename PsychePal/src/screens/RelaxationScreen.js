@@ -5,12 +5,7 @@ import CozyHero from '../components/CozyHero';
 import { CozyText as Text } from '../components/CozyText';
 import { Theme } from '../styles/theme';
 
-const exercises = [
-  ['4-7-8 Breathing', 'Breathe in for 4, hold for 7, and breathe out slowly for 8.', '478', '☁', '#F1ECFA'],
-  ['Box Breathing', 'Breathe in for 4, hold for 4, breathe out for 4, and pause for 4.', 'box', '□', '#EAF3FA'],
-  ['5-4-3-2-1 Grounding', 'Notice 5 things you see, 4 you feel, 3 you hear, 2 you smell, and 1 you taste.', 'grounding', '✿', '#FBECE5'],
-  ['Mindfulness Exercises', 'Sit comfortably, notice your breathing, and gently return attention when it wanders.', 'mindfulness', '❧', '#E8F2EB'],
-];
+const exercises = require('../data/relaxationExercises');
 
 const breathingPatterns = {
   '478': [['Inhale', 4], ['Hold', 7], ['Exhale', 8]],

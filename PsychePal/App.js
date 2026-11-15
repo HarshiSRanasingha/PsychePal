@@ -72,8 +72,8 @@ function Tabs() {
         headerTintColor: palette.primary,
         tabBarActiveTintColor: palette.primary,
         tabBarInactiveTintColor: palette.muted,
-        tabBarStyle: { backgroundColor: palette.surface, borderTopColor: palette.border, height: 64, paddingTop: 7, paddingBottom: 8 },
-        tabBarLabelStyle: { fontSize: 9, fontWeight: '700', fontFamily: 'Nunito_700Bold' },
+        tabBarStyle: { backgroundColor: palette.surface, borderTopColor: palette.border, height: 72, paddingTop: 8, paddingBottom: 8 },
+        tabBarLabelStyle: { fontSize: 11, fontWeight: '800', fontFamily: 'Nunito_800ExtraBold' },
         tabBarLabel: t(route.name),
         headerTitle: t(route.name),
         headerTitleStyle: { fontWeight: '800', fontFamily: 'Nunito_800ExtraBold', color: palette.text },
@@ -81,8 +81,8 @@ function Tabs() {
           <Text
             style={{
               color,
-              fontSize: focused ? 22 : 21,
-              lineHeight: 24,
+              fontSize: focused ? 26 : 24,
+              lineHeight: 28,
               transform: [{ translateY: -2 }],
             }}
           >

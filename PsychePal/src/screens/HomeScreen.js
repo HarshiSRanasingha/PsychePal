@@ -236,7 +236,8 @@ export default function HomeScreen({ navigation }) {
               onPress={() => navigation.navigate(item.screen || item.title)}
               style={({ pressed }) => [
                 styles.exploreCard,
-                { width: cardWidth, backgroundColor: item.background, borderColor: item.accent, minHeight: 190 * Math.max(fontScale, 1) },
+                item.title === 'Thought Reflection' && styles.reflectionCard,
+                { width: item.title === 'Thought Reflection' ? '100%' : cardWidth, backgroundColor: item.background, borderColor: item.accent, minHeight: 190 * Math.max(fontScale, 1) },
                 pressed && styles.pressed,
               ]}
             >
@@ -274,7 +275,7 @@ const styles = StyleSheet.create({
   reminderCopy: { flexShrink: 1 },
   reminderTitle: { color: '#5D524D', fontSize: 13, fontWeight: '800' },
   reminderText: { color: '#796E69', fontSize: 12, lineHeight: 17 },
-  heroCard: { minHeight: 235, position: 'relative', overflow: 'hidden', borderRadius: 26, padding: 21, marginBottom: 17, borderWidth: 1, borderColor: 'rgba(255,255,255,0.85)', elevation: 3, shadowColor: '#829588', shadowOpacity: 0.08, shadowRadius: 18, shadowOffset: { width: 0, height: 7 } },
+  heroCard: { minHeight: 250, position: 'relative', overflow: 'hidden', borderRadius: 28, padding: 24, marginBottom: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.85)', elevation: 3, shadowColor: '#829588', shadowOpacity: 0.08, shadowRadius: 18, shadowOffset: { width: 0, height: 7 } },
   landscape: { height: 91, opacity: 0.55 },
   quoteMark: { position: 'absolute', top: 9, right: 16, width: 54, height: 54, borderRadius: 27, backgroundColor: 'rgba(255,255,255,0.32)', alignItems: 'center', justifyContent: 'center' },
   quoteMarkText: { color: '#799887', fontSize: 57, lineHeight: 66, fontWeight: '800' },
@@ -286,7 +287,7 @@ const styles = StyleSheet.create({
   readingBadge: { backgroundColor: 'rgba(255,255,255,0.62)', borderRadius: 20, paddingHorizontal: 11, paddingVertical: 7 },
   readingBadgeText: { color: '#647E70', fontSize: 10, fontWeight: '700' },
   moodCard: { overflow: 'hidden', borderRadius: 25, marginBottom: 9, borderWidth: 1, borderColor: 'rgba(255,255,255,0.9)', elevation: 2, shadowColor: '#78947F', shadowOpacity: 0.08, shadowRadius: 15, shadowOffset: { width: 0, height: 5 } },
-  moodCardGradient: { minHeight: 205, padding: 19, justifyContent: 'space-between' },
+  moodCardGradient: { minHeight: 220, padding: 23, justifyContent: 'space-between' },
   moodCardTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
   moodCopy: { flex: 1, zIndex: 1 },
   checkInLabel: { flexDirection: 'row', alignItems: 'center', marginBottom: 9 },
@@ -305,6 +306,7 @@ const styles = StyleSheet.create({
   sectionHeading: { color: '#1C2D50', fontSize: 18, fontWeight: '800', marginTop: 26, marginBottom: 16 },
   exploreGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 18 },
   exploreCard: { borderRadius: 22, borderWidth: 1, padding: 20, overflow: 'hidden' },
+  reflectionCard: { borderWidth: 2 },
   exploreOrb: { position: 'absolute', width: 150, height: 150, borderRadius: 75, right: -65, bottom: -85, opacity: 0.65 },
   exploreDots: { position: 'absolute', top: 18, right: 17, width: 36, flexDirection: 'row', flexWrap: 'wrap', gap: 6, opacity: 0.9 },
   exploreDot: { width: 6, height: 6, borderRadius: 3 },
