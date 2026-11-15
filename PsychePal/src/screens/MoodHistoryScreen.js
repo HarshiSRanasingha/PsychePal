@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Alert, Platform, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalStore from '../data/localStore';
 import Screen from '../components/Screen';
 import CozyHero from '../components/CozyHero';
 import { CozyText as Text } from '../components/CozyText';
@@ -24,7 +24,7 @@ export default function MoodHistoryScreen() {
 
   useFocusEffect(useCallback(() => {
     let active = true;
-    AsyncStorage.getItem('moodRecords')
+    LocalStore.getItem('moodRecords')
       .then(value => {
         const savedRecords = JSON.parse(value || '[]');
         if (!Array.isArray(savedRecords)) throw new Error('Mood history data is not a list.');

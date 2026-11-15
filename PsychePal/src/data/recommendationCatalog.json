@@ -1,0 +1,69 @@
+{
+  "Books": {
+    "Fiction": ["The Midnight Library — Matt Haig", "A Man Called Ove — Fredrik Backman", "The Alchemist — Paulo Coelho", "Anne of Green Gables — L. M. Montgomery", "The Secret Garden — Frances Hodgson Burnett"],
+    "Poetry": ["Devotions — Mary Oliver", "The Sun and Her Flowers — Rupi Kaur", "The Prophet — Kahlil Gibran", "A Thousand Mornings — Mary Oliver", "Where the Sidewalk Ends — Shel Silverstein"],
+    "Mindfulness": ["Wherever You Go, There You Are — Jon Kabat-Zinn", "The Miracle of Mindfulness — Thich Nhat Hanh", "Peace Is Every Step — Thich Nhat Hanh", "The Mindful Way Through Depression — Mark Williams and others", "The Art of Happiness — Dalai Lama and Howard C. Cutler"],
+    "Self-compassion": ["Self-Compassion — Kristin Neff", "The Mindful Self-Compassion Workbook — Kristin Neff and Christopher Germer", "Radical Acceptance — Tara Brach", "The Gifts of Imperfection — Brené Brown", "Self-Compassion Step by Step — Kristin Neff"],
+    "Personal growth": ["Atomic Habits — James Clear", "The Four Agreements — Don Miguel Ruiz", "Maybe You Should Talk to Someone — Lori Gottlieb", "The Mountain Is You — Brianna Wiest", "The Comfort Book — Matt Haig"],
+    "Nature": ["Braiding Sweetgrass — Robin Wall Kimmerer", "The Hidden Life of Trees — Peter Wohlleben", "The Overstory — Richard Powers", "A Sand County Almanac — Aldo Leopold", "The Book of Delights — Ross Gay"],
+    "Memoir": ["Educated — Tara Westover", "Becoming — Michelle Obama", "Crying in H Mart — Michelle Zauner", "When Breath Becomes Air — Paul Kalanithi", "The Year of Magical Thinking — Joan Didion"],
+    "Fantasy": ["Howl's Moving Castle — Diana Wynne Jones", "The Hobbit — J. R. R. Tolkien", "The House in the Cerulean Sea — TJ Klune", "A Wizard of Earthsea — Ursula K. Le Guin", "The Lion, the Witch and the Wardrobe — C. S. Lewis"],
+    "Humor": ["The Hitchhiker's Guide to the Galaxy — Douglas Adams", "Good Omens — Terry Pratchett and Neil Gaiman", "Born a Crime — Trevor Noah", "Me Talk Pretty One Day — David Sedaris", "Three Men in a Boat — Jerome K. Jerome"],
+    "Creativity": ["The Artist's Way — Julia Cameron", "Big Magic — Elizabeth Gilbert", "Steal Like an Artist — Austin Kleon", "The Creative Act — Rick Rubin", "Bird by Bird — Anne Lamott"]
+  },
+  "Music": {
+    "Relaxation": ["Weightless — Marconi Union", "Watermark — Enya", "We Can Fly — Rue du Soleil", "Electra — Airstream", "Mellomaniac (Chill Out Mix) — DJ Shah"],
+    "Mindfulness": ["An Ending (Ascent) — Brian Eno", "A Walk — Tycho", "First Breath After Coma — Explosions in the Sky", "Your Hand in Mine — Explosions in the Sky", "Abandon Window — Jon Hopkins"],
+    "Classical": ["Clair de lune — Claude Debussy", "Gymnopédie No. 1 — Erik Satie", "The Four Seasons: Spring — Antonio Vivaldi", "Piano Concerto No. 21: Andante — Wolfgang Amadeus Mozart", "Air on the G String — Johann Sebastian Bach"],
+    "Piano": ["Nuvole Bianche — Ludovico Einaudi", "River Flows in You — Yiruma", "Comptine d'un autre été — Yann Tiersen", "Una Mattina — Ludovico Einaudi", "Kiss the Rain — Yiruma"],
+    "Jazz": ["Take Five — The Dave Brubeck Quartet", "So What — Miles Davis", "My Favorite Things — John Coltrane", "Misty — Erroll Garner", "Blue in Green — Miles Davis"],
+    "Acoustic": ["Blackbird — The Beatles", "Fast Car — Tracy Chapman", "Banana Pancakes — Jack Johnson", "Heart of Gold — Neil Young", "Better Together — Jack Johnson"],
+    "Soul": ["What a Wonderful World — Louis Armstrong", "Lean on Me — Bill Withers", "Lovely Day — Bill Withers", "Three Little Birds — Bob Marley and the Wailers", "Ain't No Mountain High Enough — Marvin Gaye and Tammi Terrell"],
+    "Pop": ["Here Comes the Sun — The Beatles", "Count on Me — Bruno Mars", "I'm Yours — Jason Mraz", "Put Your Records On — Corinne Bailey Rae", "Sunday Best — Surfaces"],
+    "Ambient": ["Music for Airports 1/1 — Brian Eno", "A Late Anthropocene — Brian Eno", "A Moment Apart — ODESZA", "Awake — Tycho", "Open Eye Signal — Jon Hopkins"],
+    "Soundtracks": ["Merry-Go-Round of Life — Joe Hisaishi", "One Summer's Day — Joe Hisaishi", "Cornfield Chase — Hans Zimmer", "Married Life — Michael Giacchino", "The Ludlows — James Horner"]
+  },
+  "Films": {
+    "Drama": ["The Pursuit of Happyness", "Good Will Hunting", "The Shawshank Redemption", "Little Women (2019)", "The King's Speech"],
+    "Feel-good": ["The Secret Life of Walter Mitty", "Paddington 2", "Chef", "The Intouchables", "The Intern"],
+    "Animation": ["My Neighbor Totoro", "Inside Out", "Coco", "Kiki's Delivery Service", "Soul"],
+    "Adventure": ["The Princess Bride", "The Lord of the Rings: The Fellowship of the Ring", "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe", "The Goonies", "Hunt for the Wilderpeople"]
+  },
+  "Web Games": {
+    "Puzzle": [
+      ["2048", "https://play2048.co/"],
+      ["Little Alchemy 2", "https://littlealchemy2.com/"],
+      ["Jigsaw Explorer", "https://www.jigsawexplorer.com/"],
+      ["Minesweeper Online", "https://minesweeper.online/"],
+      ["Sudoku", "https://sudoku.com/"]
+    ],
+    "Word": [
+      ["Wordle", "https://www.nytimes.com/games/wordle/index.html"],
+      ["Spelling Bee", "https://www.nytimes.com/puzzles/spelling-bee"],
+      ["Connections", "https://www.nytimes.com/games/connections"],
+      ["Waffle", "https://wafflegame.net/"],
+      ["Sporcle Word Games", "https://www.sporcle.com/games/category/word"]
+    ],
+    "Strategy": [
+      ["Chess", "https://www.chess.com/play/computer"],
+      ["Lichess", "https://lichess.org/"],
+      ["Board Game Arena", "https://boardgamearena.com/"],
+      ["Colonist", "https://colonist.io/"],
+      ["Backgammon", "https://www.playok.com/en/backgammon/"]
+    ],
+    "Cards": [
+      ["Solitaire", "https://solitaired.com/"],
+      ["Spider Solitaire", "https://solitaired.com/spider-solitaire"],
+      ["FreeCell", "https://solitaired.com/freecell"],
+      ["Hearts", "https://cardgames.io/hearts/"],
+      ["Spades", "https://cardgames.io/spades/"]
+    ],
+    "Creative": [
+      ["Quick, Draw!", "https://quickdraw.withgoogle.com/"],
+      ["Drawize", "https://www.drawize.com/"],
+      ["Skribbl.io", "https://skribbl.io/"],
+      ["Gartic Phone", "https://garticphone.com/"],
+      ["Let's Draw It", "https://letsdraw.it/"]
+    ]
+  }
+}
